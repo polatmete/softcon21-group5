@@ -2,6 +2,14 @@ package ch.uzh.softcon.zero;
 
 import java.util.Scanner;
 
+/**
+ * Contributed to by the authors:
+ * Elvio Petillo
+ * [Insert name]
+ * [Insert name]
+ * [Insert name]
+ */
+
 public class Main {
     public static void main(String[] args){
         tdoc("", 0);
@@ -16,5 +24,9 @@ public class Main {
         String newLine = "\n" + scan.nextLine();
 
         tdoc(newLine + newText, day + 1);
+    }
+
+    private static void print_recursively(String previous, String count_str) {
+        // TODO: Implement
     }
 }
