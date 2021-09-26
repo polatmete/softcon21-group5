@@ -5,7 +5,7 @@ import java.util.Scanner;
 /**
  * Contributed to by the authors:
  * Elvio Petillo
- * [Insert name]
+ * Jerome Maier
  * [Insert name]
  * [Insert name]
  */
@@ -16,6 +16,9 @@ public class Main {
     }
 
     public static void tdoc(String newText, int day){
+        if (day >= 12) {
+            return;
+        }
         String prologue = String.format("On the %d. day of Christmas\n" +
                 "My true love sent to me:", day);
         System.out.println(prologue + newText);
@@ -24,9 +27,5 @@ public class Main {
         String newLine = "\n" + scan.nextLine();
 
         tdoc(newLine + newText, day + 1);
-    }
-
-    private static void print_recursively(String previous, String count_str) {
-        // TODO: Implement
     }
 }
