@@ -6,7 +6,7 @@ import java.util.Scanner;
  * Contributed to by the authors:
  * Elvio Petillo
  * Jerome Maier
- * [Insert name]
+ * Alessandro Stefanelli
  * [Insert name]
  */
 
