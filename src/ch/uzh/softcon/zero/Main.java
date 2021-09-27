@@ -12,11 +12,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-        tdoc("", 0);
+        tdoc("", 1);
     }
 
     public static void tdoc(String newText, int day){
-        if (day >= 12) {
+        if (day > 12) {
             return;
         }
         String prologue = String.format("On the %d. day of Christmas\n" +
@@ -24,7 +24,7 @@ public class Main {
         System.out.println(prologue + newText);
 
         Scanner scan = new Scanner(System.in);
-        String newLine = "\n" + scan.nextLine();
+        String newLine = scan.nextLine();
 
         tdoc(newLine + newText, day + 1);
     }
