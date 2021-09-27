@@ -7,7 +7,7 @@ import java.util.Scanner;
  * Elvio Petillo
  * Jerome Maier
  * Alessandro Stefanelli
- * [Insert name]
+ * Mete Polat
  */
 
 public class Main {
