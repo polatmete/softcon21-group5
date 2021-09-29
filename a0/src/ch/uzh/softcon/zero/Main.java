@@ -21,11 +21,11 @@ public class Main {
         }
         String prologue = String.format("On the %d. day of Christmas\n" +
                 "My true love sent to me:", day);
-        System.out.println(prologue + newText);
+        System.out.println(prologue + "\n" + newText);
 
         Scanner scan = new Scanner(System.in);
         String newLine = scan.nextLine();
 
-        tdoc(newLine + newText, day + 1);
+        tdoc(newLine + "\n" + newText, day + 1);
     }
 }
