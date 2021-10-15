@@ -4,4 +4,5 @@ public enum Player {
 
     RED,
     WHITE
+
 }

@@ -8,7 +8,7 @@ public class Turn {
 
     protected TilePosition from;
     protected TilePosition to;
-    public Player player;
+    public Player activePlayer;
 
     public enum Status {
         COMPLETED,
@@ -30,7 +30,7 @@ public class Turn {
     public Turn(int x_from, int y_from, int x_to, int y_to, Player p) {
         from = new TilePosition(x_from, y_from);
         to = new TilePosition(x_to, y_to);
-        player = p;
+        activePlayer = p;
     }
 
     /**
@@ -42,7 +42,7 @@ public class Turn {
     public Turn(int[] pos, Player p) {
         from = new TilePosition(pos[0], pos[1]);
         to = new TilePosition(pos[2], pos[3]);
-        player = p;
+        activePlayer = p;
     }
 
     /**
