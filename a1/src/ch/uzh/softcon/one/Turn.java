@@ -10,6 +10,14 @@ public class Turn {
     protected TilePosition to;
     public Player player;
 
+    public enum Status {
+        COMPLETED,
+        SYNTAX_ERROR,
+        ILLEGAL_TURN,
+        JUMP_REQUIRED,
+        //CANNOT_MOVE
+    }
+
     /**
      * Class constructor for the turn class.
      * A single turn consisting of two tile positions.
