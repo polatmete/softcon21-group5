@@ -1,13 +1,13 @@
 package ch.uzh.softcon.one;
 
 public class Board {
-    public Piece[][] positions;
-    public int pieceCountRed;
-    public int pieceCountWhite;
+    public static Piece[][] positions;
+    public static int pieceCountRed;
+    public static int pieceCountWhite;
 
     public void initialize() {
 
-        this.positions = new Piece[8][8];
+        positions = new Piece[8][8];
 
         int[][][] initialPosRed = {
                 {{0}, {1, 3, 5, 7}},
@@ -31,7 +31,7 @@ public class Board {
             int[] columns = initialPosRed[i][1];
 
             for (int column : columns) {
-                this.positions[row][column] = newPiece;
+                positions[row][column] = newPiece;
             }
         }
 
@@ -45,21 +45,25 @@ public class Board {
             int[] columns = initialPosWhite[i][1];
 
             for (int column : columns) {
-                this.positions[row][column] = newPiece;
+                positions[row][column] = newPiece;
             }
         }
     }
 
-    public void movePiece(Turn turn) {
-        this.positions[turn.to.x()][turn.to.y()] = this.positions[turn.from.x()][turn.from.y()];
+    public static void movePiece(Turn turn) {
+        positions[turn.to.x()][turn.to.y()] = positions[turn.from.x()][turn.from.y()];
         removePiece(turn.from.x(), turn.from.x());
     }
 
-    public void removePiece(int posX, int posY) {
-        this.positions[posX][posY] = null;
+    public static void removePiece(int posX, int posY) {
+        positions[posX][posY] = null;
     }
 
-    public Piece getPiece(int posX, int posY) {
-        return this.positions[posX][posY];
+    public static int size() {
+        return positions.length;
+    }
+
+    public static Piece getPiece(int posX, int posY) {
+        return positions[posX][posY];
     }
 }
