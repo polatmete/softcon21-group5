@@ -29,14 +29,13 @@ public class TurnHandler {
             Game.win(turn.activePlayer);
         }
 
-        if (isEnemyStuck(turn.activePlayer)) {
-            Game.win(turn.activePlayer);
-        }
-
         return Status.COMPLETED;
     }
 
     private static boolean checkWin(Turn turn) {
+        if (isEnemyStuck(turn.activePlayer)) {
+            return true;
+        }
         if (turn.activePlayer == Player.RED) {
             return Board.pieceCountWhite == 0;
         } else {
