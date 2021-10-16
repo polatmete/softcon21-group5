@@ -1,9 +1,9 @@
 package ch.uzh.softcon.one;
 
 public class Game {
-    String activePlayer;
+    Player activePlayer;
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         // TODO
         //Board.initialize();
     }
@@ -21,7 +21,7 @@ public class Game {
         return null;
     }
 
-    private static void win() {
+    protected static void win(Player player) {
         // TODO
     }
 }
