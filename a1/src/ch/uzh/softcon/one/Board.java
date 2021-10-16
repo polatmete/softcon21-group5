@@ -5,7 +5,7 @@ public class Board {
     public static int pieceCountRed;
     public static int pieceCountWhite;
 
-    public void initialize() {
+    public static void initialize() {
 
         positions = new Piece[8][8];
 
