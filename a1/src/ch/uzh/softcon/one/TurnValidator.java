@@ -4,13 +4,12 @@ import ch.uzh.softcon.one.Turn.Status;
 
 public class TurnValidator {
 
-    public static Status validateMove(Turn turn) {
+    public static Status validateMove(Turn turn, boolean mustJump) {
         int fromX = turn.from.x(); int toX = turn.to.x();
         int fromY = turn.from.y(); int toY = turn.to.y();
 
         //Turn would result in a position outside the field
-        if (toX >= 8 || toX <= 0 ||
-                toY >= 8 || toY <= 0) {
+        if (isOutsideBoard(toX, toY)) {
             return Status.ILLEGAL_TURN;
         }
 
@@ -21,7 +20,7 @@ public class TurnValidator {
 
         //Attempt to move backwards but piece is not a king
         Piece piece = Board.getPiece(fromX, fromY);
-        if (! piece.isKing) {
+        if (!piece.isKing) {
             if (turn.activePlayer == Player.RED) {
                 return toY < fromY ? turn.status : Status.ILLEGAL_TURN;
             } else {
@@ -30,36 +29,76 @@ public class TurnValidator {
         }
 
         //Turn destination is not one diagonal or two diagonal if an enemy sits on the first diagonal
-        return !canMoveDiagonally(turn) ? Status.ILLEGAL_TURN : turn.status;
+        if (mustJump) {
+            if (!isJumpPossible(toX, toY, turn.activePlayer)) {
+                return Status.JUMP_REQUIRED;
+            }
+        } else if (!canMoveDiagonally(turn)) {
+            return Status.ILLEGAL_TURN;
+        }
+
+        return turn.status;
     }
 
-    public static boolean canMoveDiagonally(Turn turn) {
-        int x = turn.from.x();
-        int y = turn.from.y();
-
-        if (turn.activePlayer == Player.WHITE || Board.getPiece(turn.from).isKing) {
-            if (x > 1 && y < 8) {
-                if (Board.getPiece(x - 1, y + 1) == null) return true;
+    /**
+     * Enemy on diagonal
+     * one tile diagonally behind the enemy must be free
+     */
+    public static boolean isJumpPossible(int x, int y, Player p) {
+        if (p == Player.WHITE || Board.getPiece(x, y).isKing) {
+            if (!isOutsideBoard(x - 2, y + 2)) {
+                if (Board.getPiece(x - 1, y + 1).color != p && Board.getPiece(x - 2, y + 2) == null) {
+                    return true;
+                }
             }
-            if (x < 8 && y < 8) {
-                if (Board.getPiece(x + 1, y + 1) == null) return true;
-            }
-        }
-
-        if (turn.activePlayer == Player.RED || Board.getPiece(turn.from).isKing) {
-            if (x > 1) {
-                return Board.getPiece(x - 1, y - 1) == null;
-            } else {
-                return Board.getPiece(x + 1, y - 1) == null;
+            if (!isOutsideBoard(x + 2, y + 2)) {
+                if (Board.getPiece(x + 1, y + 1).color != p && Board.getPiece(x + 2, y + 2) == null) {
+                    return true;
+                }
             }
         }
 
+        if (p == Player.RED || Board.getPiece(x, y).isKing) {
+            if (!isOutsideBoard(x - 2, y - 2)) {
+                if (Board.getPiece(x - 1, y - 1).color != p && Board.getPiece(x - 2, y - 2) == null) {
+                    return true;
+                }
+            }
+            if (!isOutsideBoard(x + 2, y - 2)) {
+                if (Board.getPiece(x + 1, y - 1).color != p && Board.getPiece(x + 2, y - 2) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
-    public static boolean isJumpPossible(int posX, int posY) {
-        // TODO: is enemy on diagonal?
-        // one tile diagonally behind the enemy must be free
+    public static boolean isOutsideBoard(int x, int y) {
+        return x > 8 || x < 1 || y > 8 || y < 1;
+    }
+
+    private static boolean canMoveDiagonally(Turn turn) {
+        int toX = turn.from.x();
+        int toY = turn.from.y();
+
+        if (turn.activePlayer == Player.WHITE || Board.getPiece(toX, toY).isKing) {
+            if (!isOutsideBoard(toX - 1, toY + 1)) {
+                if (Board.getPiece(toX - 1, toY + 1) == null) return true;
+            }
+            if (!isOutsideBoard(toX + 1, toY + 1)) {
+                if (Board.getPiece(toX + 1, toY + 1) == null) return true;
+            }
+        }
+
+        if (turn.activePlayer == Player.RED || Board.getPiece(toX, toY).isKing) {
+            if (!isOutsideBoard(toX - 1, toY - 1)) {
+                if (Board.getPiece(toX - 1, toY - 1) == null) return true;
+            }
+            if (!isOutsideBoard(toX + 1, toY - 1)) {
+                if (Board.getPiece(toX + 1, toY - 1) == null) return true;
+            }
+        }
+
         return false;
     }
 }

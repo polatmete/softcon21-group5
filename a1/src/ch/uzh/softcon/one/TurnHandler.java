@@ -5,35 +5,38 @@ import ch.uzh.softcon.one.Turn.Status;
 public class TurnHandler {
 
     public static Status runTurnSequence(Turn turn) {
-        if (isJumpRequired(turn)) {
-            setTurnStatus(turn, Status.JUMP_REQUIRED);
+
+        Status validationResult = TurnValidator.validateMove(turn, isJumpRequired(turn));
+        if (validationResult == Status.ILLEGAL_TURN) {
+            return Status.ILLEGAL_TURN;
         }
+
+        if (validationResult == Status.JUMP_REQUIRED) {
+            return Status.JUMP_REQUIRED;
+        }
+
+        executeTurn(turn);
 
         if (checkTransformNeeded(turn)) {
             Board.getPiece(turn.to.x(), turn.to.y()).setKing();
         }
 
-        if (checkWin(turn)) { // TODO: last check
+        if (isJumpRequired(turn)) {
+            return Status.JUMP_AGAIN;
+        }
+
+        if (checkWin(turn)) {
             Game.win(turn.activePlayer);
         }
 
-        if (TurnValidator.validateMove(turn) == Status.ILLEGAL_TURN) {
-            return Status.ILLEGAL_TURN;
+        if (isEnemyStuck(turn.activePlayer)) {
+            Game.win(turn.activePlayer);
         }
 
-        // executeTurn()
-
-        // isJumpRequired() again
-        // executeTurn()
-
-        // after turn executed re-check jumpRequired, transformNeeded, checkWin
-
-        return turn.status;
+        return Status.COMPLETED;
     }
 
     private static boolean checkWin(Turn turn) {
-        // TODO: also check if p cannot move? -> lose
-        // isPieceStuck()?
         if (turn.activePlayer == Player.RED) {
             return Board.pieceCountWhite == 0;
         } else {
@@ -46,26 +49,14 @@ public class TurnHandler {
     private static boolean isJumpRequired(Turn turn) {
         for (int i = 1; i <= Board.size; i++) {
             for (int j = 1; j <= Board.size; j++) {
-                if (Board.getPiece(turn.from.x(), turn.from.y()).color == turn.activePlayer) {
-                    if (TurnValidator.isJumpPossible(i, j)) {
+                if (Board.getPiece(i, j).color == turn.activePlayer) {
+                    if (TurnValidator.isJumpPossible(i, j, turn.activePlayer)) {
                         return true;
                     }
                 }
             }
         }
         return false;
-    }
-
-    // TODO: rename on UML from checkMovePossible
-    // This must come before isPieceStuck() and isJumpRequired()
-    /**
-     * it is not stuck if:
-     *  - it can move in any of its two or four diagonal directions
-     *  - it can capture any enemy pieces on the two or four diagonally adjacent tiles
-     */
-    private static boolean isPieceStuck(Turn turn) {
-        TurnValidator.canMoveDiagonally(turn);
-        return !TurnValidator.isJumpPossible(turn.from.x(), turn.from.y());
     }
 
     private static boolean checkTransformNeeded(Turn turn) {
@@ -77,18 +68,116 @@ public class TurnHandler {
     }
 
     private static void executeTurn(Turn turn) {
+        if (turn.status == Status.JUMP_REQUIRED) {
+            int enemyX = (turn.from.x() + turn.to.x()) / 2;
+            int enemyY = (turn.from.y() + turn.to.y()) / 2;
+            Board.removePiece(enemyX, enemyY);
+        }
 
-
-
-        int enemyX = (turn.from.x() + turn.to.x()) / 2;
-        int enemyY = (turn.from.y() + turn.to.y()) / 2;
-        Board.removePiece(enemyX, enemyY);
         Board.movePiece(turn);
     }
 
-    // TODO: Add to UML!
-    private static Turn setTurnStatus(Turn turn, Status status) {
-        turn.status = status;
-        return turn;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // TODO: rename on UML from checkMovePossible
+    /**
+     * it is not stuck if:
+     *  - it can move in any of its two or four diagonal directions
+     *  - it can capture any enemy pieces on the two or four diagonally adjacent tiles
+     */
+    private static boolean isEnemyStuck(Player p) {
+        Player enemy = p == Player.RED ? Player.WHITE : Player.RED;
+
+        for (int i = 1; i <= Board.size; i++) {
+            for (int j = 1; j <= Board.size; j++) {
+                if (Board.getPiece(i, j).color == p) {
+                    if (!TurnValidator.isOutsideBoard(i - 1, j + 1) && Board.getPiece(i - 1, j + 1) == null) {
+                        return false;
+                    } else if (!TurnValidator.isOutsideBoard(i - 2, j + 2) && Board.getPiece(i - 2, j + 2) == null) {
+                        return false;
+                    }
+                    if (!TurnValidator.isOutsideBoard(i + 1, j + 1) && Board.getPiece(i + 1, j + 1) == null) {
+                        return false;
+                    } else if (!TurnValidator.isOutsideBoard(i + 2, j + 2) && Board.getPiece(i + 2, j + 2) == null) {
+                        return false;
+                    }
+                    if (!TurnValidator.isOutsideBoard(i - 1, j - 1) && Board.getPiece(i - 1, j - 1) == null) {
+                        return false;
+                    } else if (!TurnValidator.isOutsideBoard(i - 2, j - 2) && Board.getPiece(i - 2, j - 2) == null) {
+                        return false;
+                    }
+                    if (!TurnValidator.isOutsideBoard(i + 1, j - 1) && Board.getPiece(i + 1, j - 1) == null) {
+                        return false;
+                    } else if (!TurnValidator.isOutsideBoard(i + 2, j - 2) && Board.getPiece(i + 2, j - 2) == null) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }
