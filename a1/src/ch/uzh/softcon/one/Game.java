@@ -22,7 +22,7 @@ public class Game {
         while (!winStatus) {
             Scanner scn = new Scanner(System.in);
             String input = scn.nextLine();
-            Turn turn = IOFormatter.formatInput(input);
+            Turn turn = IOFormatter.formatInput(input, getActivePlayer());
 
             Status status = TurnHandler.runTurnSequence(turn);
 
