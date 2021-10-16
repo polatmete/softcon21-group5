@@ -1,24 +1,39 @@
 package ch.uzh.softcon.one;
 
+import ch.uzh.softcon.one.Turn.Status;
+
 public class TurnHandler {
 
-    public static void runTurnSequence(Turn turn) {
-        if (checkWin(turn)) {
+    public static Status runTurnSequence(Turn turn) {
+        if (isJumpRequired(turn)) {
+            setTurnStatus(turn, Status.JUMP_REQUIRED);
+        }
+
+        if (checkTransformNeeded(turn)) {
+            Board.getPiece(turn.to.x(), turn.to.y()).setKing();
+        }
+
+        if (checkWin(turn)) { // TODO: last check
             Game.win(turn.activePlayer);
         }
 
-        //restliche checks
-
-        if (checkTransformNeeded(turn)) {
-            Board.getPiece(turn.to).setKing();
+        if (TurnValidator.validateMove(turn) == Status.ILLEGAL_TURN) {
+            return Status.ILLEGAL_TURN;
         }
-        // isPieceStuck()
-        // isJumpRequired()
-        // setTurnStatus()
+
+        // executeTurn()
+
+        // isJumpRequired() again
+        // executeTurn()
+
+        // after turn executed re-check jumpRequired, transformNeeded, checkWin
+
+        return turn.status;
     }
 
     private static boolean checkWin(Turn turn) {
         // TODO: also check if p cannot move? -> lose
+        // isPieceStuck()?
         if (turn.activePlayer == Player.RED) {
             return Board.pieceCountWhite == 0;
         } else {
@@ -29,12 +44,15 @@ public class TurnHandler {
     // check if the player is forced to move somewhere and cannot just move anywhere
     // -> Turn object only for player needed
     private static boolean isJumpRequired(Turn turn) {
-        // TODO
-        return false;
-    }
-
-    private static boolean isJumpPossible(int posX, int posY) {
-        // TODO
+        for (int i = 1; i <= Board.size; i++) {
+            for (int j = 1; j <= Board.size; j++) {
+                if (Board.getPiece(turn.from.x(), turn.from.y()).color == turn.activePlayer) {
+                    if (TurnValidator.isJumpPossible(i, j)) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -46,46 +64,31 @@ public class TurnHandler {
      *  - it can capture any enemy pieces on the two or four diagonally adjacent tiles
      */
     private static boolean isPieceStuck(Turn turn) {
-        int x = turn.status == Turn.Status.COMPLETED ? turn.to.x() : turn.from.x();
-        int y = turn.status == Turn.Status.COMPLETED ? turn.to.y() : turn.from.y();
-
-        // TODO: From where does the red player start?
-        if (turn.activePlayer == Player.RED || Board.getPiece(turn.from).isKing) {
-            if (x > 1 && y < 8) {
-                if (Board.getPiece(x - 1, y + 1) == null) return false;
-            }
-            if (x < 8 && y < 8) {
-                if (Board.getPiece(x + 1, y + 1) == null) return false;
-            }
-        }
-
-        if (turn.activePlayer == Player.WHITE || Board.getPiece(turn.from).isKing) {
-            if (x > 1) {
-                if (Board.getPiece(x - 1, y - 1) == null) return false;
-            } else {
-                if (Board.getPiece(x + 1, y - 1) == null) return false;
-            }
-        }
-
-        return !isJumpPossible(x, y);
+        TurnValidator.canMoveDiagonally(turn);
+        return !TurnValidator.isJumpPossible(turn.from.x(), turn.from.y());
     }
 
     private static boolean checkTransformNeeded(Turn turn) {
         if (turn.activePlayer == Player.RED) {
-            return turn.to.y() == 0;
+            return turn.to.y() == 1;
         } else {
-            return turn.to.y() == 7;
+            return turn.to.y() == Board.size;
         }
     }
 
-    private static void executeCapture(Turn turn) {
+    private static void executeTurn(Turn turn) {
+
+
+
         int enemyX = (turn.from.x() + turn.to.x()) / 2;
         int enemyY = (turn.from.y() + turn.to.y()) / 2;
         Board.removePiece(enemyX, enemyY);
         Board.movePiece(turn);
     }
 
-    private static Turn setTurnStatus(Turn turn) {
-        // TODO: Implement and add to UML!
+    // TODO: Add to UML!
+    private static Turn setTurnStatus(Turn turn, Status status) {
+        turn.status = status;
+        return turn;
     }
 }

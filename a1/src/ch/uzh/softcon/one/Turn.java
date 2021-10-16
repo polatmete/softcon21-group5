@@ -11,13 +11,30 @@ public class Turn {
     public Player activePlayer;
     public Status status;
 
+    /**
+     * Turn Status
+     */
     public enum Status {
+        /**
+         * Initial Processing needed
+         */
         PENDING,
+        /**
+         * Turn is processed and valid
+         */
         COMPLETED,
-        SYNTAX_ERROR,
-        ILLEGAL_TURN,
+        /**
+         * Move is invalid because there is at least one jump possible
+         */
         JUMP_REQUIRED,
-        //CANNOT_MOVE
+        /**
+         * Turn was executed but another jump must be taken
+         */
+        JUMP_AGAIN,
+        /**
+         * Turn is not possible otherwise
+         */
+        ILLEGAL_TURN,
     }
 
     /**
