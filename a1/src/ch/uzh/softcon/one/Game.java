@@ -38,7 +38,7 @@ public class Game {
 
             if (!winStatus) {
                 String out = "";
-                if (status == Status.ILLEGAL_TURN) out = IOFormatter.formatOutput(player + ": Invalid move - pleas try again.", true, "Please enter a valid move: ");
+                if (status == Status.ILLEGAL_TURN) out = IOFormatter.formatOutput(player + ": Invalid move - please try again.", true, "Please enter a valid move: ");
                 else if (status == Status.JUMP_REQUIRED) out = IOFormatter.formatOutput(player + ": Invalid move - a jump is required.", true, "Please enter a valid move: ");
                 else if (status == Status.JUMP_AGAIN) out = IOFormatter.formatOutput(player + ": Another jump is required.", true, "Please enter your next move: ");
                 else if (status == Status.COMPLETED) {
