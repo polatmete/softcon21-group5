@@ -46,8 +46,8 @@ public class TurnHandler {
     // check if the player is forced to move somewhere and cannot just move anywhere
     // -> Turn object only for player needed
     private static boolean isJumpRequired(Turn turn) {
-        for (int i = 1; i <= Board.size; i++) {
-            for (int j = 1; j <= Board.size; j++) {
+        for (int i = 1; i <= Board.size(); i++) {
+            for (int j = 1; j <= Board.size(); j++) {
                 if (Board.getPiece(i, j).color == turn.activePlayer) {
                     if (TurnValidator.isJumpPossible(i, j, turn.activePlayer)) {
                         return true;
@@ -62,7 +62,7 @@ public class TurnHandler {
         if (turn.activePlayer == Player.RED) {
             return turn.to.y() == 1;
         } else {
-            return turn.to.y() == Board.size;
+            return turn.to.y() == Board.size();
         }
     }
 
@@ -150,8 +150,8 @@ public class TurnHandler {
     private static boolean isEnemyStuck(Player p) {
         Player enemy = p == Player.RED ? Player.WHITE : Player.RED;
 
-        for (int i = 1; i <= Board.size; i++) {
-            for (int j = 1; j <= Board.size; j++) {
+        for (int i = 1; i <= Board.size(); i++) {
+            for (int j = 1; j <= Board.size(); j++) {
                 if (Board.getPiece(i, j).color == p) {
                     if (!TurnValidator.isOutsideBoard(i - 1, j + 1) && Board.getPiece(i - 1, j + 1) == null) {
                         return false;
