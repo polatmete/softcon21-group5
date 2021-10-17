@@ -10,17 +10,20 @@ public class TurnHandler {
         if (validationResult == Status.ILLEGAL_TURN) {
             return Status.ILLEGAL_TURN;
         }
-
         if (validationResult == Status.JUMP_REQUIRED) {
             return Status.JUMP_REQUIRED;
         }
 
-        executeTurn(turn);
+        if (executeTurn(turn) == Status.COMPLETED) {
+            return Status.COMPLETED;
+        }
 
         if (checkTransformNeeded(turn)) {
             Board.getPiece(turn.to.x(), turn.to.y()).setKing();
         }
 
+        //not directly a jump, rather only a multijump -> fix
+        //-> isJumpPossible();
         if (isJumpRequired(turn)) {
             return Status.JUMP_AGAIN;
         }
@@ -46,8 +49,11 @@ public class TurnHandler {
     // check if the player is forced to move somewhere and cannot just move anywhere
     // -> Turn object only for player needed
     private static boolean isJumpRequired(Turn turn) {
-        for (int i = 1; i <= Board.size(); i++) {
-            for (int j = 1; j <= Board.size(); j++) {
+        for (int i = 0; i < Board.size(); i++) {
+            for (int j = 0; j < Board.size(); j++) {
+                if (Board.getPiece(i, j) == null) {
+                    continue;
+                }
                 if (Board.getPiece(i, j).color == turn.activePlayer) {
                     if (TurnValidator.isJumpPossible(i, j, turn.activePlayer)) {
                         return true;
@@ -55,25 +61,29 @@ public class TurnHandler {
                 }
             }
         }
+
         return false;
     }
 
     private static boolean checkTransformNeeded(Turn turn) {
         if (turn.activePlayer == Player.RED) {
-            return turn.to.y() == 1;
+            return turn.to.y() == Board.size() - 1;
         } else {
-            return turn.to.y() == Board.size();
+            return turn.to.y() == 0;
         }
     }
 
-    private static void executeTurn(Turn turn) {
+    private static Status executeTurn(Turn turn) {
         if (turn.status == Status.JUMP_REQUIRED) {
             int enemyX = (turn.from.x() + turn.to.x()) / 2;
             int enemyY = (turn.from.y() + turn.to.y()) / 2;
             Board.removePiece(enemyX, enemyY);
+        } else {
+            turn.status = Status.COMPLETED;
         }
-
         Board.movePiece(turn);
+
+        return turn.status;
     }
 
 
@@ -150,27 +160,35 @@ public class TurnHandler {
     private static boolean isEnemyStuck(Player p) {
         Player enemy = p == Player.RED ? Player.WHITE : Player.RED;
 
-        for (int i = 1; i <= Board.size(); i++) {
-            for (int j = 1; j <= Board.size(); j++) {
-                if (Board.getPiece(i, j).color == p) {
-                    if (!TurnValidator.isOutsideBoard(i - 1, j + 1) && Board.getPiece(i - 1, j + 1) == null) {
+        for (int i = 0; i < Board.size(); i++) {
+            for (int j = 0; j < Board.size(); j++) {
+                if (Board.getPiece(i, j) != null && Board.getPiece(i, j).color == enemy) {
+                    if (!TurnValidator.isOutsideBoard(i + 1, j + 1)
+                            && Board.getPiece(i + 1, j + 1) == null) {
                         return false;
-                    } else if (!TurnValidator.isOutsideBoard(i - 2, j + 2) && Board.getPiece(i - 2, j + 2) == null) {
-                        return false;
-                    }
-                    if (!TurnValidator.isOutsideBoard(i + 1, j + 1) && Board.getPiece(i + 1, j + 1) == null) {
-                        return false;
-                    } else if (!TurnValidator.isOutsideBoard(i + 2, j + 2) && Board.getPiece(i + 2, j + 2) == null) {
+                    } else if (!TurnValidator.isOutsideBoard(i + 2, j + 2)
+                            && Board.getPiece(i + 2, j + 2) == null) {
                         return false;
                     }
-                    if (!TurnValidator.isOutsideBoard(i - 1, j - 1) && Board.getPiece(i - 1, j - 1) == null) {
+                    if (!TurnValidator.isOutsideBoard(i + 1, j - 1)
+                            && Board.getPiece(i + 1, j - 1) == null) {
                         return false;
-                    } else if (!TurnValidator.isOutsideBoard(i - 2, j - 2) && Board.getPiece(i - 2, j - 2) == null) {
+                    } else if (!TurnValidator.isOutsideBoard(i + 2, j - 2)
+                            && Board.getPiece(i + 2, j - 2) == null) {
                         return false;
                     }
-                    if (!TurnValidator.isOutsideBoard(i + 1, j - 1) && Board.getPiece(i + 1, j - 1) == null) {
+                    if (!TurnValidator.isOutsideBoard(i - 1, j + 1)
+                            && Board.getPiece(i - 1, j + 1) == null) {
                         return false;
-                    } else if (!TurnValidator.isOutsideBoard(i + 2, j - 2) && Board.getPiece(i + 2, j - 2) == null) {
+                    } else if (!TurnValidator.isOutsideBoard(i - 2, j + 2)
+                            && Board.getPiece(i - 2, j + 2) == null) {
+                        return false;
+                    }
+                    if (!TurnValidator.isOutsideBoard(i - 1, j - 1)
+                            && Board.getPiece(i - 1, j - 1) == null) {
+                        return false;
+                    } else if (!TurnValidator.isOutsideBoard(i - 2, j - 2)
+                            && Board.getPiece(i - 2, j - 2) == null) {
                         return false;
                     }
                 }
@@ -179,4 +197,5 @@ public class TurnHandler {
 
         return true;
     }
+
 }

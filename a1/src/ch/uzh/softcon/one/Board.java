@@ -31,7 +31,8 @@ public class Board {
             int[] columns = initialPosRed[i][1];
 
             for (int column : columns) {
-                positions[row][column] = newPiece;
+                positions[column][row] = newPiece;
+                pieceCountRed++;
             }
         }
 
@@ -45,17 +46,23 @@ public class Board {
             int[] columns = initialPosWhite[i][1];
 
             for (int column : columns) {
-                positions[row][column] = newPiece;
+                positions[column][row] = newPiece;
+                pieceCountWhite++;
             }
         }
     }
 
     public static void movePiece(Turn turn) {
         positions[turn.to.x()][turn.to.y()] = positions[turn.from.x()][turn.from.y()];
-        removePiece(turn.from.x(), turn.from.x());
+        removePiece(turn.from.x(), turn.from.y());
     }
 
     public static void removePiece(int posX, int posY) {
+        if (getPiece(posX, posY).color == Player.RED) {
+            pieceCountRed--;
+        } else {
+            pieceCountWhite--;
+        }
         positions[posX][posY] = null;
     }
 

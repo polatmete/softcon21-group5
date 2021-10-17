@@ -10,7 +10,10 @@ public class IOFormatter {
                 (int)tmp[3] >= 97 && (int)tmp[3] <= 104 && // fourth char between a and h
                 (int)tmp[1] >= 49 && (int)tmp[1] <= 56 && // second char between 1 and 8
                 (int)tmp[4] >= 49 && (int)tmp[4] <= 56) { // fifth char between 1 and 8
-            turn = new Turn((int)tmp[0] - 97, (int)tmp[1] - 49, (int)tmp[3] - 97, (int)tmp[4] - 49, player); // subtract ascii code starting point (97 for a and 49 for 1)
+
+            // subtract ascii code starting point (97 for a and 49 for 1)
+            turn = new Turn((int)tmp[0] - 97, 8 - ((int)tmp[1] - 49 + 1),
+                    (int)tmp[3] - 97, 8 - ((int)tmp[4] - 49 + 1), player);
         }
         else {
             turn = new Turn(-1, -1, -1, -1, player, Turn.Status.ILLEGAL_TURN);
@@ -20,6 +23,7 @@ public class IOFormatter {
 
     public static String formatOutput(String textBeforeBoard, boolean printBoard, String textAfterBoard) {
         StringBuilder out = new StringBuilder();
+        out.append("\n");
         if (!textBeforeBoard.equals("")) out.append(textBeforeBoard).append("\n");
 
         if (printBoard) {
@@ -27,10 +31,10 @@ public class IOFormatter {
                           a     b     c     d     e     f     g     h
                       +-------------------------------------------------+
                     """);
-            for (int i = 0; i < 8; ++i) {
+            for (int i = 0; i < 8; i++) {
                 StringBuilder tmp = new StringBuilder(8 - i + " | ");
-                for (int j = 0; j < 8; ++j) {
-                    Piece piece = Board.getPiece(i, j);
+                for (int j = 0; j < 8; j++) {
+                    Piece piece = Board.getPiece(j, i);
                     if (piece == null) tmp.append("[   ] ");
                     else {
                         String color = "";

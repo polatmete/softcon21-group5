@@ -14,7 +14,9 @@ public class TurnValidator {
         }
 
         //Another piece is at the turn destination
-        if (Board.getPiece(toX, toY) != null) {
+        //or the chosen "piece" does not exist
+        if (Board.getPiece(toX, toY) != null
+                || Board.getPiece(fromX, fromY) == null) {
             return Status.ILLEGAL_TURN;
         }
 
@@ -22,9 +24,9 @@ public class TurnValidator {
         Piece piece = Board.getPiece(fromX, fromY);
         if (!piece.isKing) {
             if (turn.activePlayer == Player.RED) {
-                return toY < fromY ? turn.status : Status.ILLEGAL_TURN;
-            } else {
                 return toY > fromY ? turn.status : Status.ILLEGAL_TURN;
+            } else {
+                return toY < fromY ? turn.status : Status.ILLEGAL_TURN;
             }
         }
 
@@ -45,60 +47,74 @@ public class TurnValidator {
      * one tile diagonally behind the enemy must be free
      */
     public static boolean isJumpPossible(int x, int y, Player p) {
-        if (p == Player.WHITE || Board.getPiece(x, y).isKing) {
-            if (!isOutsideBoard(x - 2, y + 2)) {
-                if (Board.getPiece(x - 1, y + 1).color != p && Board.getPiece(x - 2, y + 2) == null) {
-                    return true;
+        if (p == Player.RED || Board.getPiece(x, y).isKing) {
+            if (!isOutsideBoard(x + 1, y + 1) && !isOutsideBoard(x + 2, y + 2)) {
+                if (Board.getPiece(x + 1, y + 1) != null
+                        && Board.getPiece(x + 1, y + 1).color != p) {
+                    if (Board.getPiece(x + 2, y + 2) == null) {
+                        return true;
+                    }
                 }
             }
-            if (!isOutsideBoard(x + 2, y + 2)) {
-                if (Board.getPiece(x + 1, y + 1).color != p && Board.getPiece(x + 2, y + 2) == null) {
-                    return true;
+            if (!isOutsideBoard(x - 1, y + 1) && !isOutsideBoard(x - 2, y + 2)) {
+                if (Board.getPiece(x - 1, y + 1) != null
+                        && Board.getPiece(x - 1, y + 1).color != p) {
+                    if (Board.getPiece(x - 2, y + 2) == null) {
+                        return true;
+                    }
                 }
             }
         }
 
-        if (p == Player.RED || Board.getPiece(x, y).isKing) {
-            if (!isOutsideBoard(x - 2, y - 2)) {
-                if (Board.getPiece(x - 1, y - 1).color != p && Board.getPiece(x - 2, y - 2) == null) {
-                    return true;
+        if (p == Player.WHITE || Board.getPiece(x, y).isKing) {
+            if (!isOutsideBoard(x + 1, y - 1) && !isOutsideBoard(x + 2, y - 2)) {
+                if (Board.getPiece(x + 1, y - 1) != null
+                        && Board.getPiece(x + 1, y - 1).color != p) {
+                    if (Board.getPiece(x + 2, y - 2) == null) {
+                        return true;
+                    }
                 }
             }
-            if (!isOutsideBoard(x + 2, y - 2)) {
-                if (Board.getPiece(x + 1, y - 1).color != p && Board.getPiece(x + 2, y - 2) == null) {
-                    return true;
+            if (!isOutsideBoard(x - 1, y - 1) && !isOutsideBoard(x - 2, y - 2)) {
+                if (Board.getPiece(x - 1, y - 1) != null
+                        && Board.getPiece(x - 1, y - 1).color != p) {
+                    if (Board.getPiece(x - 2, y - 2) == null) {
+                        return true;
+                    }
                 }
             }
         }
+
         return false;
     }
 
     public static boolean isOutsideBoard(int x, int y) {
-        return x > 8 || x < 1 || y > 8 || y < 1;
+        return x > 7 || x < 0 || y > 7 || y < 0;
     }
 
     private static boolean canMoveDiagonally(Turn turn) {
         int toX = turn.from.x();
         int toY = turn.from.y();
 
-        if (turn.activePlayer == Player.WHITE || Board.getPiece(toX, toY).isKing) {
-            if (!isOutsideBoard(toX - 1, toY + 1)) {
-                if (Board.getPiece(toX - 1, toY + 1) == null) return true;
-            }
+        if (turn.activePlayer == Player.RED || Board.getPiece(toX, toY).isKing) {
             if (!isOutsideBoard(toX + 1, toY + 1)) {
                 if (Board.getPiece(toX + 1, toY + 1) == null) return true;
             }
+            if (!isOutsideBoard(toX - 1, toY + 1)) {
+                if (Board.getPiece(toX - 1, toY + 1) == null) return true;
+            }
         }
 
-        if (turn.activePlayer == Player.RED || Board.getPiece(toX, toY).isKing) {
-            if (!isOutsideBoard(toX - 1, toY - 1)) {
-                if (Board.getPiece(toX - 1, toY - 1) == null) return true;
-            }
+        if (turn.activePlayer == Player.WHITE || Board.getPiece(toX, toY).isKing) {
             if (!isOutsideBoard(toX + 1, toY - 1)) {
                 if (Board.getPiece(toX + 1, toY - 1) == null) return true;
+            }
+            if (!isOutsideBoard(toX - 1, toY - 1)) {
+                if (Board.getPiece(toX - 1, toY - 1) == null) return true;
             }
         }
 
         return false;
     }
+
 }
