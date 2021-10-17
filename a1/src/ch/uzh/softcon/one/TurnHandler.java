@@ -5,8 +5,9 @@ import ch.uzh.softcon.one.Turn.Status;
 public class TurnHandler {
 
     public static Status runTurnSequence(Turn turn) {
+        boolean mustJump = isJumpRequired(turn);
 
-        Status validationResult = TurnValidator.validateMove(turn, isJumpRequired(turn));
+        Status validationResult = TurnValidator.validateMove(turn, mustJump);
         if (validationResult == Status.ILLEGAL_TURN) {
             return Status.ILLEGAL_TURN;
         }
@@ -14,16 +15,14 @@ public class TurnHandler {
             return Status.JUMP_REQUIRED;
         }
 
-        if (executeTurn(turn) == Status.COMPLETED) {
-            return Status.COMPLETED;
-        }
+        executeTurn(turn);
 
         if (checkTransformNeeded(turn)) {
             Board.getPiece(turn.to.x(), turn.to.y()).setKing();
         }
 
         //suspected a possible logic flaw -> check
-        if (isJumpRequired(turn)) {
+        if (mustJump && isJumpRequired(turn)) {
             return Status.JUMP_AGAIN;
         }
 
@@ -75,18 +74,14 @@ public class TurnHandler {
         }
     }
 
-    private static Status executeTurn(Turn turn) {
+    private static void executeTurn(Turn turn) {
         int enemyX = (turn.from.x() + turn.to.x()) / 2;
         int enemyY = (turn.from.y() + turn.to.y()) / 2;
 
         if (Math.abs(turn.from.x() - turn.to.x()) == 2 || Math.abs(turn.from.y() - turn.to.y()) == 2) {
             Board.removePiece(enemyX, enemyY);
-        } else {
-            turn.status = Status.COMPLETED;
         }
         Board.movePiece(turn);
-
-        return turn.status;
     }
 
 
