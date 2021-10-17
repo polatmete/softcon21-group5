@@ -53,8 +53,9 @@ public class Board {
     }
 
     public static void movePiece(Turn turn) {
-        positions[turn.to.x()][turn.to.y()] = positions[turn.from.x()][turn.from.y()];
-        removePiece(turn.from.x(), turn.from.y());
+        Piece pieceToMove = getPiece(turn.from.x(), turn.from.y());
+        positions[turn.to.x()][turn.to.y()] = pieceToMove;
+        positions[turn.from.x()][turn.from.y()] = null;
     }
 
     public static void removePiece(int posX, int posY) {
