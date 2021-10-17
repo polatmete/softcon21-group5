@@ -24,13 +24,13 @@ public class Board {
         //Put red pieces on the board
 
         for (int i = 0; i < initialPosRed.length; i++) {
-            Piece newPiece = new Piece();
-            newPiece.color = Player.RED;
-
             int row = initialPosRed[i][0][0];
             int[] columns = initialPosRed[i][1];
 
             for (int column : columns) {
+                // Make sure we instantiate a new object for every piece such that we have no shared references.
+                Piece newPiece = new Piece();
+                newPiece.color = Player.RED;
                 positions[column][row] = newPiece;
                 pieceCountRed++;
             }
@@ -39,13 +39,13 @@ public class Board {
         //Put white pieces on the board
 
         for (int i = 0; i < initialPosWhite.length; i++) {
-            Piece newPiece = new Piece();
-            newPiece.color = Player.WHITE;
-
             int row = initialPosWhite[i][0][0];
             int[] columns = initialPosWhite[i][1];
 
             for (int column : columns) {
+                // Same here
+                Piece newPiece = new Piece();
+                newPiece.color = Player.WHITE;
                 positions[column][row] = newPiece;
                 pieceCountWhite++;
             }
@@ -59,7 +59,8 @@ public class Board {
     }
 
     public static void removePiece(int posX, int posY) {
-        if (getPiece(posX, posY).color == Player.RED) {
+        if (getPiece(posX, posY) != null &&
+                getPiece(posX, posY).color == Player.RED) {
             pieceCountRed--;
         } else {
             pieceCountWhite--;

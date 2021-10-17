@@ -29,7 +29,7 @@ public class Game {
             Turn turn = IOFormatter.formatInput(input, getActivePlayer());
 
             if (turn.status == Status.ILLEGAL_TURN) {
-                String tmp = IOFormatter.formatOutput("", false, player + ": Invalid input. Please enter your move according to the following pattern: a1Xb2 ");
+                String tmp = IOFormatter.formatOutput("", false, player + ": Invalid input. Please enter your move according to the following pattern: a1xb2 ");
                 System.out.println(tmp);
                 continue;
             }

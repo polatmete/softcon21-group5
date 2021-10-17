@@ -9,7 +9,8 @@ public class TurnValidator {
         int fromY = turn.from.y(); int toY = turn.to.y();
 
         //Player tries to move enemy pieces
-        if (Board.getPiece(fromX, fromY).color != turn.activePlayer) {
+        if (Board.getPiece(fromX, fromY) != null &&
+                Board.getPiece(fromX, fromY).color != turn.activePlayer) {
             return Status.ILLEGAL_TURN;
         }
 
