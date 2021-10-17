@@ -22,8 +22,7 @@ public class TurnHandler {
             Board.getPiece(turn.to.x(), turn.to.y()).setKing();
         }
 
-        //not directly a jump, rather only a multijump -> fix
-        //-> isJumpPossible();
+        //suspected a possible logic flaw -> check
         if (isJumpRequired(turn)) {
             return Status.JUMP_AGAIN;
         }
@@ -55,7 +54,10 @@ public class TurnHandler {
                     continue;
                 }
                 if (Board.getPiece(i, j).color == turn.activePlayer) {
-                    if (TurnValidator.isJumpPossible(i, j, turn.activePlayer)) {
+                    if (TurnValidator.isJumpPossible(i, j, i + 2, j + 2, turn.activePlayer)
+                            || TurnValidator.isJumpPossible(i, j, i + 2, j - 2, turn.activePlayer)
+                            || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, turn.activePlayer)
+                            || TurnValidator.isJumpPossible(i, j, i - 2, j - 2, turn.activePlayer)) {
                         return true;
                     }
                 }
@@ -74,9 +76,10 @@ public class TurnHandler {
     }
 
     private static Status executeTurn(Turn turn) {
-        if (turn.status == Status.JUMP_REQUIRED) {
-            int enemyX = (turn.from.x() + turn.to.x()) / 2;
-            int enemyY = (turn.from.y() + turn.to.y()) / 2;
+        int enemyX = (turn.from.x() + turn.to.x()) / 2;
+        int enemyY = (turn.from.y() + turn.to.y()) / 2;
+
+        if (Math.abs(turn.from.x() - turn.to.x()) == 2 || Math.abs(turn.from.y() - turn.to.y()) == 2) {
             Board.removePiece(enemyX, enemyY);
         } else {
             turn.status = Status.COMPLETED;

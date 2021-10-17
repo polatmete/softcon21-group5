@@ -8,6 +8,11 @@ public class TurnValidator {
         int fromX = turn.from.x(); int toX = turn.to.x();
         int fromY = turn.from.y(); int toY = turn.to.y();
 
+        //Player tries to move enemy pieces
+        if (Board.getPiece(fromX, fromY).color != turn.activePlayer) {
+            return Status.ILLEGAL_TURN;
+        }
+
         //Turn would result in a position outside the field
         if (isOutsideBoard(toX, toY)) {
             return Status.ILLEGAL_TURN;
@@ -24,15 +29,23 @@ public class TurnValidator {
         Piece piece = Board.getPiece(fromX, fromY);
         if (!piece.isKing) {
             if (turn.activePlayer == Player.RED) {
-                return toY > fromY ? turn.status : Status.ILLEGAL_TURN;
+                if (toY < fromY) {
+                    return Status.ILLEGAL_TURN;
+                }
             } else {
-                return toY < fromY ? turn.status : Status.ILLEGAL_TURN;
+                if (toY > fromY) {
+                    return Status.ILLEGAL_TURN;
+                }
             }
         }
 
         //Turn destination is not one diagonal or two diagonal if an enemy sits on the first diagonal
         if (mustJump) {
-            if (!isJumpPossible(toX, toY, turn.activePlayer)) {
+            if (Math.abs(fromX - toX) != 2
+                    || Math.abs(fromY - toY) != 2) {
+                return Status.JUMP_REQUIRED;
+            }
+            if (!isJumpPossible(fromX, fromY, toX, toY, turn.activePlayer)) {
                 return Status.JUMP_REQUIRED;
             }
         } else if (!canMoveDiagonally(turn)) {
@@ -46,46 +59,15 @@ public class TurnValidator {
      * Enemy on diagonal
      * one tile diagonally behind the enemy must be free
      */
-    public static boolean isJumpPossible(int x, int y, Player p) {
-        if (p == Player.RED || Board.getPiece(x, y).isKing) {
-            if (!isOutsideBoard(x + 1, y + 1) && !isOutsideBoard(x + 2, y + 2)) {
-                if (Board.getPiece(x + 1, y + 1) != null
-                        && Board.getPiece(x + 1, y + 1).color != p) {
-                    if (Board.getPiece(x + 2, y + 2) == null) {
-                        return true;
-                    }
-                }
-            }
-            if (!isOutsideBoard(x - 1, y + 1) && !isOutsideBoard(x - 2, y + 2)) {
-                if (Board.getPiece(x - 1, y + 1) != null
-                        && Board.getPiece(x - 1, y + 1).color != p) {
-                    if (Board.getPiece(x - 2, y + 2) == null) {
-                        return true;
-                    }
-                }
-            }
-        }
+    public static boolean isJumpPossible(int fromX, int fromY, int toX, int toY, Player p) {
+        int enemyX = (fromX + toX) / 2;
+        int enemyY = (fromY + toY) / 2;
 
-        if (p == Player.WHITE || Board.getPiece(x, y).isKing) {
-            if (!isOutsideBoard(x + 1, y - 1) && !isOutsideBoard(x + 2, y - 2)) {
-                if (Board.getPiece(x + 1, y - 1) != null
-                        && Board.getPiece(x + 1, y - 1).color != p) {
-                    if (Board.getPiece(x + 2, y - 2) == null) {
-                        return true;
-                    }
-                }
-            }
-            if (!isOutsideBoard(x - 1, y - 1) && !isOutsideBoard(x - 2, y - 2)) {
-                if (Board.getPiece(x - 1, y - 1) != null
-                        && Board.getPiece(x - 1, y - 1).color != p) {
-                    if (Board.getPiece(x - 2, y - 2) == null) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
+        return !isOutsideBoard(enemyX, enemyY)
+                && !isOutsideBoard(toX, toY)
+                && Board.getPiece(enemyX, enemyY) != null
+                && Board.getPiece(enemyX, enemyY).color != p
+                && Board.getPiece(toX, toY) == null;
     }
 
     public static boolean isOutsideBoard(int x, int y) {
