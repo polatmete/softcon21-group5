@@ -20,17 +20,23 @@ public class Game {
 
     private static void gameLoop() {
         while (!winStatus) {
+            String player = "";
+            if (getActivePlayer() == Player.RED) player = "Player red";
+            else if (getActivePlayer() == Player.WHITE) player = "Player white";
+
             Scanner scn = new Scanner(System.in);
             String input = scn.nextLine();
             Turn turn = IOFormatter.formatInput(input, getActivePlayer());
 
+            if (turn.status == Status.ILLEGAL_TURN) {
+                String tmp = IOFormatter.formatOutput("", false, player + ": Invalid input. Please enter your move according to the following pattern: a1Xb2 ");
+                System.out.println(tmp);
+                continue;
+            }
+
             Status status = TurnHandler.runTurnSequence(turn);
 
             if (!winStatus) {
-                String player = "";
-                if (getActivePlayer() == Player.RED) player = "Player red";
-                else if (getActivePlayer() == Player.WHITE) player = "Player white";
-
                 String out = "";
                 if (status == Status.ILLEGAL_TURN) out = IOFormatter.formatOutput(player + ": Invalid move - pleas try again.", true, "Please enter a valid move: ");
                 else if (status == Status.JUMP_REQUIRED) out = IOFormatter.formatOutput(player + ": Invalid move - a jump is required.", true, "Please enter a valid move: ");
