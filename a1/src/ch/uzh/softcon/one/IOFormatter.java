@@ -28,32 +28,46 @@ public class IOFormatter {
 
         if (printBoard) {
             out.append("""
-                          a     b     c     d     e     f     g     h
-                      +-------------------------------------------------+
+                    \u001B[37m\u001B[40m      a     b     c     d     e     f     g     h      \u001B[0m
+                    \u001B[37m\u001B[40m  +-------------------------------------------------+  \u001B[0m
                     """);
             for (int i = 0; i < 8; i++) {
-                StringBuilder tmp = new StringBuilder(8 - i + " | ");
+                StringBuilder tmp = new StringBuilder("\u001B[37m\u001B[40m" + (8 - i) + " | \u001B[0m");
                 for (int j = 0; j < 8; j++) {
                     Piece piece = Board.getPiece(j, i);
-                    if (piece == null) tmp.append("[   ] ");
+                    if (piece == null) tmp.append("\u001B[37m\u001B[40m[   ] ");
                     else {
                         String color = "";
                         String type;
+                        String consoleFontColor = "";
+                        String consoleBackgroundColor;
 
-                        if (piece.color == Player.RED) color = "R";
-                        else if (piece.color == Player.WHITE) color = "W";
-                        if (piece.isKing) type = "K";
-                        else type = "P";
+                        if (piece.color == Player.RED) {
+                            color = "R";
+                            consoleFontColor = "\u001B[91m"; //Font red
+                        }
+                        else if (piece.color == Player.WHITE) {
+                            color = "W";
+                            consoleFontColor = "\u001B[97m"; // Font white
+                        }
+                        if (piece.isKing) {
+                            type = "K";
+                            consoleBackgroundColor = "\u001B[44m"; // Background green
+                        }
+                        else {
+                            type = "P";
+                            consoleBackgroundColor = "\u001B[40m"; // Background black
+                        }
 
-                        tmp.append("[").append(color).append("_").append(type).append("] ");
+                        tmp.append(consoleFontColor).append(consoleBackgroundColor).append("[").append(color).append("_").append(type).append("]\u001B[37m\u001B[40m ");
                     }
                 }
-                tmp.append("| ").append(8 - i).append("\n");
+                tmp.append("| ").append(8 - i).append("\u001B[0m\n");
                 out.append(tmp);
             }
             out.append("""
-                      +-------------------------------------------------+
-                          a     b     c     d     e     f     g     h
+                    \u001B[37m\u001B[40m  +-------------------------------------------------+  \u001B[0m
+                    \u001B[37m\u001B[40m      a     b     c     d     e     f     g     h      \u001B[97m\u001B[0m
                     """);
         }
         out.append(textAfterBoard);
