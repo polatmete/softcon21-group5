@@ -71,7 +71,7 @@ public class Game {
         activePlayer = playerStatus;
     }
 
-    private static Player getActivePlayer() {
+    public static Player getActivePlayer() {
         return activePlayer;
     }
 

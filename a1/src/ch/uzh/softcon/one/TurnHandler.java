@@ -128,15 +128,21 @@ public class TurnHandler {
                 if (Board.getPiece(i, j) == null || Board.getPiece(i, j).color != enemy) {
                     continue;
                 }
-                if (TurnValidator.canMoveDiagonally(i + 1, j + 1)
-                        || TurnValidator.isJumpPossible(i, j, i + 2, j + 2, enemy)
-                        || TurnValidator.canMoveDiagonally(i + 1, j - 1)
-                        || TurnValidator.isJumpPossible(i, j, i + 2, j - 2, enemy)
-                        || TurnValidator.canMoveDiagonally(i - 1, j + 1)
-                        || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, enemy)
-                        || TurnValidator.canMoveDiagonally(i - 1, j - 1)
-                        || TurnValidator.isJumpPossible(i, j, i - 2, j - 2, enemy)) {
-                    return false;
+                if (Board.getPiece(i, j).color == Player.RED || Board.getPiece(i, j).isKing) {
+                    if (TurnValidator.canMoveDiagonally(i + 1, j + 1)
+                            || TurnValidator.isJumpPossible(i, j, i + 2, j + 2, enemy)
+                            || TurnValidator.canMoveDiagonally(i - 1, j + 1)
+                            || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, enemy)){
+                        return false;
+                    }
+                }
+                if (Board.getPiece(i, j).color == Player.WHITE || Board.getPiece(i, j).isKing) {
+                    if (TurnValidator.canMoveDiagonally(i + 1, j - 1)
+                            || TurnValidator.isJumpPossible(i, j, i + 2, j - 2, enemy)
+                            || TurnValidator.canMoveDiagonally(i - 1, j - 1)
+                            || TurnValidator.isJumpPossible(i, j, i - 2, j - 2, enemy)) {
+                        return false;
+                    }
                 }
             }
         }
