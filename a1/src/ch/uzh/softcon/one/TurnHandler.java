@@ -71,11 +71,17 @@ public class TurnHandler {
                 if (Board.getPiece(i, j) == null || Board.getPiece(i, j).color != turn.activePlayer) {
                     continue;
                 }
-                if (TurnValidator.isJumpPossible(i, j, i + 2, j + 2, turn.activePlayer)
-                        || TurnValidator.isJumpPossible(i, j, i + 2, j - 2, turn.activePlayer)
-                        || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, turn.activePlayer)
-                        || TurnValidator.isJumpPossible(i, j, i - 2, j - 2, turn.activePlayer)) {
-                    return true;
+                if (Board.getPiece(i, j).color == Player.RED || Board.getPiece(i, j).isKing) {
+                    if (TurnValidator.isJumpPossible(i, j, i + 2, j + 2, turn.activePlayer)
+                            || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, turn.activePlayer)) {
+                        return true;
+                    }
+                }
+                if (Board.getPiece(i, j).color == Player.WHITE || Board.getPiece(i, j).isKing) {
+                    if (TurnValidator.isJumpPossible(i, j, i + 2, j - 2, turn.activePlayer)
+                            || TurnValidator.isJumpPossible(i, j, i - 2, j - 2, turn.activePlayer)) {
+                        return true;
+                    }
                 }
             }
         }
