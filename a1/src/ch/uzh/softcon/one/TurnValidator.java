@@ -46,7 +46,7 @@ public class TurnValidator {
         // A jump has to be performed but the turn is not a (possible) jump
         if (hasToJump) {
             if (turn.status == Status.JUMP_AGAIN) {
-                if (Board.getPiece(fromX, fromY) != Game.getActiveMultiJumpPiece()) {
+                if (piece != Game.getActiveMultiJumpPiece()) {
                     return Status.JUMP_REQUIRED;
                 }
             }
