@@ -86,13 +86,23 @@ public class Game {
                 true,"Do you want a revenge? (y|n): ");
         System.out.print(out);
 
-        Scanner scn = new Scanner(System.in);
-        String input = scn.nextLine().toLowerCase();
+        boolean acceptedAnswer = false;
 
-        if (input.equals("y")) {
-            rematch = true;
-            System.out.print("\u001B[101m                                                         \u001B[0m\n\n");
+        while (!acceptedAnswer) {
+            Scanner scn = new Scanner(System.in);
+            String input = scn.nextLine().toLowerCase();
+
+            if (input.equals("y")) {
+                acceptedAnswer = true;
+                rematch = true;
+                System.out.print("\u001B[101m                                                         \u001B[0m\n\n");
+            } else if (input.equals("n")) {
+                acceptedAnswer = true;
+                System.out.println("Game over.");
+            }
+            else {
+                System.out.print("\nInput not recognized. Please type \"y\" or \"n\" and press enter.\nDo you want a revenge? (y|n): ");
+            }
         }
-        else System.out.println("Game over.");
     }
 }
