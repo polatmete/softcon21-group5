@@ -9,7 +9,7 @@ public class Board {
 
         positions = new Piece[8][8];
 
-        int[][][] initialPosRed = {
+        /*int[][][] initialPosRed = {
                 {{0}, {1, 3, 5, 7}},
                 {{1}, {0, 2, 4, 6}},
                 {{2}, {1, 3, 5, 7}}
@@ -19,6 +19,18 @@ public class Board {
                 {{5}, {0, 2, 4, 6}},
                 {{6}, {1, 3, 5, 7}},
                 {{7}, {0, 2, 4, 6}},
+        };*/
+
+        int[][][] initialPosRed = {
+                //{{0}, {1, 3, 5, 7}},
+                {{1}, {0, 6}},
+                //{{2}, {1, 3, 5, 7}}
+        };
+
+        int[][][] initialPosWhite = {
+                {{2}, {1, 5}},
+                {{4}, {5}},
+                //{{7}, {0, 2, 4, 6}},
         };
 
         //Put red pieces on the board

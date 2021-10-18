@@ -25,13 +25,18 @@ public class TurnHandler {
         executeTurn(turn);
 
         // Make a king out of the piece if it has reached the other side
+        Piece activePiece = Board.getPiece(turn.to.x(), turn.to.y());
         if (checkTransformNeeded(turn)) {
-            Board.getPiece(turn.to.x(), turn.to.y()).setKing();
+            activePiece.setKing();
         }
 
         // If the player had to make a jump it is possible he must continue with a multi-jump.
-        if (jumpRequired && isJumpRequired(turn)) {
-            return Status.JUMP_AGAIN;
+        if (jumpRequired) {
+            Game.setActiveMultiJumpPiece(activePiece);
+            turn.status = Status.JUMP_AGAIN;
+            if (isJumpRequired(turn)) {
+                return Status.JUMP_AGAIN;
+            }
         }
 
         // Check whether a player has won
@@ -40,6 +45,33 @@ public class TurnHandler {
         }
 
         return Status.COMPLETED;
+    }
+
+    /**
+     * Takes care of moving or jumping a piece and removes the eaten enemy piece.
+     * @param turn Current turn
+     */
+    private static void executeTurn(Turn turn) {
+        int enemyX = (turn.from.x() + turn.to.x()) / 2;
+        int enemyY = (turn.from.y() + turn.to.y()) / 2;
+
+        if (Math.abs(turn.from.x() - turn.to.x()) == 2 || Math.abs(turn.from.y() - turn.to.y()) == 2) {
+            Board.removePiece(enemyX, enemyY);
+        }
+        Board.movePiece(turn);
+    }
+
+    /**
+     * Checks if a piece has reached the other side of the board.
+     * @param turn Current turn
+     * @return Reached the end of the board
+     */
+    private static boolean checkTransformNeeded(Turn turn) {
+        if (turn.activePlayer == Player.RED) {
+            return turn.to.y() == Board.size() - 1;
+        } else {
+            return turn.to.y() == 0;
+        }
     }
 
     /**
@@ -71,6 +103,9 @@ public class TurnHandler {
                 if (Board.getPiece(i, j) == null || Board.getPiece(i, j).color != turn.activePlayer) {
                     continue;
                 }
+                if (turn.status == Status.JUMP_AGAIN && Board.getPiece(i, j) != Game.getActiveMultiJumpPiece()) {
+                    continue;
+                }
                 if (Board.getPiece(i, j).color == Player.RED || Board.getPiece(i, j).isKing) {
                     if (TurnValidator.isJumpPossible(i, j, i + 2, j + 2, turn.activePlayer)
                             || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, turn.activePlayer)) {
@@ -86,33 +121,6 @@ public class TurnHandler {
             }
         }
         return false;
-    }
-
-    /**
-     * Checks if a piece has reached the other side of the board.
-     * @param turn Current turn
-     * @return Reached the end of the board
-     */
-    private static boolean checkTransformNeeded(Turn turn) {
-        if (turn.activePlayer == Player.RED) {
-            return turn.to.y() == Board.size() - 1;
-        } else {
-            return turn.to.y() == 0;
-        }
-    }
-
-    /**
-     * Takes care of moving or jumping a piece and removes the eaten enemy piece.
-     * @param turn Current turn
-     */
-    private static void executeTurn(Turn turn) {
-        int enemyX = (turn.from.x() + turn.to.x()) / 2;
-        int enemyY = (turn.from.y() + turn.to.y()) / 2;
-
-        if (Math.abs(turn.from.x() - turn.to.x()) == 2 || Math.abs(turn.from.y() - turn.to.y()) == 2) {
-            Board.removePiece(enemyX, enemyY);
-        }
-        Board.movePiece(turn);
     }
 
     /**
