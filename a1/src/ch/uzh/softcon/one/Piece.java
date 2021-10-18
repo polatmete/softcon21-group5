@@ -8,5 +8,4 @@ public class Piece {
     public void setKing() {
         isKing = true;
     }
-
 }

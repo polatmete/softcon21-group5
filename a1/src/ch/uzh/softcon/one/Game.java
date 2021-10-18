@@ -7,10 +7,13 @@ public class Game {
     private static Player activePlayer;
     private static boolean winStatus;
     private static boolean rematch;
+    private static boolean multiJump;
+    private static Piece multiJumpPiece;
 
     public static void main(String[] args) { // Setup and initialize game
         winStatus = false;
         rematch = false;
+        multiJump = false;
         setActivePlayer(Player.RED);
         Board.initialize();
         String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
@@ -36,6 +39,9 @@ public class Game {
                 continue;
             }
 
+            if (multiJump) {
+                turn.status = Status.JUMP_AGAIN;
+            }
             Status status = TurnHandler.runTurnSequence(turn);
 
             if (!winStatus) {
@@ -46,9 +52,11 @@ public class Game {
                 else if (status == Status.JUMP_REQUIRED)
                     out = IOFormatter.formatOutput(player + ": Invalid move - a jump is required.",
                             true, "Please enter a valid move: ");
-                else if (status == Status.JUMP_AGAIN)
+                else if (status == Status.JUMP_AGAIN) {
+                    multiJump = true;
                     out = IOFormatter.formatOutput(player + ": Another jump is required.",
                             true, "Please enter your next move: ");
+                    }
                 else if (status == Status.COMPLETED) {
                     if (getActivePlayer() == Player.RED) {
                         setActivePlayer(Player.WHITE);
@@ -57,6 +65,7 @@ public class Game {
                         setActivePlayer(Player.RED);
                         player = "Player red";
                     }
+                    setActiveMultiJumpPiece(null);
                     out = IOFormatter.formatOutput(player + ": It's your turn",
                             true, "Please enter your move: ");
                 }
@@ -73,6 +82,14 @@ public class Game {
 
     public static Player getActivePlayer() {
         return activePlayer;
+    }
+
+    public static void setActiveMultiJumpPiece(Piece piece) {
+        multiJumpPiece = piece;
+    }
+
+    public static Piece getActiveMultiJumpPiece() {
+        return multiJumpPiece;
     }
 
     protected static void win(Player player) {

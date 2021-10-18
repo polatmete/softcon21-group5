@@ -4,7 +4,6 @@ import ch.uzh.softcon.one.Turn.Status;
 
 public class TurnValidator {
 
-
     /**
      * Checks if the attempted turn, whether a jump or a move, is valid.
      * @param turn Current turn
@@ -14,10 +13,10 @@ public class TurnValidator {
     public static Status validateMove(Turn turn, boolean hasToJump) {
         int fromX = turn.from.x(); int toX = turn.to.x();
         int fromY = turn.from.y(); int toY = turn.to.y();
+        Piece piece = Board.getPiece(fromX, fromY);
 
         // Player tries to move a non-existent piece or an enemy piece
-        if (Board.getPiece(fromX, fromY) == null ||
-                Board.getPiece(fromX, fromY).color != turn.activePlayer) {
+        if (piece == null || piece.color != turn.activePlayer) {
             return Status.ILLEGAL_TURN;
         }
 
@@ -32,7 +31,6 @@ public class TurnValidator {
         }
 
         // Attempt to move backwards but piece is not a king
-        Piece piece = Board.getPiece(fromX, fromY);
         if (!piece.isKing) {
             if (turn.activePlayer == Player.RED) {
                 if (toY < fromY) {
@@ -47,6 +45,11 @@ public class TurnValidator {
 
         // A jump has to be performed but the turn is not a (possible) jump
         if (hasToJump) {
+            if (turn.status == Status.JUMP_AGAIN) {
+                if (piece != Game.getActiveMultiJumpPiece()) {
+                    return Status.JUMP_REQUIRED;
+                }
+            }
             if (Math.abs(fromX - toX) != 2
                     || Math.abs(fromY - toY) != 2) {
                 return Status.JUMP_REQUIRED;
