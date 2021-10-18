@@ -8,12 +8,13 @@ public class Game {
     private static boolean winStatus;
     private static boolean rematch;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { // Setup and initialize game
         winStatus = false;
         rematch = false;
         setActivePlayer(Player.RED);
         Board.initialize();
-        String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.", true,"Please enter your move: ");
+        String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
+                true,"Please enter your move: ");
         System.out.print(out);
         gameLoop();
     }
@@ -29,7 +30,8 @@ public class Game {
             Turn turn = IOFormatter.formatInput(input, getActivePlayer());
 
             if (turn.status == Status.ILLEGAL_TURN) {
-                String tmp = IOFormatter.formatOutput("", false, player + ": Invalid input. Please enter your move according to the following pattern: a1xb2 ");
+                String tmp = IOFormatter.formatOutput("", false,
+                        player + ": Invalid input. Please enter your move according to the following pattern: a1xb2 ");
                 System.out.println(tmp);
                 continue;
             }
@@ -38,9 +40,15 @@ public class Game {
 
             if (!winStatus) {
                 String out = "";
-                if (status == Status.ILLEGAL_TURN) out = IOFormatter.formatOutput(player + ": Invalid move - please try again.", true, "Please enter a valid move: ");
-                else if (status == Status.JUMP_REQUIRED) out = IOFormatter.formatOutput(player + ": Invalid move - a jump is required.", true, "Please enter a valid move: ");
-                else if (status == Status.JUMP_AGAIN) out = IOFormatter.formatOutput(player + ": Another jump is required.", true, "Please enter your next move: ");
+                if (status == Status.ILLEGAL_TURN)
+                    out = IOFormatter.formatOutput(player + ": Invalid move - please try again.",
+                            true, "Please enter a valid move: ");
+                else if (status == Status.JUMP_REQUIRED)
+                    out = IOFormatter.formatOutput(player + ": Invalid move - a jump is required.",
+                            true, "Please enter a valid move: ");
+                else if (status == Status.JUMP_AGAIN)
+                    out = IOFormatter.formatOutput(player + ": Another jump is required.",
+                            true, "Please enter your next move: ");
                 else if (status == Status.COMPLETED) {
                     if (getActivePlayer() == Player.RED) {
                         setActivePlayer(Player.WHITE);
@@ -49,7 +57,8 @@ public class Game {
                         setActivePlayer(Player.RED);
                         player = "Player red";
                     }
-                    out = IOFormatter.formatOutput(player + ": It's your turn", true, "Please enter your move: ");
+                    out = IOFormatter.formatOutput(player + ": It's your turn",
+                            true, "Please enter your move: ");
                 }
                 System.out.print(out);
             }
@@ -73,13 +82,17 @@ public class Game {
         if (player == Player.RED) playerString = "Player red";
         else if (player == Player.WHITE) playerString = "Player white";
 
-        String out = IOFormatter.formatOutput("Congratulations " + playerString + ", you won!", true,"Do you want a revenge? (y/n): ");
+        String out = IOFormatter.formatOutput("Congratulations " + playerString + ", you won!",
+                true,"Do you want a revenge? (y|n): ");
         System.out.print(out);
 
         Scanner scn = new Scanner(System.in);
-        String input = scn.nextLine();
+        String input = scn.nextLine().toLowerCase();
 
-        if (input.equals("y")) rematch = true;
+        if (input.equals("y")) {
+            rematch = true;
+            System.out.print("\u001B[101m                                                         \u001B[0m\n\n");
+        }
         else System.out.println("Game over.");
     }
 }

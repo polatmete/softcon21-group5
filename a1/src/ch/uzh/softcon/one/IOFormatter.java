@@ -23,16 +23,16 @@ public class IOFormatter {
 
     public static String formatOutput(String textBeforeBoard, boolean printBoard, String textAfterBoard) {
         StringBuilder out = new StringBuilder();
-        out.append("\n");
+        out.append("\u001B[47m                                                         \u001B[0m\n");
         if (!textBeforeBoard.equals("")) out.append(textBeforeBoard).append("\n");
 
         if (printBoard) {
             out.append("""
-                    \u001B[37m\u001B[40m      a     b     c     d     e     f     g     h      \u001B[0m
-                    \u001B[37m\u001B[40m  +-------------------------------------------------+  \u001B[0m
+                    \u001B[37m\u001B[40m       a     b     c     d     e     f     g     h       \u001B[0m
+                    \u001B[37m\u001B[40m   +-------------------------------------------------+   \u001B[0m
                     """);
             for (int i = 0; i < 8; i++) {
-                StringBuilder tmp = new StringBuilder("\u001B[37m\u001B[40m" + (8 - i) + " | \u001B[0m");
+                StringBuilder tmp = new StringBuilder("\u001B[37m\u001B[40m " + (8 - i) + " | \u001B[0m");
                 for (int j = 0; j < 8; j++) {
                     Piece piece = Board.getPiece(j, i);
                     if (piece == null) tmp.append("\u001B[37m\u001B[40m[   ] ");
@@ -62,12 +62,12 @@ public class IOFormatter {
                         tmp.append(consoleFontColor).append(consoleBackgroundColor).append("[").append(color).append("_").append(type).append("]\u001B[37m\u001B[40m ");
                     }
                 }
-                tmp.append("| ").append(8 - i).append("\u001B[0m\n");
+                tmp.append("| ").append(8 - i).append(" \u001B[0m\n");
                 out.append(tmp);
             }
             out.append("""
-                    \u001B[37m\u001B[40m  +-------------------------------------------------+  \u001B[0m
-                    \u001B[37m\u001B[40m      a     b     c     d     e     f     g     h      \u001B[97m\u001B[0m
+                    \u001B[37m\u001B[40m   +-------------------------------------------------+   \u001B[0m
+                    \u001B[37m\u001B[40m       a     b     c     d     e     f     g     h       \u001B[97m\u001B[0m
                     """);
         }
         out.append(textAfterBoard);
