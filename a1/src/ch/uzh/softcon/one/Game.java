@@ -33,7 +33,7 @@ public class Game {
 
             if (turn.status == Status.ILLEGAL_TURN) {
                 String tmp = IOFormatter.formatOutput("", false,
-                        player + ": Invalid input. Please enter your move according to the following pattern: a1xb2 ");
+                        player + ": Invalid input. Please enter your move according to the following pattern: [a1]X[b2]");
                 System.out.println(tmp);
                 continue;
             }
@@ -96,21 +96,18 @@ public class Game {
 
         boolean acceptedAnswer = false;
 
-        while (!acceptedAnswer) {
-            Scanner scn = new Scanner(System.in);
-            String input = scn.nextLine().toLowerCase();
 
+        Scanner scn = new Scanner(System.in);
+        String input;
+        do {
+            input = scn.nextLine().toLowerCase();
             if (input.equals("y")) {
-                acceptedAnswer = true;
                 rematch = true;
                 System.out.print("\u001B[101m                                                         \u001B[0m\n\n");
-            } else if (input.equals("n")) {
-                acceptedAnswer = true;
-                System.out.println("Game over.");
-            }
+            } else if (input.equals("n")) System.out.println("Game over.");
             else {
                 System.out.print("\nInput not recognized. Please type \"y\" or \"n\" and press enter.\nDo you want a revenge? (y|n): ");
             }
-        }
+        } while (!input.equals("y") && !input.equals("n"));
     }
 }
