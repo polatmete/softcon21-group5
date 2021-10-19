@@ -32,7 +32,6 @@ public class TurnHandler {
         }
 
         // If the player had to make a jump it is possible he must continue with a multi-jump.
-        activePiece.setMultiJumping(false);
         if (jumpRequired) {
             activePiece.setMultiJumping(true);
             turn.status = Status.JUMP_AGAIN;
@@ -46,6 +45,7 @@ public class TurnHandler {
             Game.win(turn.activePlayer);
         }
 
+        activePiece.setMultiJumping(false);
         return Status.COMPLETED;
     }
 
