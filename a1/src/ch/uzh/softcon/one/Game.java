@@ -57,6 +57,7 @@ public class Game {
                             true, "Please enter your next move: ");
                     }
                 else if (status == Status.COMPLETED) {
+                    multiJump = false;
                     if (getActivePlayer() == Player.RED) {
                         setActivePlayer(Player.WHITE);
                         player = "Player white";

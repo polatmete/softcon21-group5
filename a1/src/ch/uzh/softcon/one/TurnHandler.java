@@ -32,13 +32,13 @@ public class TurnHandler {
         }
 
         // If the player had to make a jump it is possible he must continue with a multi-jump.
+        activePiece.setMultiJumping(false);
         if (jumpRequired) {
             activePiece.setMultiJumping(true);
             turn.status = Status.JUMP_AGAIN;
             if (isJumpRequired(turn)) {
                 return Status.JUMP_AGAIN;
             }
-            activePiece.setMultiJumping(false);
         }
 
         // Check whether a player has won
