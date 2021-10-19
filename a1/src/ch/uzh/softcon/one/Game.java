@@ -8,7 +8,6 @@ public class Game {
     private static boolean winStatus;
     private static boolean rematch;
     private static boolean multiJump;
-    private static Piece multiJumpPiece;
 
     public static void main(String[] args) { // Setup and initialize game
         winStatus = false;
@@ -65,7 +64,6 @@ public class Game {
                         setActivePlayer(Player.RED);
                         player = "Player red";
                     }
-                    setActiveMultiJumpPiece(null);
                     out = IOFormatter.formatOutput(player + ": It's your turn",
                             true, "Please enter your move: ");
                 }
@@ -84,15 +82,7 @@ public class Game {
         return activePlayer;
     }
 
-    public static void setActiveMultiJumpPiece(Piece piece) {
-        multiJumpPiece = piece;
-    }
-
-    public static Piece getActiveMultiJumpPiece() {
-        return multiJumpPiece;
-    }
-
-    protected static void win(Player player) {
+    public static void win(Player player) {
         winStatus = true;
 
         String playerString = "";
