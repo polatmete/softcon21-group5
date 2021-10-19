@@ -31,7 +31,7 @@ public class TurnValidator {
         }
 
         // Attempt to move backwards but piece is not a king
-        if (!piece.isKing) {
+        if (!piece.isKing()) {
             if (turn.activePlayer == Player.RED) {
                 if (toY < fromY) {
                     return Status.ILLEGAL_TURN;
@@ -46,7 +46,7 @@ public class TurnValidator {
         // A jump has to be performed but the turn is not a (possible) jump
         if (hasToJump) {
             if (turn.status == Status.JUMP_AGAIN) {
-                if (piece != Game.getActiveMultiJumpPiece()) {
+                if (!piece.isMultiJumping()) {
                     return Status.JUMP_REQUIRED;
                 }
             }

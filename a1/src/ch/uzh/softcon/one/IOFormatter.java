@@ -50,7 +50,7 @@ public class IOFormatter {
                             color = "W";
                             consoleFontColor = "\u001B[97m"; // Font white
                         }
-                        if (piece.isKing) {
+                        if (piece.isKing()) {
                             type = "K";
                             consoleBackgroundColor = "\u001B[44m"; // Background green
                         }

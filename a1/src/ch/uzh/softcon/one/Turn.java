@@ -69,19 +69,6 @@ public class Turn {
     }
 
     /**
-     * Class constructor for the turn class.
-     * A single turn consisting of two tile positions.
-     * @param pos x_from, y_from, x_to, y_to
-     * @param p Active player
-     */
-    public Turn(int[] pos, Player p, Status s) {
-        from = new TilePosition(pos[0], pos[1]);
-        to = new TilePosition(pos[2], pos[3]);
-        activePlayer = p;
-        status = s;
-    }
-
-    /**
      * TilePosition class.
      * Represents a single board tile position.
      * @param x
