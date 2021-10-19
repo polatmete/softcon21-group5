@@ -1,19 +1,22 @@
 package ch.uzh.softcon.one;
 
+import java.util.regex.Pattern;
+
 public class IOFormatter {
     public static Turn formatInput(String input, Player player) {
-        char[] tmp = input.toLowerCase().toCharArray();
+        char[] tmp = input.toCharArray();
         Turn turn;
 
-        if (tmp.length == 5 && tmp[2] == 'x' && // input is exactly 5 chars long and third char is x
-                (int)tmp[0] >= 97 && (int)tmp[0] <= 104 && // first char between a and h
-                (int)tmp[3] >= 97 && (int)tmp[3] <= 104 && // fourth char between a and h
-                (int)tmp[1] >= 49 && (int)tmp[1] <= 56 && // second char between 1 and 8
-                (int)tmp[4] >= 49 && (int)tmp[4] <= 56) { // fifth char between 1 and 8
+        if (tmp.length == 9 && tmp[4] == 'X' && // Check for length and syntax of input
+                tmp[0] == '[' && tmp[5] == '[' && tmp[3] == ']' && tmp[8] == ']' && // Check for syntax of input
+                (int)tmp[1] >= 97 && (int)tmp[1] <= 104 && // second char between a and h
+                (int)tmp[6] >= 97 && (int)tmp[6] <= 104 && // seventh char between a and h
+                (int)tmp[2] >= 49 && (int)tmp[2] <= 56 && // third char between 1 and 8
+                (int)tmp[7] >= 49 && (int)tmp[7] <= 56) { // eight char between 1 and 8
 
             // subtract ascii code starting point (97 for a and 49 for 1)
-            turn = new Turn((int)tmp[0] - 97, 8 - ((int)tmp[1] - 49 + 1),
-                    (int)tmp[3] - 97, 8 - ((int)tmp[4] - 49 + 1), player);
+            turn = new Turn((int)tmp[1] - 97, 8 - ((int)tmp[2] - 49 + 1),
+                    (int)tmp[6] - 97, 8 - ((int)tmp[7] - 49 + 1), player);
         }
         else {
             turn = new Turn(-1, -1, -1, -1, player, Turn.Status.ILLEGAL_TURN);
