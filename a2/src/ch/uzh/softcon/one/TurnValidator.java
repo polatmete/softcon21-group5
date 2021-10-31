@@ -16,7 +16,7 @@ public class TurnValidator {
         Piece piece = Board.getPiece(fromX, fromY);
 
         // Player tries to move a non-existent piece or an enemy piece
-        if (piece == null || piece.color != turn.activePlayer) {
+        if (piece == null || piece.getColor() != turn.activePlayer) {
             return Status.ILLEGAL_TURN;
         }
 
@@ -97,7 +97,7 @@ public class TurnValidator {
         return !isOutsideBoard(enemyX, enemyY)
                 && !isOutsideBoard(toX, toY)
                 && Board.getPiece(enemyX, enemyY) != null
-                && Board.getPiece(enemyX, enemyY).color != p
+                && Board.getPiece(enemyX, enemyY).getColor() != p
                 && Board.getPiece(toX, toY) == null;
     }
 

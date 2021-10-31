@@ -3,8 +3,8 @@ package ch.uzh.softcon.one;
 public class Board {
     //TODO: make private
     private static Piece[][] positions;
-    public static int pieceCountRed;
-    public static int pieceCountWhite;
+    private static int pieceCountRed;
+    private static int pieceCountWhite;
 
     public static void initialize() {
 
@@ -30,8 +30,7 @@ public class Board {
 
             for (int column : columns) {
                 // Make sure we instantiate a new object for every piece such that we have no shared references.
-                Piece newPiece = new Piece();
-                newPiece.color = Player.RED;
+                Piece newPiece = new Piece(Player.RED);
                 positions[column][row] = newPiece;
                 pieceCountRed++;
             }
@@ -45,8 +44,7 @@ public class Board {
 
             for (int column : columns) {
                 // Same here
-                Piece newPiece = new Piece();
-                newPiece.color = Player.WHITE;
+                Piece newPiece = new Piece(Player.WHITE);
                 positions[column][row] = newPiece;
                 pieceCountWhite++;
             }
@@ -61,7 +59,7 @@ public class Board {
 
     public static void removePiece(int posX, int posY) {
         if (getPiece(posX, posY) != null &&
-                getPiece(posX, posY).color == Player.RED) {
+                getPiece(posX, posY).getColor() == Player.RED) {
             pieceCountRed--;
         } else {
             pieceCountWhite--;

@@ -47,11 +47,11 @@ public class IOFormatter {
                         String consoleFontColor = "";
                         String consoleBackgroundColor;
 
-                        if (piece.color == Player.RED) {
+                        if (piece.getColor() == Player.RED) {
                             color = "R";
                             consoleFontColor = "\u001B[91m"; //Font red
                         }
-                        else if (piece.color == Player.WHITE) {
+                        else if (piece.getColor() == Player.WHITE) {
                             color = "W";
                             consoleFontColor = "\u001B[97m"; // Font white
                         }

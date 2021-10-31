@@ -102,19 +102,19 @@ public class TurnHandler {
     private static boolean isJumpRequired(Turn turn) {
         for (int i = 0; i < Board.size(); i++) {
             for (int j = 0; j < Board.size(); j++) {
-                if (Board.getPiece(i, j) == null || Board.getPiece(i, j).color != turn.activePlayer) {
+                if (Board.getPiece(i, j) == null || Board.getPiece(i, j).getColor() != turn.activePlayer) {
                     continue;
                 }
                 if (turn.status == Status.JUMP_AGAIN && !Board.getPiece(i, j).isMultiJumping()) {
                     continue;
                 }
-                if (Board.getPiece(i, j).color == Player.RED || Board.getPiece(i, j).isKing()) {
+                if (Board.getPiece(i, j).getColor() == Player.RED || Board.getPiece(i, j).isKing()) {
                     if (TurnValidator.isJumpPossible(i, j, i + 2, j + 2, turn.activePlayer)
                             || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, turn.activePlayer)) {
                         return true;
                     }
                 }
-                if (Board.getPiece(i, j).color == Player.WHITE || Board.getPiece(i, j).isKing()) {
+                if (Board.getPiece(i, j).getColor() == Player.WHITE || Board.getPiece(i, j).isKing()) {
                     if (TurnValidator.isJumpPossible(i, j, i + 2, j - 2, turn.activePlayer)
                             || TurnValidator.isJumpPossible(i, j, i - 2, j - 2, turn.activePlayer)) {
                         return true;
@@ -135,10 +135,10 @@ public class TurnHandler {
 
         for (int i = 0; i < Board.size(); i++) {
             for (int j = 0; j < Board.size(); j++) {
-                if (Board.getPiece(i, j) == null || Board.getPiece(i, j).color != enemy) {
+                if (Board.getPiece(i, j) == null || Board.getPiece(i, j).getColor() != enemy) {
                     continue;
                 }
-                if (Board.getPiece(i, j).color == Player.RED || Board.getPiece(i, j).isKing()) {
+                if (Board.getPiece(i, j).getColor() == Player.RED || Board.getPiece(i, j).isKing()) {
                     if (TurnValidator.canMoveDiagonally(i + 1, j + 1)
                             || TurnValidator.isJumpPossible(i, j, i + 2, j + 2, enemy)
                             || TurnValidator.canMoveDiagonally(i - 1, j + 1)
@@ -146,7 +146,7 @@ public class TurnHandler {
                         return false;
                     }
                 }
-                if (Board.getPiece(i, j).color == Player.WHITE || Board.getPiece(i, j).isKing()) {
+                if (Board.getPiece(i, j).getColor() == Player.WHITE || Board.getPiece(i, j).isKing()) {
                     if (TurnValidator.canMoveDiagonally(i + 1, j - 1)
                             || TurnValidator.isJumpPossible(i, j, i + 2, j - 2, enemy)
                             || TurnValidator.canMoveDiagonally(i - 1, j - 1)

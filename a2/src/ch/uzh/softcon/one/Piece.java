@@ -3,9 +3,17 @@ package ch.uzh.softcon.one;
 public class Piece {
 
     //TODO: private but no getters & setters?
-    public Player color;
+    private Player color;
     private boolean isKing = false;
     private boolean isMultiJumping = false;
+
+    public Piece(Player color) {
+        this.color = color;
+    }
+
+    public Player getColor() {
+        return color;
+    }
 
     //TODO: simply new name?
     public boolean isKing() {
