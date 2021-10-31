@@ -1,24 +1,26 @@
 package ch.uzh.softcon.one;
 
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class IOFormatter {
     public static Turn formatInput(String input, Player player) {
-        char[] tmp = input.toCharArray();
+
         Turn turn;
 
-        if (tmp.length == 9 && tmp[4] == 'X' && // Check for length and syntax of input
-                tmp[0] == '[' && tmp[5] == '[' && tmp[3] == ']' && tmp[8] == ']' && // Check for syntax of input
-                (int)tmp[1] >= 97 && (int)tmp[1] <= 104 && // second char between a and h
-                (int)tmp[6] >= 97 && (int)tmp[6] <= 104 && // seventh char between a and h
-                (int)tmp[2] >= 49 && (int)tmp[2] <= 56 && // third char between 1 and 8
-                (int)tmp[7] >= 49 && (int)tmp[7] <= 56) { // eight char between 1 and 8
+        //check syntax of input
+
+        Pattern pattern = Pattern.compile("\\[[a-h][1-8]]X\\[[a-h][1-8]]");
+        Matcher matcher = pattern.matcher(input);
+        boolean matchFound = matcher.find();
+
+        if (matchFound) {
+            char[] tmp = input.toCharArray();
 
             // subtract ascii code starting point (97 for a and 49 for 1)
             turn = new Turn((int)tmp[1] - 97, 8 - ((int)tmp[2] - 49 + 1),
                     (int)tmp[6] - 97, 8 - ((int)tmp[7] - 49 + 1), player);
-        }
-        else {
+        } else {
             turn = new Turn(-1, -1, -1, -1, player, Turn.Status.ILLEGAL_TURN);
         }
         return turn;
