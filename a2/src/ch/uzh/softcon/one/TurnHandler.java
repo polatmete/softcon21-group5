@@ -87,9 +87,9 @@ public class TurnHandler {
             return true;
         }
         if (turn.activePlayer == Player.RED) {
-            return Board.pieceCount(Player.WHITE) == 0;
+            return Board.hasNoPieces(Player.WHITE);
         } else {
-            return Board.pieceCount(Player.RED) == 0;
+            return Board.hasNoPieces(Player.RED);
         }
     }
 

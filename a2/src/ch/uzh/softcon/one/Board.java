@@ -73,11 +73,12 @@ public class Board {
         return positions.length;
     }
 
-    public static int pieceCount(Player player) {
+    //checks if a player has no more pieces left
+    public static boolean hasNoPieces(Player player) {
         if (player == Player.RED) {
-            return pieceCountRed;
+            return pieceCountRed == 0;
         } else {
-            return pieceCountWhite;
+            return pieceCountWhite == 0;
         }
     }
 
