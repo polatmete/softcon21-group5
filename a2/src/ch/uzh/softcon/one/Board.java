@@ -1,10 +1,10 @@
 package ch.uzh.softcon.one;
 
 public class Board {
-    //TODO: make private
+
     private static Piece[][] positions;
-    public static int pieceCountRed;
-    public static int pieceCountWhite;
+    private static int pieceCountRed;
+    private static int pieceCountWhite;
 
     public static void initialize() {
 
@@ -73,7 +73,13 @@ public class Board {
         return positions.length;
     }
 
-    //TODO: new Method: public int pieceCount(Player player)
+    public static int pieceCount(Player player) {
+        if (player == Player.RED) {
+            return pieceCountRed;
+        } else {
+            return pieceCountWhite;
+        }
+    }
 
 
     public static Piece getPiece(int posX, int posY) {
