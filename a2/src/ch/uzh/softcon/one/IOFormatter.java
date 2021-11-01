@@ -9,7 +9,6 @@ public class IOFormatter {
         Turn turn;
 
         //check syntax of input
-
         Pattern pattern = Pattern.compile("\\[[a-h][1-8]]X\\[[a-h][1-8]]");
         Matcher matcher = pattern.matcher(input);
         boolean matchFound = matcher.find();
