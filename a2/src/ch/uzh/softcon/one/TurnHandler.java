@@ -27,7 +27,7 @@ public class TurnHandler {
         // Make a king out of the piece if it has reached the other side
         Piece activePiece = Board.getPiece(turn.to.x(), turn.to.y());
         if (checkTransformNeeded(turn)) {
-            activePiece.setKing();
+            activePiece.promote();
             return Status.COMPLETED;
         }
 
