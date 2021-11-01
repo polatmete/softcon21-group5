@@ -5,7 +5,6 @@ import java.util.regex.Matcher;
 
 public class IOFormatter {
     public static Turn formatInput(String input, Player player) {
-
         Turn turn;
 
         //check syntax of input
