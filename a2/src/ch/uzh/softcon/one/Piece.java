@@ -20,8 +20,7 @@ public class Piece {
         return isKing;
     }
 
-    //TODO: promote() -> piece.promote();
-    public void setKing() {
+    public void promote() {
         isKing = true;
     }
 
