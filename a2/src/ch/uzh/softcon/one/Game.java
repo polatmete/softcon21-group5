@@ -13,7 +13,7 @@ public class Game {
         winStatus = false;
         rematch = false;
         multiJump = false;
-        setActivePlayer(Player.RED);
+        activePlayer = Player.RED;
         Board.initialize();
         String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
                 true,"Please enter your move: ");
@@ -24,12 +24,12 @@ public class Game {
     private static void gameLoop() {
         while (!winStatus) {
             String player = "";
-            if (getActivePlayer() == Player.RED) player = "Player red";
-            else if (getActivePlayer() == Player.WHITE) player = "Player white";
+            if (activePlayer == Player.RED) player = "Player red";
+            else if (activePlayer == Player.WHITE) player = "Player white";
 
             Scanner scn = new Scanner(System.in);
             String input = scn.nextLine();
-            Turn turn = IOFormatter.formatInput(input, getActivePlayer());
+            Turn turn = IOFormatter.formatInput(input, activePlayer);
 
             if (turn.status == Status.ILLEGAL_TURN) {
                 String tmp = IOFormatter.formatOutput("", false,
@@ -55,14 +55,14 @@ public class Game {
                     multiJump = true;
                     out = IOFormatter.formatOutput(player + ": Another jump is required.",
                             true, "Please enter your next move: ");
-                    }
+                }
                 else if (status == Status.COMPLETED) {
                     multiJump = false;
-                    if (getActivePlayer() == Player.RED) {
-                        setActivePlayer(Player.WHITE);
+                    if (activePlayer == Player.RED) {
+                        activePlayer = Player.WHITE;
                         player = "Player white";
-                    } else if (getActivePlayer() == Player.WHITE) {
-                        setActivePlayer(Player.RED);
+                    } else if (activePlayer == Player.WHITE) {
+                        activePlayer = Player.RED;
                         player = "Player red";
                     }
                     out = IOFormatter.formatOutput(player + ": It's your turn",
@@ -75,16 +75,6 @@ public class Game {
         if (rematch) main(null);
     }
 
-    //TODO: Get rid of set and directly access variable inside this class
-    private static void setActivePlayer(Player playerStatus) {
-        activePlayer = playerStatus;
-    }
-
-    //TODO: Get rid of get and directly access variable inside this class
-    private static Player getActivePlayer() {
-        return activePlayer;
-    }
-
     public static void win(Player player) {
         winStatus = true;
 
@@ -95,10 +85,6 @@ public class Game {
         String out = IOFormatter.formatOutput("Congratulations " + playerString + ", you won!",
                 true,"Do you want a revenge? (y|n): ");
         System.out.print(out);
-
-        //TODO: unused
-        boolean acceptedAnswer = false;
-
 
         Scanner scn = new Scanner(System.in);
         String input;
