@@ -1,9 +1,13 @@
 package ch.uzh.softcon.one;
 
-import java.util.Scanner;
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import ch.uzh.softcon.one.Turn.Status;
 
-public class Game {
+public class Game extends Application {
     private static Player activePlayer;
     private static boolean winStatus;
     private static boolean rematch;
@@ -18,25 +22,49 @@ public class Game {
         String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
                 true,"Please enter your move: ");
         System.out.print(out);
-        gameLoop();
+        launch(args);
     }
 
-    private static void gameLoop() {
-        while (!winStatus) {
+    @Override
+    public void start(Stage stage) throws Exception {
+
+
+        int width = 750;
+        int height = 750;
+
+
+        Group root = new Group();
+        Group board = new Group();
+        Group pieces = new Group();
+        Group texts = new Group();
+        Group rematch = new Group();
+        root.getChildren().add(board);
+        root.getChildren().add(pieces);
+        root.getChildren().add(texts);
+        root.getChildren().add(rematch);
+
+
+        Scene scene = new Scene(root);
+
+        stage.setWidth(width);
+        stage.setHeight(height);
+        stage.setTitle("Checkers Game");
+        stage.setResizable(false);
+        stage.setScene(scene);
+        stage.show();
+
+        UI ui = new UI(pieces, board, texts, rematch, stage);
+        UI.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
+        UI.drawBoard();
+        UI.updatePieces();
+    }
+
+    public static void gameLoop(Turn turn) {
+        if (!winStatus) {
             String player = "";
             if (activePlayer == Player.RED) player = "Player red";
             else if (activePlayer == Player.WHITE) player = "Player white";
 
-            Scanner scn = new Scanner(System.in);
-            String input = scn.nextLine();
-            Turn turn = IOFormatter.formatInput(input, activePlayer);
-
-            if (turn.status == Status.ILLEGAL_TURN) {
-                String tmp = IOFormatter.formatOutput("", false,
-                        player + ": Invalid input. Please enter your move according to the following pattern: [a1]X[b2]");
-                System.out.println(tmp);
-                continue;
-            }
 
             if (multiJump) {
                 turn.status = Status.JUMP_AGAIN;
@@ -45,18 +73,20 @@ public class Game {
 
             if (!winStatus) {
                 String out = "";
-                if (status == Status.ILLEGAL_TURN)
+                if (status == Status.ILLEGAL_TURN) {
                     out = IOFormatter.formatOutput(player + ": Invalid move - please try again.",
                             true, "Please enter a valid move: ");
-                else if (status == Status.JUMP_REQUIRED)
+                    UI.updateStatusMessage(player + ": Invalid move - please try again.");
+                } else if (status == Status.JUMP_REQUIRED) {
                     out = IOFormatter.formatOutput(player + ": Invalid move - a jump is required.",
                             true, "Please enter a valid move: ");
-                else if (status == Status.JUMP_AGAIN) {
+                    UI.updateStatusMessage(player + ": Invalid move - a jump is required.");
+                } else if (status == Status.JUMP_AGAIN) {
                     multiJump = true;
                     out = IOFormatter.formatOutput(player + ": Another jump is required.",
                             true, "Please enter your next move: ");
-                }
-                else if (status == Status.COMPLETED) {
+                    UI.updateStatusMessage(player + ": Another jump is required.");
+                } else if (status == Status.COMPLETED) {
                     multiJump = false;
                     if (activePlayer == Player.RED) {
                         activePlayer = Player.WHITE;
@@ -67,12 +97,23 @@ public class Game {
                     }
                     out = IOFormatter.formatOutput(player + ": It's your turn",
                             true, "Please enter your move: ");
+                    UI.updateStatusMessage(player + ": It's your turn. Please enter your move.");
                 }
                 System.out.print(out);
             }
         }
 
-        if (rematch) main(null);
+        else {
+            winStatus = false;
+            rematch = false;
+            multiJump = false;
+            activePlayer = Player.RED;
+            Board.initialize();
+        }
+    }
+
+    public static Player getActivePlayer() {
+        return activePlayer;
     }
 
     public static void win(Player player) {
@@ -84,19 +125,9 @@ public class Game {
 
         String out = IOFormatter.formatOutput("Congratulations " + playerString + ", you won!",
                 true,"Do you want a revenge? (y|n): ");
+        UI.updateStatusMessage("Congratulations " + playerString + ", you won! Do you want a revenge?");
         System.out.print(out);
 
-        Scanner scn = new Scanner(System.in);
-        String input;
-        do {
-            input = scn.nextLine().toLowerCase();
-            if (input.equals("y")) {
-                rematch = true;
-                System.out.print("\u001B[101m                                                         \u001B[0m\n\n");
-            } else if (input.equals("n")) System.out.println("Game over.");
-            else {
-                System.out.print("\nInput not recognized. Please type \"y\" or \"n\" and press enter.\nDo you want a revenge? (y|n): ");
-            }
-        } while (!input.equals("y") && !input.equals("n"));
+        UI.createRematchInterface();
     }
 }
