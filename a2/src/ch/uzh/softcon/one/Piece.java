@@ -2,8 +2,7 @@ package ch.uzh.softcon.one;
 
 public class Piece {
 
-    //TODO: private but no getters & setters?
-    private Player color;
+    private final Player color;
     private boolean isKing = false;
     private boolean isMultiJumping = false;
 
@@ -15,7 +14,6 @@ public class Piece {
         return color;
     }
 
-    //TODO: simply new name?
     public boolean isKing() {
         return isKing;
     }
@@ -24,13 +22,15 @@ public class Piece {
         isKing = true;
     }
 
-    //TODO simply new name?
-    public boolean isMultiJumping() {
+    public boolean inMultiJump() {
         return isMultiJumping;
     }
 
-    //TODO: remove? -> isInMultiJump ???
-    public void setMultiJumping(boolean multiJumping) {
-        isMultiJumping = multiJumping;
+    public void startMultiJump() {
+        isMultiJumping = true;
+    }
+
+    public void endMultiJump() {
+        isMultiJumping = false;
     }
 }
