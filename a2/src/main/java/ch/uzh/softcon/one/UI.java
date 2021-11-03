@@ -61,8 +61,9 @@ public class UI {
                         public void handle(MouseEvent e) {
                             if (rematch.getChildren().isEmpty()) { //makes it so no more moves can be made if the game is over
                                 if (selectedPieceX != -1 || selectedPieceY != -1) {
+                                    // TODO: DAs isch grusig
                                     //when clicking on any piece while a piece is selected it unselects that selected piece
-                                    Turn turn = new Turn(selectedPieceX, selectedPieceY, finalI, finalJ, Game.getActivePlayer());
+                                    Turn turn = new Turn(selectedPieceX, selectedPieceY, finalI, finalJ, Game.activePlayer);
                                     Game.gameLoop(turn); //performs one iteration of the game loop (to update status message)
                                     selectedPieceX = -1;
                                     selectedPieceY = -1;
@@ -100,7 +101,8 @@ public class UI {
                     @Override
                     public void handle(MouseEvent e) {
                         if (selectedPieceX != -1 || selectedPieceY != -1) {
-                            Turn turn = new Turn(selectedPieceX, selectedPieceY, finalI, finalJ, Game.getActivePlayer());
+                            // TODO: DAs isch grusig
+                            Turn turn = new Turn(selectedPieceX, selectedPieceY, finalI, finalJ, Game.activePlayer);
                             Game.gameLoop(turn); //performs one iteration of the game loop
                             selectedPieceX = -1;
                             selectedPieceY = -1;
