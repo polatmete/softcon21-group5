@@ -13,18 +13,16 @@ public class Game extends Application {
     private static boolean rematch;
 
     public static void main(String[] args) { // Setup and initialize game
-        do {
-            rematch = false;
-            winStatus = false;
+        rematch = false;
+        winStatus = false;
 
-            Board.initialize();
-            activePlayer = Player.RED;
-            String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
-                    true,"Please enter your move: ");
-            System.out.print(out);
+        Board.initialize();
+        activePlayer = Player.RED;
+        String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
+                true,"Please enter your move: ");
+        System.out.print(out);
 
-            launch(args);
-        } while (rematch);
+        launch(args);
     }
 
     @Override
@@ -121,6 +119,12 @@ public class Game extends Application {
                 UI.updateStatusMessage(player + ": It's your turn. Please enter your move.");
             }
             System.out.print(out);
+        } else {
+            winStatus = false;
+            rematch = false;
+            multiJump = false;
+            activePlayer = Player.RED;
+            Board.initialize();
         }
     }
 
