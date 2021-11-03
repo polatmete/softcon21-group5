@@ -7,21 +7,24 @@ public class Game {
     private static Player activePlayer;
     private static boolean winStatus;
     private static boolean rematch;
-    private static boolean multiJump;
 
     public static void main(String[] args) { // Setup and initialize game
-        winStatus = false;
-        rematch = false;
-        multiJump = false;
-        activePlayer = Player.RED;
-        Board.initialize();
-        String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
-                true,"Please enter your move: ");
-        System.out.print(out);
-        gameLoop();
+        do {
+            rematch = false;
+            winStatus = false;
+
+            Board.initialize();
+            activePlayer = Player.RED;
+            String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
+                    true,"Please enter your move: ");
+            System.out.print(out);
+
+            gameLoop();
+        } while (rematch);
     }
 
     private static void gameLoop() {
+        boolean multiJump = false;
         while (!winStatus) {
             String player = "";
             if (activePlayer == Player.RED) player = "Player red";
@@ -71,8 +74,6 @@ public class Game {
                 System.out.print(out);
             }
         }
-
-        if (rematch) main(null);
     }
 
     public static void win(Player player) {
