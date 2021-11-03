@@ -13,7 +13,7 @@ public class Game extends Application {
     private static boolean rematch;
     private static boolean multiJump;
 
-    public static void main(String[] args) { // Setup and initialize game
+    public Game(String[] args) {
         winStatus = false;
         rematch = false;
         multiJump = false;

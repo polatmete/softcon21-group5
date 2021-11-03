@@ -7,12 +7,14 @@
     <groupId>org.openjfx</groupId>
     <artifactId>javafx-maven-archetypes</artifactId>
     <version>0.0.6</version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <javafx.version>17.0.0.1</javafx.version>
+        <javafx.maven.plugin.version>0.0.6</javafx.maven.plugin.version>
+    </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx</artifactId>
-            <version>17.0.0.1</version>
-        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
@@ -33,17 +35,7 @@
             <artifactId>javafx-controls</artifactId>
             <version>17.0.0.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-maven-archetypes</artifactId>
-            <version>0.0.6</version>
-        </dependency>
     </dependencies>
     <name>Assignment2</name>
-
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-    </properties>
     
 </project>
