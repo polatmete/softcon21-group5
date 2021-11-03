@@ -14,47 +14,53 @@ public class TurnValidator {
         int fromX = turn.from.x(); int toX = turn.to.x();
         int fromY = turn.from.y(); int toY = turn.to.y();
         Piece piece = Board.getPiece(fromX, fromY);
+        Player p = turn.getActivePlayer();
 
-        // Player tries to move a non-existent piece or an enemy piece
-        if (piece == null || piece.getColor() != turn.activePlayer) {
-            return Status.ILLEGAL_TURN;
+        // Player tries to move a non-existent piece
+        if (piece == null) {
+            return Status.NO_PIECE;
+        }
+
+        // Player tries to move an enemy piece
+        if (piece.getColor() != p) {
+            return Status.ENEMY_PIECE;
         }
 
         // Turn would result in a position outside the field
         if (isOutsideBoard(toX, toY)) {
-            return Status.ILLEGAL_TURN;
+            return Status.OUTSIDE_BOARD;
         }
 
         //Another piece is at the turn destination
         if (Board.getPiece(toX, toY) != null) {
-            return Status.ILLEGAL_TURN;
+            return Status.PIECE_AT_DESTINATION;
         }
 
         // Attempt to move backwards but piece is not a king
         if (!piece.isKing()) {
-            if (turn.activePlayer == Player.RED) {
+            if (p == Player.RED) {
                 if (toY < fromY) {
-                    return Status.ILLEGAL_TURN;
+                    return Status.ILLEGAL_BACKWARDS;
                 }
             } else {
                 if (toY > fromY) {
-                    return Status.ILLEGAL_TURN;
+                    return Status.ILLEGAL_BACKWARDS;
                 }
             }
         }
 
         // A jump has to be performed but the turn is not a (possible) jump
         if (hasToJump) {
-            if (turn.status == Status.JUMP_AGAIN) {
-                if (!piece.isMultiJumping()) {
-                    return Status.JUMP_REQUIRED;
+            if (turn.getStatus() == Status.ANOTHER_JUMP_REQUIRED) {
+                if (!piece.inMultiJump()) {
+                    return Status.NOT_MULTI_JUMP_PIECE;
                 }
             }
             if (Math.abs(fromX - toX) != 2
                     || Math.abs(fromY - toY) != 2) {
                 return Status.JUMP_REQUIRED;
             }
-            if (!isJumpPossible(fromX, fromY, toX, toY, turn.activePlayer)) {
+            if (!isJumpPossible(fromX, fromY, toX, toY, p)) {
                 return Status.JUMP_REQUIRED;
             }
         // A move has to be performed but the turn is not a (possible) move
@@ -68,7 +74,7 @@ public class TurnValidator {
             }
         }
 
-        return turn.status;
+        return Status.PENDING;
     }
 
     /**

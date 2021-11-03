@@ -7,21 +7,24 @@ public class Game {
     private static Player activePlayer;
     private static boolean winStatus;
     private static boolean rematch;
-    private static boolean multiJump;
 
     public static void main(String[] args) { // Setup and initialize game
-        winStatus = false;
-        rematch = false;
-        multiJump = false;
-        activePlayer = Player.RED;
-        Board.initialize();
-        String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
-                true,"Please enter your move: ");
-        System.out.print(out);
-        gameLoop();
+        do {
+            rematch = false;
+            winStatus = false;
+
+            Board.initialize();
+            activePlayer = Player.RED;
+            String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
+                    true,"Please enter your move: ");
+            System.out.print(out);
+
+            gameLoop();
+        } while (rematch);
     }
 
     private static void gameLoop() {
+        boolean multiJump = false;
         while (!winStatus) {
             String player = "";
             if (activePlayer == Player.RED) player = "Player red";
@@ -31,7 +34,7 @@ public class Game {
             String input = scn.nextLine();
             Turn turn = IOFormatter.formatInput(input, activePlayer);
 
-            if (turn.status == Status.ILLEGAL_TURN) {
+            if (turn.getStatus() == Status.ILLEGAL_TURN) {
                 String tmp = IOFormatter.formatOutput("", false,
                         player + ": Invalid input. Please enter your move according to the following pattern: [a1]X[b2]");
                 System.out.println(tmp);
@@ -39,23 +42,40 @@ public class Game {
             }
 
             if (multiJump) {
-                turn.status = Status.JUMP_AGAIN;
+                turn.anotherJump();
             }
             Status status = TurnHandler.runTurnSequence(turn);
 
             if (!winStatus) {
                 String out = "";
-                if (status == Status.ILLEGAL_TURN)
-                    out = IOFormatter.formatOutput(player + ": Invalid move - please try again.",
-                            true, "Please enter a valid move: ");
-                else if (status == Status.JUMP_REQUIRED)
-                    out = IOFormatter.formatOutput(player + ": Invalid move - a jump is required.",
-                            true, "Please enter a valid move: ");
-                else if (status == Status.JUMP_AGAIN) {
+                if (status == Status.JUMP_REQUIRED)
+                    out = IOFormatter.formatOutput(player + ": Desired jump is not possible.",
+                            false, "Please enter a valid move: ");
+                else if (status == Status.ANOTHER_JUMP_REQUIRED) {
                     multiJump = true;
                     out = IOFormatter.formatOutput(player + ": Another jump is required.",
                             true, "Please enter your next move: ");
-                }
+                } else if (status == Status.NO_PIECE)
+                    out = IOFormatter.formatOutput(player + ": Targeted piece does not exist.",
+                            false, "Please enter a valid move: ");
+                else if (status == Status.ENEMY_PIECE)
+                    out = IOFormatter.formatOutput(player + ": Targeted piece is an enemy piece.",
+                            false, "Please enter a valid move: ");
+                else if (status == Status.OUTSIDE_BOARD)
+                    out = IOFormatter.formatOutput(player + ": Turn would result outside of the board.",
+                            false, "Please enter a valid move: ");
+                else if (status == Status.PIECE_AT_DESTINATION)
+                    out = IOFormatter.formatOutput(player + ": A piece blocks the desired destination.",
+                            false, "Please enter a valid move: ");
+                else if (status == Status.ILLEGAL_BACKWARDS)
+                    out = IOFormatter.formatOutput(player + ": Non-King piece cannot move backwards.",
+                            false, "Please enter a valid move: ");
+                else if (status == Status.NOT_MULTI_JUMP_PIECE)
+                    out = IOFormatter.formatOutput(player + ": Another piece is in a multi-jump already.",
+                            false, "Please enter a valid move: ");
+                else if (status == Status.ILLEGAL_TURN)
+                    out = IOFormatter.formatOutput(player + ": Desired move is not possible.",
+                            false, "Please enter a valid move: ");
                 else if (status == Status.COMPLETED) {
                     multiJump = false;
                     if (activePlayer == Player.RED) {
@@ -71,8 +91,6 @@ public class Game {
                 System.out.print(out);
             }
         }
-
-        if (rematch) main(null);
     }
 
     public static void win(Player player) {

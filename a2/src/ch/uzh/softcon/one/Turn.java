@@ -6,11 +6,10 @@ package ch.uzh.softcon.one;
  */
 public class Turn {
 
-    //TODO: private -> methods
     protected TilePosition from;
     protected TilePosition to;
-    public Player activePlayer;
-    public Status status;
+    private Player activePlayer;
+    private Status status;
 
     /**
      * Turn Status
@@ -21,7 +20,7 @@ public class Turn {
          */
         PENDING,
         /**
-         * Turn is processed and valid
+         * Turn was processed
          */
         COMPLETED,
         /**
@@ -31,7 +30,15 @@ public class Turn {
         /**
          * Turn was executed but another jump must be taken
          */
-        JUMP_AGAIN,
+        ANOTHER_JUMP_REQUIRED,
+
+        NO_PIECE,
+        ENEMY_PIECE,
+        OUTSIDE_BOARD,
+        PIECE_AT_DESTINATION,
+        ILLEGAL_BACKWARDS,
+        NOT_MULTI_JUMP_PIECE,
+
         /**
          * Turn is not possible otherwise
          */
@@ -76,5 +83,17 @@ public class Turn {
      * @param y
      */
     protected record TilePosition(int x, int y) {
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public void anotherJump() {
+        status = Status.ANOTHER_JUMP_REQUIRED;
     }
 }

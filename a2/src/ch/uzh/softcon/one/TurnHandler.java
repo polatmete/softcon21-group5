@@ -14,11 +14,10 @@ public class TurnHandler {
 
         // Validate the move or jump and return the status based on it
         Status validationResult = TurnValidator.validateMove(turn, jumpRequired);
-        if (validationResult == Status.ILLEGAL_TURN) {
-            return Status.ILLEGAL_TURN;
-        }
-        if (validationResult == Status.JUMP_REQUIRED) {
-            return Status.JUMP_REQUIRED;
+
+        //If the desired turn is invalid it returns the status
+        if (validationResult != Status.PENDING) {
+            return validationResult;
         }
 
         // Execute the move or jump
@@ -33,19 +32,19 @@ public class TurnHandler {
 
         // If the player had to make a jump it is possible he must continue with a multi-jump.
         if (jumpRequired) {
-            activePiece.setMultiJumping(true);
-            turn.status = Status.JUMP_AGAIN;
+            activePiece.startMultiJump();
+            turn.anotherJump();
             if (isJumpRequired(turn)) {
-                return Status.JUMP_AGAIN;
+                return Status.ANOTHER_JUMP_REQUIRED;
             }
         }
 
         // Check whether a player has won
         if (checkWin(turn)) {
-            Game.win(turn.activePlayer);
+            Game.win(turn.getActivePlayer());
         }
 
-        activePiece.setMultiJumping(false);
+        activePiece.endMultiJump();
         return Status.COMPLETED;
     }
 
@@ -69,7 +68,7 @@ public class TurnHandler {
      * @return Reached the end of the board
      */
     private static boolean checkTransformNeeded(Turn turn) {
-        if (turn.activePlayer == Player.RED) {
+        if (turn.getActivePlayer() == Player.RED) {
             return turn.to.y() == Board.size() - 1;
         } else {
             return turn.to.y() == 0;
@@ -83,10 +82,10 @@ public class TurnHandler {
      * @return Current player has won
      */
     private static boolean checkWin(Turn turn) {
-        if (isEnemyStuck(turn.activePlayer)) {
+        if (isEnemyStuck(turn.getActivePlayer())) {
             return true;
         }
-        if (turn.activePlayer == Player.RED) {
+        if (turn.getActivePlayer() == Player.RED) {
             return Board.hasNoPieces(Player.WHITE);
         } else {
             return Board.hasNoPieces(Player.RED);
@@ -100,23 +99,24 @@ public class TurnHandler {
      * @return Player has to take a jump
      */
     private static boolean isJumpRequired(Turn turn) {
+        Player p = turn.getActivePlayer();
         for (int i = 0; i < Board.size(); i++) {
             for (int j = 0; j < Board.size(); j++) {
-                if (Board.getPiece(i, j) == null || Board.getPiece(i, j).getColor() != turn.activePlayer) {
+                if (Board.getPiece(i, j) == null || Board.getPiece(i, j).getColor() != p) {
                     continue;
                 }
-                if (turn.status == Status.JUMP_AGAIN && !Board.getPiece(i, j).isMultiJumping()) {
+                if (turn.getStatus() == Status.ANOTHER_JUMP_REQUIRED && !Board.getPiece(i, j).inMultiJump()) {
                     continue;
                 }
                 if (Board.getPiece(i, j).getColor() == Player.RED || Board.getPiece(i, j).isKing()) {
-                    if (TurnValidator.isJumpPossible(i, j, i + 2, j + 2, turn.activePlayer)
-                            || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, turn.activePlayer)) {
+                    if (TurnValidator.isJumpPossible(i, j, i + 2, j + 2, p)
+                            || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, p)) {
                         return true;
                     }
                 }
                 if (Board.getPiece(i, j).getColor() == Player.WHITE || Board.getPiece(i, j).isKing()) {
-                    if (TurnValidator.isJumpPossible(i, j, i + 2, j - 2, turn.activePlayer)
-                            || TurnValidator.isJumpPossible(i, j, i - 2, j - 2, turn.activePlayer)) {
+                    if (TurnValidator.isJumpPossible(i, j, i + 2, j - 2, p)
+                            || TurnValidator.isJumpPossible(i, j, i - 2, j - 2, p)) {
                         return true;
                     }
                 }
