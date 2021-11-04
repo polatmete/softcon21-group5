@@ -332,8 +332,12 @@ public class UI {
                         if (buttonNames[finalButtonIdx].equals("New Game")) {
                             System.out.println("New Game");
 <<<<<<< HEAD
+<<<<<<< HEAD
                             Game.activePlayer = Player.RED;
                             Board.initialize();
+=======
+                            Game.reset();
+>>>>>>> master
 =======
                             Game.reset();
 >>>>>>> master
