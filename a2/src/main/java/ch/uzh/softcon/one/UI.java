@@ -308,6 +308,7 @@ public class UI {
                     if (eventType.equals("MOUSE_CLICKED")) {
                         if (buttonNames[finalButtonIdx].equals("New Game")) {
                             System.out.println("New Game");
+                            Game.activePlayer = Player.RED;
                             Board.initialize();
                             updatePieces();
                         } else if (buttonNames[finalButtonIdx].equals("Load Game")) {
