@@ -1,8 +1,6 @@
 package ch.uzh.softcon.one;
 
 import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import ch.uzh.softcon.one.Turn.Status;
@@ -28,36 +26,7 @@ public class Game extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
-
-        int width = 750;
-        int height = 750;
-
-
-        Group root = new Group();
-        Group board = new Group();
-        Group pieces = new Group();
-        Group texts = new Group();
-        Group rematch = new Group();
-        root.getChildren().add(board);
-        root.getChildren().add(pieces);
-        root.getChildren().add(texts);
-        root.getChildren().add(rematch);
-
-
-        Scene scene = new Scene(root);
-
-        stage.setWidth(width);
-        stage.setHeight(height);
-        stage.setTitle("Checkers Game");
-        stage.setResizable(false);
-        stage.setScene(scene);
-        stage.show();
-
-        UI ui = new UI(pieces, board, texts, rematch, stage);
-        UI.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
-        UI.drawBoard();
-        UI.updatePieces();
+        UI.initialize(stage);
     }
 
     public static void gameLoop(Turn turn) {
