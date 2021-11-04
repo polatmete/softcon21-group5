@@ -77,6 +77,11 @@ public class UI {
         selectedPieceY = -1;
     }
 
+    private static void selectPiece(int x, int y) {
+        selectedPieceX = x;
+        selectedPieceY = y;
+    }
+
     public static void updatePieces() {
         pieces.getChildren().clear();
         int padding = 10;
@@ -116,14 +121,13 @@ public class UI {
                                         unselectPiece();
                                         updatePieces();
                                     } else {
-                                        circle.setStrokeWidth(5);
-                                        circle.setStroke(Color.BLACK);
-                                        selectedPieceX = x;
-                                        selectedPieceY = y;
+                                        if (Board.getPiece(x, y).getColor() == activePlayer) {
+                                            circle.setStrokeWidth(5);
+                                            circle.setStroke(Color.BLACK);
+                                            selectPiece(x, y);
+                                        }
                                     }
                                 } else if (eventType.equals ("MOUSE_ENTERED")) {
-                                    System.out.println(x);
-                                    System.out.println(y);
                                     if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
                                         circle.setStrokeWidth(2);
                                         circle.setStroke(Color.BLACK);
@@ -169,10 +173,6 @@ public class UI {
                     public void handle(MouseEvent e) {
                         if (isPieceSelected()) { //if a piece is selected
                             // TODO: DAs isch grusig
-                            System.out.println("selectedPieceX: " + selectedPieceX);
-                            System.out.println("selectedPieceY: " + selectedPieceY);
-                            System.out.println("x: " + x);
-                            System.out.println("y: " + y);
                             Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, Game.activePlayer);
                             Game.gameLoop(turn); //performs one iteration of the game loop
                             unselectPiece();
