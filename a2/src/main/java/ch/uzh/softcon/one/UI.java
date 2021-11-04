@@ -5,7 +5,9 @@ import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -16,6 +18,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
+import java.util.Optional;
 
 public class UI {
 
@@ -62,9 +67,27 @@ public class UI {
         drawBoard();
         updatePieces();
         drawButtons();
+
+        stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, UI::closeWindowEvent);
     }
 
-    public static boolean isPieceSelected() {
+    private static void closeWindowEvent(WindowEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.getButtonTypes().remove(ButtonType.OK);
+        alert.getButtonTypes().add(ButtonType.CANCEL);
+        alert.getButtonTypes().add(ButtonType.YES);
+        alert.setTitle("Quit application");
+        alert.setContentText(String.format("Close without saving?"));
+        alert.initOwner(stage.getOwner());
+        Optional<ButtonType> res = alert.showAndWait();
+
+        if(res.isPresent()) {
+            if(res.get().equals(ButtonType.CANCEL))
+                event.consume();
+        }
+    }
+
+    private static boolean isPieceSelected() {
         if (selectedPieceX != -1 || selectedPieceY != -1) {
             return true;
         } else {
@@ -72,7 +95,7 @@ public class UI {
         }
     }
 
-    public static void unselectPiece() {
+    private static void unselectPiece() {
         selectedPieceX = -1;
         selectedPieceY = -1;
     }
@@ -82,7 +105,7 @@ public class UI {
         selectedPieceY = y;
     }
 
-    public static void updatePieces() {
+    private static void updatePieces() {
         pieces.getChildren().clear();
         int padding = 10;
         for (int i = 0; i < 8; i++) {
@@ -151,7 +174,7 @@ public class UI {
         }
     }
 
-    public static void drawBoard() {
+    private static void drawBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Rectangle rectangle = new Rectangle();
@@ -166,7 +189,7 @@ public class UI {
                 }
                 rectangle.setStrokeWidth(5);
                 rectangle.setStroke(Color.BLACK);
-                int x= i;
+                int x = i;
                 int y = j;
                 EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                     @Override
@@ -241,15 +264,15 @@ public class UI {
 
     }
 
-    public static void clearRematchInterface() {
+    private static void clearRematchInterface() {
         rematch.getChildren().clear();
     }
 
-    public static boolean isGameOver() {
+    private static boolean isGameOver() {
         return !rematch.getChildren().isEmpty();
     }
 
-    public static void drawButtons() {
+    private static void drawButtons() {
         //add buttons
         float buttonHeight = 100;
         float buttonWidth = 200;
@@ -308,7 +331,7 @@ public class UI {
                     if (eventType.equals("MOUSE_CLICKED")) {
                         if (buttonNames[finalButtonIdx].equals("New Game")) {
                             System.out.println("New Game");
-                            Board.initialize();
+                            Game.reset();
                             updatePieces();
                         } else if (buttonNames[finalButtonIdx].equals("Load Game")) {
                             System.out.println("Load Game");
