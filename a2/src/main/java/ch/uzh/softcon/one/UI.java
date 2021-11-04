@@ -122,6 +122,8 @@ public class UI {
                                         selectedPieceY = y;
                                     }
                                 } else if (eventType.equals ("MOUSE_ENTERED")) {
+                                    System.out.println(x);
+                                    System.out.println(y);
                                     if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
                                         circle.setStrokeWidth(2);
                                         circle.setStroke(Color.BLACK);
@@ -306,10 +308,15 @@ public class UI {
                     if (eventType.equals("MOUSE_CLICKED")) {
                         if (buttonNames[finalButtonIdx].equals("New Game")) {
                             System.out.println("New Game");
+                            Board.initialize();
+                            updatePieces();
                         } else if (buttonNames[finalButtonIdx].equals("Load Game")) {
                             System.out.println("Load Game");
+                            BoardLoader.loadBoard();
+                            updatePieces();
                         } else if (buttonNames[finalButtonIdx].equals("Save Game")) {
                             System.out.println("Save Game");
+                            BoardLoader.saveBoard();
                         }
                     } else if (eventType.equals("MOUSE_ENTERED")) {
                         rectangle.setFill(Color.LIGHTGRAY);
