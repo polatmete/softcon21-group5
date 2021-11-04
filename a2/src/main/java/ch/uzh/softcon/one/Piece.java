@@ -3,11 +3,13 @@ package ch.uzh.softcon.one;
 public class Piece {
 
     private final Player color;
-    private boolean isKing = false;
-    private boolean isMultiJumping = false;
+    private boolean isKing;
+    private boolean isMultiJumping;
 
     public Piece(Player color) {
         this.color = color;
+        isKing = false;
+        isMultiJumping = false;
     }
 
     public Player getColor() {
