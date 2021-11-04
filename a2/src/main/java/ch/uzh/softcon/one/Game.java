@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import ch.uzh.softcon.one.Turn.Status;
+import javafx.stage.WindowEvent;
 
 public class Game extends Application {
     //TODO De wieder privat?
@@ -111,5 +112,12 @@ public class Game extends Application {
         System.out.print(out);
 
         UI.createRematchInterface();
+    }
+
+    public static void reset() {
+        winStatus = false;
+        activePlayer = Player.RED;
+        Board.initialize();
+        UI.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
     }
 }
