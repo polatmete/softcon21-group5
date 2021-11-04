@@ -51,7 +51,7 @@ public class BoardLoader {
                     }
                     y++;
                 }
-            } else System.out.println("Canceled or Error.");
+            } else JOptionPane.showMessageDialog(null, "You messed up.", "Load Failed", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,7 +105,7 @@ public class BoardLoader {
                 writer.write(aP.toString());
                 writer.flush();
                 writer.close();
-            } else System.out.println("Canceled or Error.");
+            } else JOptionPane.showMessageDialog(null,"You messed up.", "Save Failed", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
             e.printStackTrace();
         }
