@@ -6,16 +6,17 @@ import javafx.stage.Stage;
 import ch.uzh.softcon.one.Turn.Status;
 
 public class Game extends Application {
+    //TODO De wieder privat?
     protected static Player activePlayer;
     private static boolean winStatus;
-    private static boolean rematch;
+    private static boolean rematch; //TODO remove
 
     public static void main(String[] args) { // Setup and initialize game
-        rematch = false;
+        rematch = false; //TODO remove
         winStatus = false;
 
-        Board.initialize();
         activePlayer = Player.RED;
+        Board.initialize();
         String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
                 true,"Please enter your move: ");
         System.out.print(out);
@@ -29,13 +30,13 @@ public class Game extends Application {
     }
 
     public static void gameLoop(Turn turn) {
-        boolean multiJump = false;
+        boolean multiJump = false; //TODO remove
         if (!winStatus) {
             String player = "";
             if (activePlayer == Player.RED) player = "Player red";
             else if (activePlayer == Player.WHITE) player = "Player white";
 
-            if (multiJump) {
+            if (multiJump) { //TODO remove
                 turn.anotherJump();
             }
             Status status = TurnHandler.runTurnSequence(turn);
@@ -47,7 +48,7 @@ public class Game extends Application {
                 UI.updateStatusMessage(player + ": Desired jump is not possible.");
             }
             else if (status == Status.ANOTHER_JUMP_REQUIRED) {
-                multiJump = true;
+                multiJump = true; //TODO remove
                 out = IOFormatter.formatOutput(player + ": Another jump is required.",
                         true, "Please enter your next move: ");
                 UI.updateStatusMessage(player + ": Another jump is required.");
@@ -75,7 +76,7 @@ public class Game extends Application {
                 UI.updateStatusMessage(player + ": Desired move is not possible.");
             }
             else if (status == Status.COMPLETED) {
-                multiJump = false;
+                multiJump = false; //TODO remove
                 if (activePlayer == Player.RED) {
                     activePlayer = Player.WHITE;
                     player = "Player white";
@@ -90,8 +91,8 @@ public class Game extends Application {
             System.out.print(out);
         } else {
             winStatus = false;
-            rematch = false;
-            multiJump = false;
+            rematch = false; //TODO remove
+            multiJump = false; //TODO remove
             activePlayer = Player.RED;
             Board.initialize();
         }

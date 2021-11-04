@@ -23,6 +23,11 @@ public class TurnHandler {
         // Execute the move or jump
         executeTurn(turn);
 
+        // Check whether a player has won
+        if (checkWin(turn)) {
+            Game.win(turn.getActivePlayer());
+        }
+
         // Make a king out of the piece if it has reached the other side
         Piece activePiece = Board.getPiece(turn.to.x(), turn.to.y());
         if (checkTransformNeeded(turn)) {
@@ -37,11 +42,6 @@ public class TurnHandler {
             if (isJumpRequired(turn)) {
                 return Status.ANOTHER_JUMP_REQUIRED;
             }
-        }
-
-        // Check whether a player has won
-        if (checkWin(turn)) {
-            Game.win(turn.getActivePlayer());
         }
 
         activePiece.endMultiJump();
