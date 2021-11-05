@@ -76,16 +76,6 @@ public class TurnValidator {
     }
 
     /**
-     * Checks if the desired coordinates are outside the board.
-     * @param x Targeted x axis
-     * @param y Targeted y axis
-     * @return Is outside the board
-     */
-    public static boolean isOutsideBoard(int x, int y) {
-        return x > 7 || x < 0 || y > 7 || y < 0;
-    }
-
-    /**
      * Checks if a jump in a desired direction is possible.
      * @param fromX From x axis
      * @param fromY From y axis
@@ -114,5 +104,15 @@ public class TurnValidator {
     public static boolean canMoveDiagonally(int toX, int toY) {
         return !isOutsideBoard(toX, toY)
                 && Board.getPiece(toX, toY) == null;
+    }
+
+    /**
+     * Checks if the desired coordinates are outside the board.
+     * @param x Targeted x axis
+     * @param y Targeted y axis
+     * @return Is outside the board
+     */
+    public static boolean isOutsideBoard(int x, int y) {
+        return x > 7 || x < 0 || y > 7 || y < 0;
     }
 }

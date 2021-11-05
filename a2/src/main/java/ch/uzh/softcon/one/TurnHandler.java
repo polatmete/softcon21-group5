@@ -62,19 +62,6 @@ public class TurnHandler {
     }
 
     /**
-     * Checks if a piece has reached the other side of the board.
-     * @param turn Current turn
-     * @return Reached the end of the board
-     */
-    private static boolean checkTransformNeeded(Turn turn) {
-        if (turn.getActivePlayer() == Player.RED) {
-            return turn.to.y() == Board.size() - 1;
-        } else {
-            return turn.to.y() == 0;
-        }
-    }
-
-    /**
      * Checks if the enemy is stuck or has no pieces left.
      * Determines a winner based on these checks.
      * @param turn Current turn
@@ -88,6 +75,19 @@ public class TurnHandler {
             return Board.hasNoPieces(Player.WHITE);
         } else {
             return Board.hasNoPieces(Player.RED);
+        }
+    }
+
+    /**
+     * Checks if a piece has reached the other side of the board.
+     * @param turn Current turn
+     * @return Reached the end of the board
+     */
+    private static boolean checkTransformNeeded(Turn turn) {
+        if (turn.getActivePlayer() == Player.RED) {
+            return turn.to.y() == Board.size() - 1;
+        } else {
+            return turn.to.y() == 0;
         }
     }
 
