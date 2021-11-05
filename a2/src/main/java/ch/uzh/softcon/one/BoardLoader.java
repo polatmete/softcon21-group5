@@ -53,6 +53,7 @@ public class BoardLoader {
                     }
                     y++;
                 }
+                Board.updateSavedBoard();
             } else JOptionPane.showMessageDialog(null, "You messed up.", "Load Failed", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
             e.printStackTrace();
@@ -99,10 +100,10 @@ public class BoardLoader {
                     }
                     writer.newLine();
                 }
-                Board.updateSavedBoard();
                 writer.write("activePlayer:" + Game.getActivePlayer());
                 writer.flush();
                 writer.close();
+                Board.updateSavedBoard();
             } else JOptionPane.showMessageDialog(null,"You messed up.", "Save Failed", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
             e.printStackTrace();

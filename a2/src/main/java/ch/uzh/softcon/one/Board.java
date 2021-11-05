@@ -94,6 +94,7 @@ public class Board {
     }
 
     public static boolean isCurrentBoardSaved() {
+
         if (savedBoard == board) {
             return true;
         } else {
