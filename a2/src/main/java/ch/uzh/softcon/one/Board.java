@@ -3,11 +3,14 @@ package ch.uzh.softcon.one;
 public class Board {
 
     private static Piece[][] board;
+    private static Piece[][] savedBoard;
     private static int pieceCountRed;
     private static int pieceCountWhite;
+    private static int totalMoves;
 
     public static void initialize() {
 
+        totalMoves = 0;
         cleanBoard();
 
         int[][][] initialPosRed = {
@@ -58,6 +61,7 @@ public class Board {
         Piece pieceToMove = getPiece(turn.from.x(), turn.from.y());
         board[turn.to.x()][turn.to.y()] = pieceToMove;
         board[turn.from.x()][turn.from.y()] = null;
+        totalMoves++;
     }
 
     public static void removePiece(int posX, int posY) {
@@ -81,6 +85,27 @@ public class Board {
             return pieceCountRed == 0;
         } else {
             return pieceCountWhite == 0;
+        }
+    }
+
+    public static void updateSavedBoard() {
+        savedBoard = board;
+    }
+
+    public static boolean isCurrentBoardSaved() {
+
+        if (savedBoard == board) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isInitial() {
+        if (totalMoves == 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 
