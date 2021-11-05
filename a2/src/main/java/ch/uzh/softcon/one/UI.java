@@ -37,6 +37,7 @@ public class UI {
     private static Stage stage;
     private static Group buttons;
     private static Scene scene;
+    private static boolean isCurrentStateSaved;
 
     public static void initialize(Stage stage) {
 
@@ -72,18 +73,20 @@ public class UI {
     }
 
     private static void closeWindowEvent(WindowEvent event) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.getButtonTypes().remove(ButtonType.OK);
-        alert.getButtonTypes().add(ButtonType.CANCEL);
-        alert.getButtonTypes().add(ButtonType.YES);
-        alert.setTitle("Quit application");
-        alert.setContentText(String.format("Close without saving?"));
-        alert.initOwner(stage.getOwner());
-        Optional<ButtonType> res = alert.showAndWait();
+        if (!isGameOver() && !Board.isCurrentBoardSaved() && !Board.isInitial()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.getButtonTypes().remove(ButtonType.OK);
+            alert.getButtonTypes().add(ButtonType.CANCEL);
+            alert.getButtonTypes().add(ButtonType.YES);
+            alert.setTitle("Quit application");
+            alert.setContentText(String.format("Close without saving?"));
+            alert.initOwner(stage.getOwner());
+            Optional<ButtonType> res = alert.showAndWait();
 
-        if(res.isPresent()) {
-            if(res.get().equals(ButtonType.CANCEL))
-                event.consume();
+            if(res.isPresent()) {
+                if(res.get().equals(ButtonType.CANCEL))
+                    event.consume();
+            }
         }
     }
 
@@ -339,7 +342,9 @@ public class UI {
                             updatePieces();
                         } else if (buttonNames[finalButtonIdx].equals("Save Game")) {
                             System.out.println("Save Game");
+                            isCurrentStateSaved = true;
                             BoardLoader.saveBoard();
+
                         }
                     } else if (eventType.equals("MOUSE_ENTERED")) {
                         rectangle.setFill(Color.LIGHTGRAY);

@@ -53,7 +53,6 @@ public class BoardLoader {
     public static void saveBoard() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("a2/src/boardState.csv"));
-
             for (int i = 0; i < size(); i++) {
                 for (int j = 0; j < size(); j++) {
                     Piece piece = getPiece(j, i);
@@ -92,6 +91,7 @@ public class BoardLoader {
             writer.write(aP.toString());
             writer.flush();
             writer.close();
+            Board.updateSavedBoard();
         } catch (IOException e) {
             e.printStackTrace();
         }
