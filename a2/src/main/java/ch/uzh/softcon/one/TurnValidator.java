@@ -51,10 +51,8 @@ public class TurnValidator {
 
         // A jump has to be performed but the turn is not a (possible) jump
         if (hasToJump) {
-            if (turn.getStatus() == Status.ANOTHER_JUMP_REQUIRED) {
-                if (!piece.inMultiJump()) {
-                    return Status.NOT_MULTI_JUMP_PIECE;
-                }
+            if (Piece.activeMultiJump() && !piece.isInMultiJump()) {
+                return Status.NOT_MULTI_JUMP_PIECE;
             }
             if (Math.abs(fromX - toX) != 2
                     || Math.abs(fromY - toY) != 2) {
