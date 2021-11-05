@@ -1,10 +1,8 @@
 package ch.uzh.softcon.one;
 
+import ch.uzh.softcon.one.Turn.Status;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import ch.uzh.softcon.one.Turn.Status;
-import javafx.stage.WindowEvent;
 
 public class Game extends Application {
     private static Player activePlayer;
@@ -12,13 +10,8 @@ public class Game extends Application {
 
     public static void main(String[] args) { // Setup and initialize game
         winStatus = false;
-
         Board.initialize();
         activatePlayerRed();
-        String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
-                true,"Please enter your move: ");
-        System.out.print(out);
-
         launch(args);
     }
 
@@ -35,39 +28,22 @@ public class Game extends Application {
 
             Status status = TurnHandler.runTurnSequence(turn);
 
-            String out = "";
-            if (status == Status.JUMP_REQUIRED) {
-                out = IOFormatter.formatOutput(player + ": A jump is required.",
-                        false, "Please enter a valid move: ");
-                UI.updateStatusMessage(player + ": A jump is required.");
-            }
-            else if (status == Status.ANOTHER_JUMP_REQUIRED) {
-                out = IOFormatter.formatOutput(player + ": Another jump is required.",
-                        true, "Please enter your next move: ");
+            if (status == Status.JUMP_REQUIRED) UI.updateStatusMessage(player + ": A jump is required.");
+            else if (status == Status.ANOTHER_JUMP_REQUIRED)
                 UI.updateStatusMessage(player + ": Another jump is required.");
-            } else if (status == Status.NO_PIECE)
-                out = IOFormatter.formatOutput(player + ": Targeted piece does not exist.",
-                        false, "Please enter a valid move: ");
+            else if (status == Status.NO_PIECE)
+                UI.updateStatusMessage(player + ": Targeted piece does not exist.");
             else if (status == Status.ENEMY_PIECE)
-                out = IOFormatter.formatOutput(player + ": Targeted piece is an enemy piece.",
-                        false, "Please enter a valid move: ");
+                UI.updateStatusMessage(player + ": Targeted piece is an enemy piece.");
             else if (status == Status.OUTSIDE_BOARD)
-                out = IOFormatter.formatOutput(player + ": Turn would result outside of the board.",
-                        false, "Please enter a valid move: ");
+                UI.updateStatusMessage(player + ": Turn would result outside of the board.");
             else if (status == Status.PIECE_AT_DESTINATION)
-                out = IOFormatter.formatOutput(player + ": A piece blocks the desired destination.",
-                        false, "Please enter a valid move: ");
+                UI.updateStatusMessage(player + ": A piece blocks the desired destination.");
             else if (status == Status.ILLEGAL_BACKWARDS)
-                out = IOFormatter.formatOutput(player + ": Non-King piece cannot move backwards.",
-                        false, "Please enter a valid move: ");
+                UI.updateStatusMessage(player + ": Non-King piece cannot move backwards.");
             else if (status == Status.NOT_MULTI_JUMP_PIECE)
-                out = IOFormatter.formatOutput(player + ": Another piece is in a multi-jump already.",
-                        false, "Please enter a valid move: ");
-            else if (status == Status.ILLEGAL_TURN) {
-                out = IOFormatter.formatOutput(player + ": Desired move is not possible.",
-                        false, "Please enter a valid move: ");
-                UI.updateStatusMessage(player + ": Desired move is not possible.");
-            }
+                UI.updateStatusMessage(player + ": Another piece is in a multi-jump already.");
+            else if (status == Status.ILLEGAL_TURN) UI.updateStatusMessage(player + ": Desired move is not possible.");
             else if (status == Status.COMPLETED) {
                 if (activePlayer == Player.RED) {
                     activatePlayerWhite();
@@ -76,11 +52,8 @@ public class Game extends Application {
                     activatePlayerRed();
                     player = "Player red";
                 }
-                out = IOFormatter.formatOutput(player + ": It's your turn",
-                        true, "Please enter your move: ");
                 UI.updateStatusMessage(player + ": It's your turn. Please enter your move.");
             }
-            System.out.print(out);
         } else {
             reset();
         }
