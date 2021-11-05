@@ -1,7 +1,6 @@
 package ch.uzh.softcon.one;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 
 import static ch.uzh.softcon.one.Board.*;

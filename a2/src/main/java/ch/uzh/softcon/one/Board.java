@@ -11,8 +11,7 @@ public class Board {
     public static void initialize() {
 
         totalMoves = 0;
-
-        board = new Piece[8][8];
+        cleanBoard();
 
         int[][][] initialPosRed = {
                 {{0}, {1, 3, 5, 7}},

@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import ch.uzh.softcon.one.Turn.Status;
-import javafx.stage.WindowEvent;
 
 public class Game extends Application {
     private static Player activePlayer;
@@ -52,7 +51,7 @@ public class Game extends Application {
                 out = IOFormatter.formatOutput(player + ": Targeted piece is an enemy piece.",
                         false, "Please enter a valid move: ");
             else if (status == Status.OUTSIDE_BOARD)
-                out = IOFormatter.formatOutput(player + ": Turn would result outside of the board.",
+                out = IOFormatter.formatOutput(player + ": Turn would result outside the board.",
                         false, "Please enter a valid move: ");
             else if (status == Status.PIECE_AT_DESTINATION)
                 out = IOFormatter.formatOutput(player + ": A piece blocks the desired destination.",
