@@ -82,9 +82,7 @@ public class Game extends Application {
             }
             System.out.print(out);
         } else {
-            winStatus = false;
-            Board.initialize();
-            activatePlayerRed();
+            reset();
         }
     }
 
@@ -117,7 +115,7 @@ public class Game extends Application {
 
     public static void reset() {
         winStatus = false;
-        activePlayer = Player.RED;
+        activatePlayerRed();
         Board.initialize();
         UI.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
     }
