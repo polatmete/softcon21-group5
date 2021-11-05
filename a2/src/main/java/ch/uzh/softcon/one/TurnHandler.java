@@ -38,7 +38,6 @@ public class TurnHandler {
         // If the player had to make a jump it is possible he must continue with a multi-jump.
         if (jumpRequired) {
             activePiece.startMultiJump();
-            turn.anotherJump();
             if (isJumpRequired(turn)) {
                 return Status.ANOTHER_JUMP_REQUIRED;
             }
@@ -105,7 +104,7 @@ public class TurnHandler {
                 if (Board.getPiece(i, j) == null || Board.getPiece(i, j).getColor() != p) {
                     continue;
                 }
-                if (turn.getStatus() == Status.ANOTHER_JUMP_REQUIRED && !Board.getPiece(i, j).inMultiJump()) {
+                if (Piece.activeMultiJump() && !Board.getPiece(i, j).isInMultiJump()) {
                     continue;
                 }
                 if (Board.getPiece(i, j).getColor() == Player.RED || Board.getPiece(i, j).isKing()) {

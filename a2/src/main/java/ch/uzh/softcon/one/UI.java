@@ -133,7 +133,7 @@ public class UI {
                         @Override
                         public void handle(MouseEvent e) {
                             String eventType = e.getEventType().getName();
-                            Player activePlayer = Game.activePlayer;
+                            Player activePlayer = Game.getActivePlayer();
                             if (!isGameOver()) { //makes it so no more moves can be made if the game is over
                                 if (eventType.equals("MOUSE_CLICKED")) {
                                     if (isPieceSelected()) {
@@ -196,7 +196,7 @@ public class UI {
                     public void handle(MouseEvent e) {
                         if (isPieceSelected()) { //if a piece is selected
                             // TODO: DAs isch grusig
-                            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, Game.activePlayer);
+                            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, Game.getActivePlayer());
                             Game.gameLoop(turn); //performs one iteration of the game loop
                             unselectPiece();
                             scene.setCursor(Cursor.DEFAULT);
@@ -331,6 +331,8 @@ public class UI {
                     if (eventType.equals("MOUSE_CLICKED")) {
                         if (buttonNames[finalButtonIdx].equals("New Game")) {
                             System.out.println("New Game");
+                            Game.activatePlayerRed();
+                            Board.initialize();
                             Game.reset();
                             updatePieces();
                         } else if (buttonNames[finalButtonIdx].equals("Load Game")) {

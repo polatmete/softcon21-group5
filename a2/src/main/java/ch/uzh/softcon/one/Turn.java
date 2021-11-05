@@ -8,8 +8,7 @@ public class Turn {
 
     protected TilePosition from;
     protected TilePosition to;
-    private Player activePlayer;
-    private Status status;
+    private final Player activePlayer;
 
     /**
      * Turn Status
@@ -48,32 +47,17 @@ public class Turn {
     /**
      * Class constructor for the turn class.
      * A single turn consisting of two tile positions.
-     * Status defaults to Status.PENDING.
      * @param x_from FROM x axis
      * @param y_from FROM y axis
      * @param x_to TO x axis
      * @param y_to TO y axis
      * @param p Active player
+     //* @param s Status
      */
     public Turn(int x_from, int y_from, int x_to, int y_to, Player p) {
-        this(x_from, y_from, x_to, y_to, p, Status.PENDING);
-    }
-
-    /**
-     * Class constructor for the turn class.
-     * A single turn consisting of two tile positions.
-     * @param x_from FROM x axis
-     * @param y_from FROM y axis
-     * @param x_to TO x axis
-     * @param y_to TO y axis
-     * @param p Active player
-     * @param s Status
-     */
-    public Turn(int x_from, int y_from, int x_to, int y_to, Player p, Status s) {
         from = new TilePosition(x_from, y_from);
         to = new TilePosition(x_to, y_to);
         activePlayer = p;
-        status = s;
     }
 
     /**
@@ -85,15 +69,7 @@ public class Turn {
     protected record TilePosition(int x, int y) {
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
     public Player getActivePlayer() {
         return activePlayer;
-    }
-
-    public void anotherJump() {
-        status = Status.ANOTHER_JUMP_REQUIRED;
     }
 }

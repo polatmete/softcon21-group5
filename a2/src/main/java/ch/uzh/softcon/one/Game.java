@@ -7,17 +7,14 @@ import ch.uzh.softcon.one.Turn.Status;
 import javafx.stage.WindowEvent;
 
 public class Game extends Application {
-    //TODO De wieder privat?
-    protected static Player activePlayer;
+    private static Player activePlayer;
     private static boolean winStatus;
-    private static boolean rematch; //TODO remove
 
     public static void main(String[] args) { // Setup and initialize game
-        rematch = false; //TODO remove
         winStatus = false;
 
-        activePlayer = Player.RED;
         Board.initialize();
+        activatePlayerRed();
         String out = IOFormatter.formatOutput("Welcome to the Checkers Game. Player red may begin.",
                 true,"Please enter your move: ");
         System.out.print(out);
@@ -31,25 +28,20 @@ public class Game extends Application {
     }
 
     public static void gameLoop(Turn turn) {
-        boolean multiJump = false; //TODO remove
         if (!winStatus) {
             String player = "";
             if (activePlayer == Player.RED) player = "Player red";
             else if (activePlayer == Player.WHITE) player = "Player white";
 
-            if (multiJump) { //TODO remove
-                turn.anotherJump();
-            }
             Status status = TurnHandler.runTurnSequence(turn);
 
             String out = "";
             if (status == Status.JUMP_REQUIRED) {
-                out = IOFormatter.formatOutput(player + ": Desired jump is not possible.",
+                out = IOFormatter.formatOutput(player + ": A jump is required.",
                         false, "Please enter a valid move: ");
-                UI.updateStatusMessage(player + ": Desired jump is not possible.");
+                UI.updateStatusMessage(player + ": A jump is required.");
             }
             else if (status == Status.ANOTHER_JUMP_REQUIRED) {
-                multiJump = true; //TODO remove
                 out = IOFormatter.formatOutput(player + ": Another jump is required.",
                         true, "Please enter your next move: ");
                 UI.updateStatusMessage(player + ": Another jump is required.");
@@ -77,12 +69,11 @@ public class Game extends Application {
                 UI.updateStatusMessage(player + ": Desired move is not possible.");
             }
             else if (status == Status.COMPLETED) {
-                multiJump = false; //TODO remove
                 if (activePlayer == Player.RED) {
-                    activePlayer = Player.WHITE;
+                    activatePlayerWhite();
                     player = "Player white";
                 } else if (activePlayer == Player.WHITE) {
-                    activePlayer = Player.RED;
+                    activatePlayerRed();
                     player = "Player red";
                 }
                 out = IOFormatter.formatOutput(player + ": It's your turn",
@@ -92,10 +83,8 @@ public class Game extends Application {
             System.out.print(out);
         } else {
             winStatus = false;
-            rematch = false; //TODO remove
-            multiJump = false; //TODO remove
-            activePlayer = Player.RED;
             Board.initialize();
+            activatePlayerRed();
         }
     }
 
@@ -112,6 +101,18 @@ public class Game extends Application {
         System.out.print(out);
 
         UI.createRematchInterface();
+    }
+
+    public static Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public static void activatePlayerRed() {
+        activePlayer = Player.RED;
+    }
+
+    public static void activatePlayerWhite() {
+        activePlayer = Player.WHITE;
     }
 
     public static void reset() {
