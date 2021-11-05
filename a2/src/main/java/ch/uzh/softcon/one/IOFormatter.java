@@ -19,7 +19,7 @@ public class IOFormatter {
             turn = new Turn((int)tmp[1] - 97, 8 - ((int)tmp[2] - 49 + 1),
                     (int)tmp[6] - 97, 8 - ((int)tmp[7] - 49 + 1), player);
         } else {
-            turn = new Turn(-1, -1, -1, -1, player, Turn.Status.ILLEGAL_TURN);
+            turn = new Turn(-1, -1, -1, -1, player);
         }
         return turn;
     }

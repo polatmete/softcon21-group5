@@ -12,7 +12,7 @@ public class BoardLoader {
         try {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Load Game...");
-            fileChooser.setCurrentDirectory(new File("./src/"));
+            fileChooser.setCurrentDirectory(new File("a2/src/"));
             int response = fileChooser.showOpenDialog(null);
 
             if (response == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile().isFile()) {
@@ -25,8 +25,11 @@ public class BoardLoader {
                     String[] fields = row.split(",");
 
                     if (y > size() - 1) {
-                        String activePlayer = fields[0].split(":")[1];
-                        Game.activePlayer = Player.valueOf(activePlayer);
+                        if (fields[0].split(":")[1].equals("RED")) {
+                            Game.activatePlayerRed();
+                        } else {
+                            Game.activatePlayerWhite();
+                        }
                         break;
                     }
 
@@ -41,7 +44,6 @@ public class BoardLoader {
                         }
                         if (fields[x].charAt(2) == '+') {
                             p.startMultiJump();
-                            //TODO STATUS MULTIJUMP
                         }
                         if (fields[x].charAt(3) == 'K') {
                             p.promote();
@@ -61,7 +63,8 @@ public class BoardLoader {
         try {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Save Game...");
-            fileChooser.setCurrentDirectory(new File("./src/"));
+            fileChooser.setCurrentDirectory(new File("a2/src/"));
+            fileChooser.setSelectedFile(new File("boardState.csv"));
             int response = fileChooser.showSaveDialog(null);
 
             if (response == JFileChooser.APPROVE_OPTION) {
@@ -80,7 +83,7 @@ public class BoardLoader {
                             } else {
                                 stringedPiece.append("W");
                             }
-                            if (piece.inMultiJump()) {
+                            if (piece.isInMultiJump()) {
                                 stringedPiece.append("+");
                             } else {
                                 stringedPiece.append("_");
@@ -96,13 +99,7 @@ public class BoardLoader {
                     }
                     writer.newLine();
                 }
-                StringBuilder aP = new StringBuilder().append("activePlayer:");
-                if (Game.activePlayer == Player.RED) {
-                    aP.append(Player.RED);
-                } else {
-                    aP.append(Player.WHITE);
-                }
-                writer.write(aP.toString());
+                writer.write("activePlayer:" + Game.getActivePlayer());
                 writer.flush();
                 writer.close();
             } else System.out.println("Canceled or Error.");
