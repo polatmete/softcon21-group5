@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import ch.uzh.softcon.one.Turn.Status;
+import javafx.stage.WindowEvent;
 
 public class Game extends Application {
     private static Player activePlayer;
@@ -112,5 +113,12 @@ public class Game extends Application {
 
     public static void activatePlayerWhite() {
         activePlayer = Player.WHITE;
+    }
+
+    public static void reset() {
+        winStatus = false;
+        activePlayer = Player.RED;
+        Board.initialize();
+        UI.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
     }
 }
