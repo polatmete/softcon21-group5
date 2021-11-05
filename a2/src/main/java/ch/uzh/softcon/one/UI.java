@@ -331,16 +331,7 @@ public class UI {
                     if (eventType.equals("MOUSE_CLICKED")) {
                         if (buttonNames[finalButtonIdx].equals("New Game")) {
                             System.out.println("New Game");
-<<<<<<< HEAD
-<<<<<<< HEAD
-                            Game.activePlayer = Player.RED;
-                            Board.initialize();
-=======
                             Game.reset();
->>>>>>> master
-=======
-                            Game.reset();
->>>>>>> master
                             updatePieces();
                         } else if (buttonNames[finalButtonIdx].equals("Load Game")) {
                             System.out.println("Load Game");
