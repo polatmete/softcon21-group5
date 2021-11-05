@@ -1,6 +1,9 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.rest;
 
-import ch.uzh.softcon.one.Turn.Status;
+import ch.uzh.softcon.one.turn.Turn;
+import ch.uzh.softcon.one.turn.Turn.Status;
+import ch.uzh.softcon.one.turn.TurnHandler;
+import ch.uzh.softcon.one.utils.UI;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -66,11 +69,7 @@ public class Game extends Application {
         if (player == Player.RED) playerString = "Player red";
         else if (player == Player.WHITE) playerString = "Player white";
 
-        String out = IOFormatter.formatOutput("Congratulations " + playerString + ", you won!",
-                true,"Do you want a revenge? (y|n): ");
         UI.updateStatusMessage("Congratulations " + playerString + ", you won! Do you want a revenge?");
-        System.out.print(out);
-
         UI.createRematchInterface();
     }
 

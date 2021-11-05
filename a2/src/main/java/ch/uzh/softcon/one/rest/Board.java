@@ -1,4 +1,6 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.rest;
+
+import ch.uzh.softcon.one.turn.Turn;
 
 public class Board {
 

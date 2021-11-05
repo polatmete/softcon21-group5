@@ -1,4 +1,6 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.turn;
+
+import ch.uzh.softcon.one.rest.Player;
 
 /**
  * The Turn class.
@@ -6,8 +8,8 @@ package ch.uzh.softcon.one;
  */
 public class Turn {
 
-    protected TilePosition from;
-    protected TilePosition to;
+    public TilePosition from;
+    public TilePosition to;
     private final Player activePlayer;
 
     /**
@@ -81,7 +83,7 @@ public class Turn {
      * @param x
      * @param y
      */
-    protected record TilePosition(int x, int y) {
+    public record TilePosition(int x, int y) {
     }
 
     /**

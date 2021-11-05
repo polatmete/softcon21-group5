@@ -1,6 +1,10 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.turn;
 
-import ch.uzh.softcon.one.Turn.Status;
+import ch.uzh.softcon.one.rest.Board;
+import ch.uzh.softcon.one.rest.Piece;
+import ch.uzh.softcon.one.turn.Turn.Status;
+import ch.uzh.softcon.one.rest.Game;
+import ch.uzh.softcon.one.rest.Player;
 
 public class TurnHandler {
 

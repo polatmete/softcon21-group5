@@ -1,4 +1,4 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.rest;
 
 public class Piece {
 
