@@ -1,6 +1,9 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.turn;
 
-import ch.uzh.softcon.one.Turn.Status;
+import ch.uzh.softcon.one.abstraction.Board;
+import ch.uzh.softcon.one.abstraction.Piece;
+import ch.uzh.softcon.one.turn.Turn.Status;
+import ch.uzh.softcon.one.abstraction.Player;
 
 public class TurnValidator {
 
@@ -11,8 +14,8 @@ public class TurnValidator {
      * @return Returns the in which the move (provisionally) ends.
      */
     public static Status validateMove(Turn turn, boolean hasToJump) {
-        int fromX = turn.from.x(); int toX = turn.to.x();
-        int fromY = turn.from.y(); int toY = turn.to.y();
+        int fromX = turn.from().x(); int toX = turn.to().x();
+        int fromY = turn.from().y(); int toY = turn.to().y();
         Piece piece = Board.getPiece(fromX, fromY);
         Player p = turn.getActivePlayer();
 
@@ -76,16 +79,6 @@ public class TurnValidator {
     }
 
     /**
-     * Checks if the desired coordinates are outside the board.
-     * @param x Targeted x axis
-     * @param y Targeted y axis
-     * @return Is outside the board
-     */
-    public static boolean isOutsideBoard(int x, int y) {
-        return x > 7 || x < 0 || y > 7 || y < 0;
-    }
-
-    /**
      * Checks if a jump in a desired direction is possible.
      * @param fromX From x axis
      * @param fromY From y axis
@@ -114,5 +107,15 @@ public class TurnValidator {
     public static boolean canMoveDiagonally(int toX, int toY) {
         return !isOutsideBoard(toX, toY)
                 && Board.getPiece(toX, toY) == null;
+    }
+
+    /**
+     * Checks if the desired coordinates are outside the board.
+     * @param x Targeted x axis
+     * @param y Targeted y axis
+     * @return Is outside the board
+     */
+    public static boolean isOutsideBoard(int x, int y) {
+        return x > 7 || x < 0 || y > 7 || y < 0;
     }
 }

@@ -1,4 +1,6 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.abstraction;
+
+import ch.uzh.softcon.one.turn.Turn;
 
 public class Board {
 
@@ -11,8 +13,7 @@ public class Board {
     public static void initialize() {
 
         totalMoves = 0;
-
-        board = new Piece[8][8];
+        cleanBoard();
 
         int[][][] initialPosRed = {
                 {{0}, {1, 3, 5, 7}},
@@ -59,9 +60,9 @@ public class Board {
     }
 
     public static void movePiece(Turn turn) {
-        Piece pieceToMove = getPiece(turn.from.x(), turn.from.y());
-        board[turn.to.x()][turn.to.y()] = pieceToMove;
-        board[turn.from.x()][turn.from.y()] = null;
+        Piece pieceToMove = getPiece(turn.from().x(), turn.from().y());
+        board[turn.to().x()][turn.to().y()] = pieceToMove;
+        board[turn.from().x()][turn.from().y()] = null;
         totalMoves++;
     }
 

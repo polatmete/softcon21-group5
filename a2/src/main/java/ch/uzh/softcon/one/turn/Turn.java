@@ -1,4 +1,6 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.turn;
+
+import ch.uzh.softcon.one.abstraction.Player;
 
 /**
  * The Turn class.
@@ -6,8 +8,8 @@ package ch.uzh.softcon.one;
  */
 public class Turn {
 
-    protected TilePosition from;
-    protected TilePosition to;
+    private final TilePosition from;
+    private final TilePosition to;
     private final Player activePlayer;
 
     /**
@@ -15,29 +17,45 @@ public class Turn {
      */
     public enum Status {
         /**
-         * Initial Processing needed
+         * Turn is being processed
          */
         PENDING,
         /**
-         * Turn was processed
+         * Turn was finished
          */
         COMPLETED,
         /**
-         * Move is invalid because there is at least one jump possible
+         * At least one jump is possible and must be made
          */
         JUMP_REQUIRED,
         /**
-         * Turn was executed but another jump must be taken
+         * Another jump is possible and must be made
          */
         ANOTHER_JUMP_REQUIRED,
-
+        /**
+         * Targeted piece does not exist
+         */
         NO_PIECE,
+        /**
+         * Targeted piece is an enemy piece
+         */
         ENEMY_PIECE,
+        /**
+         * Turn would result outside the board
+         */
         OUTSIDE_BOARD,
+        /**
+         * Piece at destination
+         */
         PIECE_AT_DESTINATION,
+        /**
+         * Attempt to move backwards while not being a king
+         */
         ILLEGAL_BACKWARDS,
+        /**
+         * Trying to jump with a piece that is not in the active multi jump
+         */
         NOT_MULTI_JUMP_PIECE,
-
         /**
          * Turn is not possible otherwise
          */
@@ -52,7 +70,6 @@ public class Turn {
      * @param x_to TO x axis
      * @param y_to TO y axis
      * @param p Active player
-     //* @param s Status
      */
     public Turn(int x_from, int y_from, int x_to, int y_to, Player p) {
         from = new TilePosition(x_from, y_from);
@@ -66,9 +83,29 @@ public class Turn {
      * @param x
      * @param y
      */
-    protected record TilePosition(int x, int y) {
+    public record TilePosition(int x, int y) {
     }
 
+    /**
+     * Returns the from tile position.
+     * @return from
+     */
+    public TilePosition from() {
+        return from;
+    }
+
+    /**
+     * Returns the to tile position
+     * @return to
+     */
+    public TilePosition to() {
+        return to;
+    }
+
+    /**
+     * Returns the active player
+     * @return active player
+     */
     public Player getActivePlayer() {
         return activePlayer;
     }

@@ -1,4 +1,4 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.abstraction;
 
 public class Piece {
 

@@ -1,12 +1,16 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.utils;
 
+import ch.uzh.softcon.one.abstraction.Game;
+import ch.uzh.softcon.one.abstraction.Board;
+import ch.uzh.softcon.one.abstraction.Piece;
+import ch.uzh.softcon.one.abstraction.Player;
+import ch.uzh.softcon.one.turn.Turn;
 import javafx.event.EventHandler;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -140,7 +144,7 @@ public class UI {
                             if (!isGameOver()) { //makes it so no more moves can be made if the game is over
                                 if (eventType.equals("MOUSE_CLICKED")) {
                                     if (isPieceSelected()) {
-                                        // TODO: DAs isch grusig
+                                        // TODO: Das isch grusig
                                         //when clicking on any piece while a piece is selected it unselects that selected piece
                                         Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
                                         Game.gameLoop(turn); //performs one iteration of the game loop (to update status message)

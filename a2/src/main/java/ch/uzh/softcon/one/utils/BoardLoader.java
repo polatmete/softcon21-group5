@@ -1,10 +1,14 @@
-package ch.uzh.softcon.one;
+package ch.uzh.softcon.one.utils;
+
+import ch.uzh.softcon.one.abstraction.Board;
+import ch.uzh.softcon.one.abstraction.Game;
+import ch.uzh.softcon.one.abstraction.Piece;
+import ch.uzh.softcon.one.abstraction.Player;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 
-import static ch.uzh.softcon.one.Board.*;
+import static ch.uzh.softcon.one.abstraction.Board.*;
 
 public class BoardLoader {
 
@@ -54,9 +58,9 @@ public class BoardLoader {
                     y++;
                 }
                 Board.updateSavedBoard();
-            } else JOptionPane.showMessageDialog(null, "You messed up.", "Load Failed", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException e) {
-            e.printStackTrace();
+            } else JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "You messed up.", "Load Failed", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "The given file was corrupted.", "General file error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -105,8 +109,8 @@ public class BoardLoader {
                 writer.close();
                 Board.updateSavedBoard();
             } else JOptionPane.showMessageDialog(null,"You messed up.", "Save Failed", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "The file could not be saved.", "General file error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
