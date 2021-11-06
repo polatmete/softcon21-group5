@@ -34,44 +34,49 @@ public class UI {
     private static final float tileHeight = 75;
     private static int selectedPieceX = -1;
     private static int selectedPieceY = -1;
+    private static Stage stage;
+    private static Scene game;
+    private static Scene home;
     private static Group pieces;
     private static Group board;
     private static Group texts;
     private static Group rematch;
-    private static Stage stage;
     private static Group buttons;
-    private static Scene scene;
-    private static boolean isCurrentStateSaved;
 
     public static void initialize(Stage stage) {
 
         UI.stage = stage;
-        Group root = new Group();
+
+        Group gameRoot = new Group();
         board = new Group();
         pieces = new Group();
         texts = new Group();
         rematch = new Group();
         buttons = new Group();
-        root.getChildren().add(board);
-        root.getChildren().add(pieces);
-        root.getChildren().add(texts);
-        root.getChildren().add(rematch);
-        root.getChildren().add(buttons);
+        gameRoot.getChildren().add(board);
+        gameRoot.getChildren().add(pieces);
+        gameRoot.getChildren().add(texts);
+        gameRoot.getChildren().add(rematch);
+        gameRoot.getChildren().add(buttons);
 
+        game = new Scene(gameRoot);
 
-        scene = new Scene(root);
+        Group homeRoot = new Group();
+        homeRoot.getChildren().add(buttons);
+
+        home = new Scene(homeRoot);
 
         stage.setWidth(windowWidth);
         stage.setHeight(windowHeight);
         stage.setTitle("Checkers Game");
         stage.setResizable(false);
-        stage.setScene(scene);
+        stage.setScene(home);
         stage.show();
 
         updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
         drawBoard();
         updatePieces();
-        drawButtons();
+        drawButtons(home);
 
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, UI::closeWindowEvent);
     }
@@ -161,12 +166,12 @@ public class UI {
                                     if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
                                         circle.setStrokeWidth(2);
                                         circle.setStroke(Color.BLACK);
-                                        scene.setCursor(Cursor.HAND);
+                                        game.setCursor(Cursor.HAND);
                                     }
                                 } else if (eventType.equals ("MOUSE_EXITED")) {
                                     if (!isPieceSelected()) {
                                         circle.setStrokeWidth(0);
-                                        scene.setCursor(Cursor.DEFAULT);
+                                        game.setCursor(Cursor.DEFAULT);
                                     }
                                 }
                             }
@@ -206,7 +211,7 @@ public class UI {
                             Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, Game.getActivePlayer());
                             Game.gameLoop(turn); //performs one iteration of the game loop
                             unselectPiece();
-                            scene.setCursor(Cursor.DEFAULT);
+                            game.setCursor(Cursor.DEFAULT);
                             updatePieces();
                         }
                     }
@@ -279,7 +284,7 @@ public class UI {
         return !rematch.getChildren().isEmpty();
     }
 
-    private static void drawButtons() {
+    private static void drawButtons(Scene scene) {
         //add buttons
         float buttonHeight = 100;
         float buttonWidth = 200;
@@ -289,20 +294,24 @@ public class UI {
         int verticalSpacing = 25;
         int margin = 75;
 
-        //float spacing = (windowWidth - numberOfButtons * buttonWidth) / (numberOfButtons + 1); //Even spacing between buttons (for horizontally centered buttons)
+        float spacing = (windowWidth - numberOfButtons * buttonWidth) / (numberOfButtons + 1); //Even spacing between buttons (for horizontally centered buttons)
 
         for (int buttonIdx = 0; buttonIdx < numberOfButtons; buttonIdx++) {
 
             Group button = new Group();
 
             Rectangle rectangle = new Rectangle();
-            //horizontally centered
-            //rectangle.setX(spacing + i * (buttonWidth + spacing));
-            //rectangle.setY(windowHeight/2 - buttonHeight/2);
 
-            //vertically aligned right
-            rectangle.setX(windowWidth - margin - buttonWidth);
-            rectangle.setY(margin + buttonIdx * (verticalSpacing + buttonHeight));
+            if (scene == home) {
+                //horizontally centered
+                rectangle.setX(spacing + buttonIdx * (buttonWidth + spacing));
+                rectangle.setY(windowHeight/2 - buttonHeight/2);
+            } else if (scene == game) {
+                //vertically aligned right
+                rectangle.setX(windowWidth - margin - buttonWidth);
+                rectangle.setY(margin + buttonIdx * (verticalSpacing + buttonHeight));
+            }
+
             rectangle.setWidth(buttonWidth);
             rectangle.setHeight(buttonHeight);
             rectangle.setFill(Color.GRAY);
@@ -316,13 +325,16 @@ public class UI {
             text.setFont(new Font(fontSize));
             text.setTextAlignment(TextAlignment.CENTER);
             text.setTextOrigin(VPos.CENTER);
-            //horizontally centered
-            //text.setX((spacing + i * (buttonWidth + spacing)) + buttonWidth/2 - text.getLayoutBounds().getWidth() / 2);
-            //text.setY(windowHeight/2 - buttonHeight/2 + buttonHeight/2);
 
-            //vertically aligned right
-            text.setX(windowWidth - margin - buttonWidth + buttonWidth/2 - text.getLayoutBounds().getWidth() / 2);
-            text.setY(margin + buttonIdx * (verticalSpacing + buttonHeight) + buttonHeight/2);
+            if (scene == home) {
+                //horizontally centered
+                text.setX((spacing + buttonIdx * (buttonWidth + spacing)) + buttonWidth/2 - text.getLayoutBounds().getWidth() / 2);
+                text.setY(windowHeight/2 - buttonHeight/2 + buttonHeight/2);
+            } else if (scene == game) {
+                //vertically aligned right
+                text.setX(windowWidth - margin - buttonWidth + buttonWidth/2 - text.getLayoutBounds().getWidth() / 2);
+                text.setY(margin + buttonIdx * (verticalSpacing + buttonHeight) + buttonHeight/2);
+            }
 
             button.getChildren().add(rectangle);
             button.getChildren().add(text);
@@ -348,7 +360,6 @@ public class UI {
                             updatePieces();
                         } else if (buttonNames[finalButtonIdx].equals("Save Game")) {
                             System.out.println("Save Game");
-                            isCurrentStateSaved = true;
                             BoardLoader.saveBoard();
 
                         }
