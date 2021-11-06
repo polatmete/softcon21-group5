@@ -1,4 +1,4 @@
-package ch.uzh.softcon.one.rest;
+package ch.uzh.softcon.one.abstraction;
 
 import ch.uzh.softcon.one.turn.Turn;
 import ch.uzh.softcon.one.turn.Turn.Status;

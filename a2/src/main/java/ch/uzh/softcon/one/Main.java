@@ -1,6 +1,6 @@
 package ch.uzh.softcon.one;
 
-import ch.uzh.softcon.one.rest.Game;
+import ch.uzh.softcon.one.abstraction.Game;
 
 public class Main {
 

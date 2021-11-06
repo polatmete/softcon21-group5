@@ -1,4 +1,4 @@
-package ch.uzh.softcon.one.rest;
+package ch.uzh.softcon.one.abstraction;
 
 import ch.uzh.softcon.one.turn.Turn;
 
@@ -60,9 +60,9 @@ public class Board {
     }
 
     public static void movePiece(Turn turn) {
-        Piece pieceToMove = getPiece(turn.from.x(), turn.from.y());
-        board[turn.to.x()][turn.to.y()] = pieceToMove;
-        board[turn.from.x()][turn.from.y()] = null;
+        Piece pieceToMove = getPiece(turn.from().x(), turn.from().y());
+        board[turn.to().x()][turn.to().y()] = pieceToMove;
+        board[turn.from().x()][turn.from().y()] = null;
         totalMoves++;
     }
 

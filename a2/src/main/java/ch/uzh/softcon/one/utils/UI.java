@@ -1,10 +1,10 @@
 package ch.uzh.softcon.one.utils;
 
-import ch.uzh.softcon.one.rest.Game;
-import ch.uzh.softcon.one.rest.Board;
-import ch.uzh.softcon.one.rest.Piece;
+import ch.uzh.softcon.one.abstraction.Game;
+import ch.uzh.softcon.one.abstraction.Board;
+import ch.uzh.softcon.one.abstraction.Piece;
+import ch.uzh.softcon.one.abstraction.Player;
 import ch.uzh.softcon.one.turn.Turn;
-import ch.uzh.softcon.one.rest.Player;
 import javafx.event.EventHandler;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;

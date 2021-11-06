@@ -1,6 +1,6 @@
 package ch.uzh.softcon.one.turn;
 
-import ch.uzh.softcon.one.rest.Player;
+import ch.uzh.softcon.one.abstraction.Player;
 
 /**
  * The Turn class.
@@ -8,8 +8,8 @@ import ch.uzh.softcon.one.rest.Player;
  */
 public class Turn {
 
-    public TilePosition from;
-    public TilePosition to;
+    private final TilePosition from;
+    private final TilePosition to;
     private final Player activePlayer;
 
     /**
@@ -84,6 +84,22 @@ public class Turn {
      * @param y
      */
     public record TilePosition(int x, int y) {
+    }
+
+    /**
+     * Returns the from tile position.
+     * @return from
+     */
+    public TilePosition from() {
+        return from;
+    }
+
+    /**
+     * Returns the to tile position
+     * @return to
+     */
+    public TilePosition to() {
+        return to;
     }
 
     /**

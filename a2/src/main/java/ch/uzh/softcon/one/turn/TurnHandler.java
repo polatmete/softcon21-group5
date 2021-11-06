@@ -1,10 +1,10 @@
 package ch.uzh.softcon.one.turn;
 
-import ch.uzh.softcon.one.rest.Board;
-import ch.uzh.softcon.one.rest.Piece;
+import ch.uzh.softcon.one.abstraction.Board;
+import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.turn.Turn.Status;
-import ch.uzh.softcon.one.rest.Game;
-import ch.uzh.softcon.one.rest.Player;
+import ch.uzh.softcon.one.abstraction.Game;
+import ch.uzh.softcon.one.abstraction.Player;
 
 public class TurnHandler {
 
@@ -33,7 +33,7 @@ public class TurnHandler {
         }
 
         // Make a king out of the piece if it has reached the other side
-        Piece activePiece = Board.getPiece(turn.to.x(), turn.to.y());
+        Piece activePiece = Board.getPiece(turn.to().x(), turn.to().y());
         if (checkTransformNeeded(turn)) {
             activePiece.promote();
             return Status.COMPLETED;
@@ -56,10 +56,10 @@ public class TurnHandler {
      * @param turn Current turn
      */
     private static void executeTurn(Turn turn) {
-        int enemyX = (turn.from.x() + turn.to.x()) / 2;
-        int enemyY = (turn.from.y() + turn.to.y()) / 2;
+        int enemyX = (turn.from().x() + turn.to().x()) / 2;
+        int enemyY = (turn.from().y() + turn.to().y()) / 2;
 
-        if (Math.abs(turn.from.x() - turn.to.x()) == 2 || Math.abs(turn.from.y() - turn.to.y()) == 2) {
+        if (Math.abs(turn.from().x() - turn.to().x()) == 2 || Math.abs(turn.from().y() - turn.to().y()) == 2) {
             Board.removePiece(enemyX, enemyY);
         }
         Board.movePiece(turn);
@@ -89,9 +89,9 @@ public class TurnHandler {
      */
     private static boolean checkTransformNeeded(Turn turn) {
         if (turn.getActivePlayer() == Player.RED) {
-            return turn.to.y() == Board.size() - 1;
+            return turn.to().y() == Board.size() - 1;
         } else {
-            return turn.to.y() == 0;
+            return turn.to().y() == 0;
         }
     }
 

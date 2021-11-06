@@ -1,9 +1,9 @@
 package ch.uzh.softcon.one.turn;
 
-import ch.uzh.softcon.one.rest.Board;
-import ch.uzh.softcon.one.rest.Piece;
+import ch.uzh.softcon.one.abstraction.Board;
+import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.turn.Turn.Status;
-import ch.uzh.softcon.one.rest.Player;
+import ch.uzh.softcon.one.abstraction.Player;
 
 public class TurnValidator {
 
@@ -14,8 +14,8 @@ public class TurnValidator {
      * @return Returns the in which the move (provisionally) ends.
      */
     public static Status validateMove(Turn turn, boolean hasToJump) {
-        int fromX = turn.from.x(); int toX = turn.to.x();
-        int fromY = turn.from.y(); int toY = turn.to.y();
+        int fromX = turn.from().x(); int toX = turn.to().x();
+        int fromY = turn.from().y(); int toY = turn.to().y();
         Piece piece = Board.getPiece(fromX, fromY);
         Player p = turn.getActivePlayer();
 
