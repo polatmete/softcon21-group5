@@ -38,6 +38,7 @@ public class Piece {
             isMultiJumping = true;
             globalMultiJump = true;
         } else {
+            // TODO: What is this?
             System.out.println("Fatal error occurred: " +
                     "tried to start multiJumping with a piece but another one is already in a multiJump!");
         }
