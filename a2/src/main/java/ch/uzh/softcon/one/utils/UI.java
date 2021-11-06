@@ -24,6 +24,7 @@ import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class UI {
@@ -41,7 +42,8 @@ public class UI {
     private static Group board;
     private static Group texts;
     private static Group rematch;
-    private static Group buttons;
+    private static Group gameButtons;
+    private static Group homeButtons;
 
     public static void initialize(Stage stage) {
 
@@ -52,17 +54,18 @@ public class UI {
         pieces = new Group();
         texts = new Group();
         rematch = new Group();
-        buttons = new Group();
+        gameButtons = new Group();
         gameRoot.getChildren().add(board);
         gameRoot.getChildren().add(pieces);
         gameRoot.getChildren().add(texts);
         gameRoot.getChildren().add(rematch);
-        gameRoot.getChildren().add(buttons);
+        gameRoot.getChildren().add(gameButtons);
 
         game = new Scene(gameRoot);
 
+        homeButtons = new Group();
         Group homeRoot = new Group();
-        homeRoot.getChildren().add(buttons);
+        homeRoot.getChildren().add(homeButtons);
 
         home = new Scene(homeRoot);
 
@@ -70,12 +73,13 @@ public class UI {
         stage.setHeight(windowHeight);
         stage.setTitle("Checkers Game");
         stage.setResizable(false);
-        stage.setScene(home);
+        stage.setScene(game);
         stage.show();
 
         updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
         drawBoard();
         updatePieces();
+        drawButtons(game);
         drawButtons(home);
 
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, UI::closeWindowEvent);
@@ -117,6 +121,62 @@ public class UI {
         selectedPieceY = y;
     }
 
+    private static void handleClick(int x, int y, Circle circle) {
+        Player activePlayer = Game.activePlayer();
+        if (isPieceSelected()) {
+            // TODO: Das isch grusig
+            //when clicking on any piece while a piece is selected it unselects that selected piece
+            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
+            Game.gameLoop(turn); //performs one iteration of the game loop (to update status message)
+            unselectPiece();
+            game.setCursor(Cursor.DEFAULT);
+            updatePieces();
+        } else {
+            if (Board.getPiece(x, y).getColor() == activePlayer) {
+                circle.setStrokeWidth(6);
+                circle.setStroke(Color.GOLD);
+                selectPiece(x, y);
+            }
+        }
+    }
+
+    private static void handleHover(int x, int y, Circle circle) {
+        Player activePlayer = Game.activePlayer();
+        if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
+            circle.setStrokeWidth(3);
+            circle.setStroke(Color.GOLD);
+            game.setCursor(Cursor.HAND);
+        }
+    }
+
+    private static void handleExit(Circle circle) {
+        if (!isPieceSelected()) {
+            circle.setStrokeWidth(0);
+            game.setCursor(Cursor.DEFAULT);
+        }
+    }
+
+    private static void handleButtonClick(String[] buttonNames, int finalButtonIdx) {
+        switch (buttonNames[finalButtonIdx]) {
+            case "New Game" -> {
+                System.out.println("New Game");
+                Game.changePlayer(Player.RED);
+                Board.initialize();
+                Game.reset();
+                updatePieces();
+            }
+            case "Load Game" -> {
+                System.out.println("Load Game");
+                BoardLoader.loadBoard();
+                updatePieces();
+            }
+            case "Save Game" -> {
+                System.out.println("Save Game");
+                BoardLoader.saveBoard();
+            }
+        }
+    }
+
     private static void updatePieces() {
         pieces.getChildren().clear();
         int padding = 10;
@@ -134,52 +194,16 @@ public class UI {
                             circle.setFill(Color.DARKRED);
                         }
                     } else {
-                        circle.setFill(Color.WHITE);
+                        circle.setFill(Color.LIGHTGRAY);
                         if (piece.isKing()) {
                             circle.setFill(Color.GRAY);
                         }
                     }
                     int x = j;
                     int y = i;
-                    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent e) {
-                            String eventType = e.getEventType().getName();
-                            Player activePlayer = Game.getActivePlayer();
-                            if (!isGameOver()) { //makes it so no more moves can be made if the game is over
-                                if (eventType.equals("MOUSE_CLICKED")) {
-                                    if (isPieceSelected()) {
-                                        // TODO: Das isch grusig
-                                        //when clicking on any piece while a piece is selected it unselects that selected piece
-                                        Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
-                                        Game.gameLoop(turn); //performs one iteration of the game loop (to update status message)
-                                        unselectPiece();
-                                        updatePieces();
-                                    } else {
-                                        if (Board.getPiece(x, y).getColor() == activePlayer) {
-                                            circle.setStrokeWidth(5);
-                                            circle.setStroke(Color.BLACK);
-                                            selectPiece(x, y);
-                                        }
-                                    }
-                                } else if (eventType.equals ("MOUSE_ENTERED")) {
-                                    if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
-                                        circle.setStrokeWidth(2);
-                                        circle.setStroke(Color.BLACK);
-                                        game.setCursor(Cursor.HAND);
-                                    }
-                                } else if (eventType.equals ("MOUSE_EXITED")) {
-                                    if (!isPieceSelected()) {
-                                        circle.setStrokeWidth(0);
-                                        game.setCursor(Cursor.DEFAULT);
-                                    }
-                                }
-                            }
-                        }
-                    };
-                    circle.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-                    circle.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandler);
-                    circle.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandler);
+                    circle.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleClick(x, y, circle));
+                    circle.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> handleHover(x, y, circle));
+                    circle.addEventFilter(MouseEvent.MOUSE_EXITED, e -> handleExit(circle));
                     pieces.getChildren().add(circle);
                 }
             }
@@ -195,28 +219,17 @@ public class UI {
                 rectangle.setWidth(tileWidth);
                 rectangle.setHeight(tileHeight);
                 if ((i + j) % 2 == 0) {
-                    rectangle.setFill(Color.LIGHTGRAY);
+                    rectangle.setFill(Color.WHITE);
                 } else {
-                    rectangle.setFill(Color.DARKGRAY);
+                    rectangle.setFill(Color.BLACK);
                 }
-                rectangle.setStrokeWidth(5);
+                rectangle.setStrokeWidth(1);
                 rectangle.setStroke(Color.BLACK);
                 int x = i;
                 int y = j;
-                EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                        if (isPieceSelected()) { //if a piece is selected
-                            // TODO: DAs isch grusig
-                            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, Game.getActivePlayer());
-                            Game.gameLoop(turn); //performs one iteration of the game loop
-                            unselectPiece();
-                            game.setCursor(Cursor.DEFAULT);
-                            updatePieces();
-                        }
-                    }
-                };
-                rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+                rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+                    if (isPieceSelected()) handleClick(x, y, null);
+                });
                 board.getChildren().add(rectangle);
             }
         }
@@ -255,6 +268,7 @@ public class UI {
             rectangle.setStroke(Color.BLACK);
             rectangle.setStrokeWidth(5);
             int finalI = i;
+            // TODO: Remove this and replace by message box.
             EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
@@ -288,7 +302,13 @@ public class UI {
         //add buttons
         float buttonHeight = 100;
         float buttonWidth = 200;
-        String[] buttonNames = {"New Game", "Load Game", "Save Game"};
+        String[] buttonNames = {"Load Game", "New Game"};
+
+        if (scene == game) {
+            buttonNames = new String[]{"New Game", "Save Game", "New Game"};
+        } else if (scene == home) {
+            buttonNames = new String[]{"Load Game", "Save Game"};
+        }
         int numberOfButtons = buttonNames.length;
         int fontSize = 30;
         int verticalSpacing = 25;
@@ -301,12 +321,14 @@ public class UI {
             Group button = new Group();
 
             Rectangle rectangle = new Rectangle();
-
+            System.out.println(scene == game);
             if (scene == home) {
                 //horizontally centered
+
                 rectangle.setX(spacing + buttonIdx * (buttonWidth + spacing));
                 rectangle.setY(windowHeight/2 - buttonHeight/2);
             } else if (scene == game) {
+                System.out.println("test");
                 //vertically aligned right
                 rectangle.setX(windowWidth - margin - buttonWidth);
                 rectangle.setY(margin + buttonIdx * (verticalSpacing + buttonHeight));
@@ -339,40 +361,18 @@ public class UI {
             button.getChildren().add(rectangle);
             button.getChildren().add(text);
 
-            buttons.getChildren().add(button);
+            if (scene == home) {
+                homeButtons.getChildren().add(button);
+            } else if (scene == game) {
+                gameButtons.getChildren().add(button);
+            }
 
             int finalButtonIdx = buttonIdx;
-            EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                    String eventType = e.getEventType().getName();
+            String[] finalButtonNames = buttonNames;
 
-                    if (eventType.equals("MOUSE_CLICKED")) {
-                        if (buttonNames[finalButtonIdx].equals("New Game")) {
-                            System.out.println("New Game");
-                            Game.activatePlayerRed();
-                            Board.initialize();
-                            Game.reset();
-                            updatePieces();
-                        } else if (buttonNames[finalButtonIdx].equals("Load Game")) {
-                            System.out.println("Load Game");
-                            BoardLoader.loadBoard();
-                            updatePieces();
-                        } else if (buttonNames[finalButtonIdx].equals("Save Game")) {
-                            System.out.println("Save Game");
-                            BoardLoader.saveBoard();
-
-                        }
-                    } else if (eventType.equals("MOUSE_ENTERED")) {
-                        rectangle.setFill(Color.LIGHTGRAY);
-                    } else if (eventType.equals("MOUSE_EXITED")) {
-                        rectangle.setFill(Color.GRAY);
-                    }
-                }
-            };
-            button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-            button.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandler);
-            button.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandler);
+            button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleButtonClick(finalButtonNames, finalButtonIdx));
+            button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> rectangle.setFill(Color.LIGHTGRAY));
+            button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> rectangle.setFill((Color.GREY)));
         }
     }
 }

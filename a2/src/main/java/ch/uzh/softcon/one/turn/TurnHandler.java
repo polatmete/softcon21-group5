@@ -36,6 +36,7 @@ public class TurnHandler {
         Piece activePiece = Board.getPiece(turn.to().x(), turn.to().y());
         if (checkTransformNeeded(turn)) {
             activePiece.promote();
+            Game.changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
             return Status.COMPLETED;
         }
 
@@ -48,6 +49,7 @@ public class TurnHandler {
         }
 
         activePiece.endMultiJump();
+        Game.changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
         return Status.COMPLETED;
     }
 
