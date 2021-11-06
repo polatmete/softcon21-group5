@@ -305,7 +305,7 @@ public class UI {
         String[] buttonNames = {"Load Game", "New Game"};
 
         if (scene == game) {
-            buttonNames = new String[]{"New Game", "Save Game", "New Game"};
+            buttonNames = new String[]{"New Game", "Load Game", "Save Game"};
         } else if (scene == home) {
             buttonNames = new String[]{"Load Game", "Save Game"};
         }
