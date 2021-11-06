@@ -142,9 +142,9 @@ public class UI {
                         @Override
                         public void handle(MouseEvent e) {
                             String eventType = e.getEventType().getName();
-                            Player activePlayer = Game.getActivePlayer();
                             if (!isGameOver()) { //makes it so no more moves can be made if the game is over
                                 if (eventType.equals("MOUSE_CLICKED")) {
+                                    Player activePlayer = Game.activePlayer();
                                     if (isPieceSelected()) {
                                         // TODO: Das isch grusig
                                         //when clicking on any piece while a piece is selected it unselects that selected piece
@@ -160,6 +160,7 @@ public class UI {
                                         }
                                     }
                                 } else if (eventType.equals ("MOUSE_ENTERED")) {
+                                    Player activePlayer = Game.activePlayer();
                                     if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
                                         circle.setStrokeWidth(2);
                                         circle.setStroke(Color.BLACK);
@@ -205,7 +206,7 @@ public class UI {
                     public void handle(MouseEvent e) {
                         if (isPieceSelected()) { //if a piece is selected
                             // TODO: DAs isch grusig
-                            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, Game.getActivePlayer());
+                            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, Game.activePlayer());
                             Game.gameLoop(turn); //performs one iteration of the game loop
                             unselectPiece();
                             scene.setCursor(Cursor.DEFAULT);
@@ -340,7 +341,7 @@ public class UI {
                     if (eventType.equals("MOUSE_CLICKED")) {
                         if (buttonNames[finalButtonIdx].equals("New Game")) {
                             System.out.println("New Game");
-                            Game.activatePlayerRed();
+                            Game.changePlayer(Player.RED);
                             Board.initialize();
                             Game.reset();
                             updatePieces();

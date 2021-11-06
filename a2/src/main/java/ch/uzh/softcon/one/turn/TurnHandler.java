@@ -13,7 +13,7 @@ public class TurnHandler {
      * @param turn Current turn
      * @return Current turn status
      */
-    public static Status runTurnSequence(Turn turn) {
+    public static void runTurnSequence(Turn turn) {
         boolean jumpRequired = isJumpRequired(turn);
 
         // Validate the move or jump and return the status based on it
@@ -21,7 +21,7 @@ public class TurnHandler {
 
         //If the desired turn is invalid it returns the status
         if (validationResult != Status.PENDING) {
-            return validationResult;
+            //return validationResult;
         }
 
         // Execute the move or jump
@@ -36,19 +36,19 @@ public class TurnHandler {
         Piece activePiece = Board.getPiece(turn.to().x(), turn.to().y());
         if (checkTransformNeeded(turn)) {
             activePiece.promote();
-            return Status.COMPLETED;
+            Game.changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
         }
 
         // If the player had to make a jump it is possible he must continue with a multi-jump.
         if (jumpRequired) {
             activePiece.startMultiJump();
             if (isJumpRequired(turn)) {
-                return Status.ANOTHER_JUMP_REQUIRED;
+                //return Status.ANOTHER_JUMP_REQUIRED;
             }
         }
 
         activePiece.endMultiJump();
-        return Status.COMPLETED;
+        Game.changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
     }
 
     /**

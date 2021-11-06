@@ -30,9 +30,10 @@ public class BoardLoader {
 
                     if (y > size() - 1) {
                         if (fields[0].split(":")[1].equals("RED")) {
-                            Game.activatePlayerRed();
+                            Game.changePlayer(Player.RED);
                         } else {
-                            Game.activatePlayerWhite();
+                            // PlayerData.activePlayerWhite()
+                            Game.changePlayer(Player.WHITE);
                         }
                         break;
                     }
@@ -104,7 +105,7 @@ public class BoardLoader {
                     }
                     writer.newLine();
                 }
-                writer.write("activePlayer:" + Game.getActivePlayer());
+                writer.write("activePlayer:" + Game.activePlayer());
                 writer.flush();
                 writer.close();
                 Board.updateSavedBoard();
