@@ -113,7 +113,7 @@ public class UI {
         selectedPieceY = y;
     }
 
-    public static void handleClick(int x, int y, Circle circle) {
+    private static void handleClick(int x, int y, Circle circle) {
         Player activePlayer = Game.activePlayer();
         if (isPieceSelected()) {
             // TODO: Das isch grusig
@@ -121,33 +121,34 @@ public class UI {
             Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
             Game.gameLoop(turn); //performs one iteration of the game loop (to update status message)
             unselectPiece();
+            scene.setCursor(Cursor.DEFAULT);
             updatePieces();
         } else {
             if (Board.getPiece(x, y).getColor() == activePlayer) {
-                circle.setStrokeWidth(5);
-                circle.setStroke(Color.BLACK);
+                circle.setStrokeWidth(6);
+                circle.setStroke(Color.GOLD);
                 selectPiece(x, y);
             }
         }
     }
 
-    public static void handleHover(int x, int y, Circle circle) {
+    private static void handleHover(int x, int y, Circle circle) {
         Player activePlayer = Game.activePlayer();
         if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
-            circle.setStrokeWidth(2);
-            circle.setStroke(Color.BLACK);
+            circle.setStrokeWidth(3);
+            circle.setStroke(Color.GOLD);
             scene.setCursor(Cursor.HAND);
         }
     }
 
-    public static void handleExit(Circle circle) {
+    private static void handleExit(Circle circle) {
         if (!isPieceSelected()) {
             circle.setStrokeWidth(0);
             scene.setCursor(Cursor.DEFAULT);
         }
     }
 
-    public static void handleButtonClick(String[] buttonNames, int finalButtonIdx) {
+    private static void handleButtonClick(String[] buttonNames, int finalButtonIdx) {
         switch (buttonNames[finalButtonIdx]) {
             case "New Game" -> {
                 System.out.println("New Game");
@@ -220,20 +221,9 @@ public class UI {
                 rectangle.setStroke(Color.BLACK);
                 int x = i;
                 int y = j;
-                EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent e) {
-                        if (isPieceSelected()) { //if a piece is selected
-                            // TODO: DAs isch grusig
-                            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, Game.activePlayer());
-                            Game.gameLoop(turn); //performs one iteration of the game loop
-                            unselectPiece();
-                            scene.setCursor(Cursor.DEFAULT);
-                            updatePieces();
-                        }
-                    }
-                };
-                rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+                rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+                    if (isPieceSelected()) handleClick(x, y, null);
+                });
                 board.getChildren().add(rectangle);
             }
         }
@@ -272,6 +262,7 @@ public class UI {
             rectangle.setStroke(Color.BLACK);
             rectangle.setStrokeWidth(5);
             int finalI = i;
+            // TODO: Remove this and replace by message box.
             EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
