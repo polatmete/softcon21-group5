@@ -58,7 +58,6 @@ public class UI {
         root.getChildren().add(rematch);
         root.getChildren().add(buttons);
 
-
         scene = new Scene(root);
 
         stage.setWidth(windowWidth);
@@ -114,6 +113,62 @@ public class UI {
         selectedPieceY = y;
     }
 
+    public static void handleClick(int x, int y, Circle circle) {
+        Player activePlayer = Game.activePlayer();
+        if (isPieceSelected()) {
+            // TODO: Das isch grusig
+            //when clicking on any piece while a piece is selected it unselects that selected piece
+            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
+            Game.gameLoop(turn); //performs one iteration of the game loop (to update status message)
+            unselectPiece();
+            updatePieces();
+        } else {
+            if (Board.getPiece(x, y).getColor() == activePlayer) {
+                circle.setStrokeWidth(5);
+                circle.setStroke(Color.BLACK);
+                selectPiece(x, y);
+            }
+        }
+    }
+
+    public static void handleHover(int x, int y, Circle circle) {
+        Player activePlayer = Game.activePlayer();
+        if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
+            circle.setStrokeWidth(2);
+            circle.setStroke(Color.BLACK);
+            scene.setCursor(Cursor.HAND);
+        }
+    }
+
+    public static void handleExit(Circle circle) {
+        if (!isPieceSelected()) {
+            circle.setStrokeWidth(0);
+            scene.setCursor(Cursor.DEFAULT);
+        }
+    }
+
+    public static void handleButtonClick(String[] buttonNames, int finalButtonIdx) {
+        switch (buttonNames[finalButtonIdx]) {
+            case "New Game" -> {
+                System.out.println("New Game");
+                Game.changePlayer(Player.RED);
+                Board.initialize();
+                Game.reset();
+                updatePieces();
+            }
+            case "Load Game" -> {
+                System.out.println("Load Game");
+                BoardLoader.loadBoard();
+                updatePieces();
+            }
+            case "Save Game" -> {
+                System.out.println("Save Game");
+                isCurrentStateSaved = true;
+                BoardLoader.saveBoard();
+            }
+        }
+    }
+
     private static void updatePieces() {
         pieces.getChildren().clear();
         int padding = 10;
@@ -131,53 +186,17 @@ public class UI {
                             circle.setFill(Color.DARKRED);
                         }
                     } else {
-                        circle.setFill(Color.WHITE);
+                        circle.setFill(Color.LIGHTGRAY);
                         if (piece.isKing()) {
                             circle.setFill(Color.GRAY);
                         }
                     }
                     int x = j;
                     int y = i;
-                    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent e) {
-                            String eventType = e.getEventType().getName();
-                            if (!isGameOver()) { //makes it so no more moves can be made if the game is over
-                                if (eventType.equals("MOUSE_CLICKED")) {
-                                    Player activePlayer = Game.activePlayer();
-                                    if (isPieceSelected()) {
-                                        // TODO: Das isch grusig
-                                        //when clicking on any piece while a piece is selected it unselects that selected piece
-                                        Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
-                                        Game.gameLoop(turn); //performs one iteration of the game loop (to update status message)
-                                        unselectPiece();
-                                        updatePieces();
-                                    } else {
-                                        if (Board.getPiece(x, y).getColor() == activePlayer) {
-                                            circle.setStrokeWidth(5);
-                                            circle.setStroke(Color.BLACK);
-                                            selectPiece(x, y);
-                                        }
-                                    }
-                                } else if (eventType.equals ("MOUSE_ENTERED")) {
-                                    Player activePlayer = Game.activePlayer();
-                                    if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
-                                        circle.setStrokeWidth(2);
-                                        circle.setStroke(Color.BLACK);
-                                        scene.setCursor(Cursor.HAND);
-                                    }
-                                } else if (eventType.equals ("MOUSE_EXITED")) {
-                                    if (!isPieceSelected()) {
-                                        circle.setStrokeWidth(0);
-                                        scene.setCursor(Cursor.DEFAULT);
-                                    }
-                                }
-                            }
-                        }
-                    };
-                    circle.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-                    circle.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandler);
-                    circle.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandler);
+
+                    circle.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleClick(x, y, circle));
+                    circle.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> handleHover(x, y, circle));
+                    circle.addEventFilter(MouseEvent.MOUSE_EXITED, e -> handleExit(circle));
                     pieces.getChildren().add(circle);
                 }
             }
@@ -193,11 +212,11 @@ public class UI {
                 rectangle.setWidth(tileWidth);
                 rectangle.setHeight(tileHeight);
                 if ((i + j) % 2 == 0) {
-                    rectangle.setFill(Color.LIGHTGRAY);
+                    rectangle.setFill(Color.WHITE);
                 } else {
-                    rectangle.setFill(Color.DARKGRAY);
+                    rectangle.setFill(Color.BLACK);
                 }
-                rectangle.setStrokeWidth(5);
+                rectangle.setStrokeWidth(1);
                 rectangle.setStroke(Color.BLACK);
                 int x = i;
                 int y = j;
@@ -333,38 +352,9 @@ public class UI {
             buttons.getChildren().add(button);
 
             int finalButtonIdx = buttonIdx;
-            EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                    String eventType = e.getEventType().getName();
-
-                    if (eventType.equals("MOUSE_CLICKED")) {
-                        if (buttonNames[finalButtonIdx].equals("New Game")) {
-                            System.out.println("New Game");
-                            Game.changePlayer(Player.RED);
-                            Board.initialize();
-                            Game.reset();
-                            updatePieces();
-                        } else if (buttonNames[finalButtonIdx].equals("Load Game")) {
-                            System.out.println("Load Game");
-                            BoardLoader.loadBoard();
-                            updatePieces();
-                        } else if (buttonNames[finalButtonIdx].equals("Save Game")) {
-                            System.out.println("Save Game");
-                            isCurrentStateSaved = true;
-                            BoardLoader.saveBoard();
-
-                        }
-                    } else if (eventType.equals("MOUSE_ENTERED")) {
-                        rectangle.setFill(Color.LIGHTGRAY);
-                    } else if (eventType.equals("MOUSE_EXITED")) {
-                        rectangle.setFill(Color.GRAY);
-                    }
-                }
-            };
-            button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-            button.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandler);
-            button.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandler);
+            button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleButtonClick(buttonNames, finalButtonIdx));
+            button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> rectangle.setFill(Color.LIGHTGRAY));
+            button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> rectangle.setFill((Color.GREY)));
         }
     }
 }
