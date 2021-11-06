@@ -74,8 +74,6 @@ public class UI {
 
     private static void closeWindowEvent(WindowEvent event) {
         if (!isGameOver() && !Board.isCurrentBoardSaved() && !Board.isInitial()) {
-            System.out.println(Board.isCurrentBoardSaved());
-            System.out.println(Board.isInitial());
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.getButtonTypes().remove(ButtonType.OK);
             alert.getButtonTypes().add(ButtonType.CANCEL);
