@@ -19,26 +19,6 @@ public class TurnValidator {
         Piece piece = Board.getPiece(fromX, fromY);
         Player p = turn.getActivePlayer();
 
-        // Player tries to move a non-existent piece
-        if (piece == null) {
-            return Status.NO_PIECE;
-        }
-
-        // Player tries to move an enemy piece
-        if (piece.getColor() != p) {
-            return Status.ENEMY_PIECE;
-        }
-
-        // Turn would result in a position outside the field
-        if (isOutsideBoard(toX, toY)) {
-            return Status.OUTSIDE_BOARD;
-        }
-
-        //Another piece is at the turn destination
-        if (Board.getPiece(toX, toY) != null) {
-            return Status.PIECE_AT_DESTINATION;
-        }
-
         // Attempt to move backwards but piece is not a king
         if (!piece.isKing()) {
             if (p == Player.RED) {
@@ -73,6 +53,11 @@ public class TurnValidator {
             if (!canMoveDiagonally(toX, toY)) {
                 return Status.ILLEGAL_TURN;
             }
+        }
+
+        //Another piece is at the turn destination
+        if (Board.getPiece(toX, toY) != null) {
+            return Status.PIECE_AT_DESTINATION;
         }
 
         return Status.PENDING;

@@ -7,6 +7,7 @@ import ch.uzh.softcon.one.observables.player.PlayerSubject;
 import ch.uzh.softcon.one.turn.Turn;
 import ch.uzh.softcon.one.turn.Turn.Status;
 import ch.uzh.softcon.one.turn.TurnHandler;
+import ch.uzh.softcon.one.utils.BoardLoader;
 import ch.uzh.softcon.one.utils.Launcher;
 import ch.uzh.softcon.one.utils.UIDesignHelper;
 
@@ -131,11 +132,7 @@ public class GameHandling {
     }
 
     private static boolean isPieceSelected() {
-        if (selectedPieceX != -1 || selectedPieceY != -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return selectedPieceX != -1 && selectedPieceY != -1;
     }
 
     private static void unselectPiece() {
@@ -187,18 +184,17 @@ public class GameHandling {
     private static void handleButtonClick(String[] buttonNames, int finalButtonIdx) {
         switch (buttonNames[finalButtonIdx]) {
             case "New Game" -> {
-                System.out.println("New Game");
                 playerSubject.changePlayer(Player.RED);
                 Board.initialize();
                 reset();
                 updatePieces();
             }
             case "Load Game" -> {
-                System.out.println("Load Game");
                 updatePieces();
+                BoardLoader.loadBoard();
             }
             case "Save Game" -> {
-                System.out.println("Save Game");
+                BoardLoader.saveBoard();
             }
         }
     }
@@ -299,6 +295,9 @@ public class GameHandling {
             //button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> rectangle.setFill(Color.LIGHTGRAY));
             //button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> rectangle.setFill((Color.GREY)));
         }
+    }
+    public static void win(turn.getActivePlayer()) {
+        
     }
 }
 
