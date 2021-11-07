@@ -26,8 +26,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.util.Locale;
-
 public class GameHandling {
 
     private static int selectedPieceX = -1;
@@ -60,7 +58,7 @@ public class GameHandling {
         gameRoot.getChildren().add(texts);
         gameRoot.getChildren().add(gameButtons);
 
-        game = new Scene(gameRoot);
+        game = new Scene(gameRoot, windowWidth, windowHeight, Color.WHITE);
 
         homeButtons = new Group();
         Group homeRoot = new Group();
@@ -68,8 +66,6 @@ public class GameHandling {
 
         home = new Scene(homeRoot);
 
-        stage.setWidth(windowWidth);
-        stage.setHeight(windowHeight);
         stage.setTitle("Checkers Game");
         stage.setResizable(false);
         stage.setScene(game);
