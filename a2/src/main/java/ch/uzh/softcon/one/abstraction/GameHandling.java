@@ -105,6 +105,13 @@ public class GameHandling {
         playerSubject.notifyObservers();
     }
 
+    public static void reset() {
+        playerSubject.changePlayer(Player.RED);
+        playerSubject.notifyObservers();
+        Board.initialize();
+        GameHandling.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
+    }
+
     private static void closeWindowEvent(WindowEvent event) {
         if (!isGameOver() && !Board.isCurrentBoardSaved() && !Board.isInitial()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -112,7 +119,7 @@ public class GameHandling {
             alert.getButtonTypes().add(ButtonType.CANCEL);
             alert.getButtonTypes().add(ButtonType.YES);
             alert.setTitle("Quit application");
-            alert.setContentText(String.format("Close without saving?"));
+            alert.setContentText("Close without saving?");
             alert.initOwner(stage.getOwner());
             Optional<ButtonType> res = alert.showAndWait();
 
@@ -182,7 +189,7 @@ public class GameHandling {
                 System.out.println("New Game");
                 playerSubject.changePlayer(Player.RED);
                 Board.initialize();
-                Launcher.reset();
+                reset();
                 updatePieces();
             }
             case "Load Game" -> {
