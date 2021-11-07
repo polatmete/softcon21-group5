@@ -24,7 +24,7 @@ public class BoardLoader {
             if (fileName == null) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle("Load Game");
-                fileChooser.setCurrentDirectory(new File("a2/resources/"));
+                fileChooser.setCurrentDirectory(new File("./resources/"));
                 fileChooser.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
                 int response = fileChooser.showOpenDialog(fileChooser.getParent());
 
@@ -39,7 +39,7 @@ public class BoardLoader {
                 }
             } else {
                 try {
-                    reader = new BufferedReader(new FileReader("a2/resources/" + fileName));
+                    reader = new BufferedReader(new FileReader("./resources/" + fileName));
                 } catch (FileNotFoundException ex) {
                     return false;
                 }
@@ -103,13 +103,13 @@ public class BoardLoader {
         try {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Save Game");
-            fileChooser.setCurrentDirectory(new File("a2/resources/"));
+            fileChooser.setCurrentDirectory(new File("resources/"));
             fileChooser.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
 
-            File file = new File("a2/resources/boardState.csv");
+            File file = new File("resources/boardState.csv");
             int files = 1;
             while (file.exists()) {
-                file = new File("a2/resources/boardState" + files + ".csv");
+                file = new File("resources/boardState" + files + ".csv");
             }
             fileChooser.setSelectedFile(file);
             int response = fileChooser.showSaveDialog(fileChooser.getParent());
