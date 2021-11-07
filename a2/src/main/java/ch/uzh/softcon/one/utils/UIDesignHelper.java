@@ -5,6 +5,8 @@ import ch.uzh.softcon.one.abstraction.Player;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -13,12 +15,27 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextBoundsType;
 
+import java.util.Optional;
+
 public class UIDesignHelper {
     private static final float windowWidth = 1000;
     private static final float windowHeight = 750;
     private static final float tileWidth = 75;
     private static final float tileHeight = 75;
 
+    public static ButtonType showDialog(String title, String headerText, String textMessage, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.getButtonTypes().add(ButtonType.YES);
+        alert.getButtonTypes().add(ButtonType.NO);
+        alert.getButtonTypes().remove(ButtonType.OK);
+        alert.getButtonTypes().remove(ButtonType.CANCEL);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(textMessage);
+        Optional<ButtonType> res = alert.showAndWait();
+
+        return res.get();
+    }
 
     public static Circle drawPieces(int i, int j, Piece piece) {
         int padding = 10;

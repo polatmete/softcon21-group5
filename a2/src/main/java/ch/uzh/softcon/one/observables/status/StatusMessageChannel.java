@@ -8,8 +8,8 @@ public class StatusMessageChannel implements Observer {
     @Override
     public void update(Object obj) {
         if (obj instanceof StatusChangeSubscriber) {
-            StatusChangeSubscriber scn = (StatusChangeSubscriber) obj;
-            GameHandling.updateStatusMessage(scn.getStatusMessage());
+            StatusChangeSubscriber scs = (StatusChangeSubscriber) obj;
+            GameHandling.updateStatusMessage(scs.getStatusMessage());
         }
     }
 }

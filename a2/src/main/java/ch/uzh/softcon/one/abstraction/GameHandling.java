@@ -29,6 +29,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import javax.swing.*;
+import java.util.Locale;
 import java.util.Optional;
 
 public class GameHandling {
@@ -41,7 +43,6 @@ public class GameHandling {
     private static Group pieces;
     private static Group board;
     private static Group texts;
-    private static Group rematch;
     private static final float windowWidth = 1000;
     private static final float windowHeight = 750;
 
@@ -56,12 +57,10 @@ public class GameHandling {
         board = new Group();
         pieces = new Group();
         texts = new Group();
-        rematch = new Group();
         Group gameButtons = new Group();
         gameRoot.getChildren().add(board);
         gameRoot.getChildren().add(pieces);
         gameRoot.getChildren().add(texts);
-        gameRoot.getChildren().add(rematch);
         gameRoot.getChildren().add(gameButtons);
 
         Scene game = new Scene(gameRoot);
@@ -126,6 +125,8 @@ public class GameHandling {
     }
 
     public static void win(Player player) {
+        updatePieces();
+        statusSubject.setWin();
         statusSubject.setStatusMessage(String.format("Congratulations %s, you won! Do you want a revenge?", player));
         statusSubject.notifyObservers();
     }
@@ -133,26 +134,16 @@ public class GameHandling {
     public static void reset() {
         playerSubject.changePlayer(Player.RED);
         playerSubject.notifyObservers();
-        clearRematchInterface();
         Board.initialize();
         GameHandling.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
     }
 
     private static void closeWindowEvent(WindowEvent event) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.getButtonTypes().remove(ButtonType.OK);
-        alert.getButtonTypes().add(ButtonType.CANCEL);
-        alert.getButtonTypes().add(ButtonType.YES);
-        alert.setTitle("Quit game");
-        alert.setHeaderText("There might be unsaved changes");
-        alert.setContentText("Are you sure you want to quit?");
-        alert.initOwner(stage.getOwner());
-        Optional<ButtonType> res = alert.showAndWait();
+        ButtonType res = UIDesignHelper.showDialog("Quit game", "There might be unsaved changes",
+                "Are you sure you want to quit?", Alert.AlertType.CONFIRMATION);
 
-        if(res.isPresent()) {
-            if(res.get().equals(ButtonType.CANCEL))
-                event.consume();
-        }
+        if(!res.equals(ButtonType.YES))
+            event.consume();
     }
 
     private static boolean isPieceSelected() {
@@ -263,33 +254,14 @@ public class GameHandling {
         texts.getChildren().add(text);
     }
 
-    // TODO: Change this (to e.g. buttons)!!!!!!!! Or re-add text event handler.
     public static void createRematchInterface() {
-        for (int i = 0; i < 2; i++) {
-            Rectangle rectangle = UIDesignHelper.drawRematchInterface(i);
-            int x = i;
-            // TODO: Remove this and replace by message box.
-            EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                    if (x == 0) {
-                        GameHandling.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
-//                        Launcher.gameLoop(null);
-                        clearRematchInterface();
-                        updatePieces();
-                    } else {
-                        stage.close();
-                    }
-                }
-            };
-            rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-            rematch.getChildren().add(rectangle);
-        }
+        ButtonType res = UIDesignHelper.showDialog("Game over", String.format("Player %s won the game!",
+                activePlayer().toString().toLowerCase()), "Do you want revenge?", Alert.AlertType.CONFIRMATION);
 
-    }
-
-    private static void clearRematchInterface() {
-        rematch.getChildren().clear();
+        if (res.equals(ButtonType.YES))
+            reset();
+        else
+            stage.close();
     }
 
     private static void drawButtons(Scene scene) {

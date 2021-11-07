@@ -8,6 +8,7 @@ import java.util.List;
 public class StatusChangeSubscriber implements StatusSubject {
     private final List<Observer> observers = new ArrayList<>();
     private String statusMessage;
+    private boolean isWin;
 
     @Override
     public void registerObserver(Observer o) {
@@ -34,5 +35,15 @@ public class StatusChangeSubscriber implements StatusSubject {
     @Override
     public String getStatusMessage() {
         return this.statusMessage;
+    }
+
+    @Override
+    public boolean getWin() {
+        return this.isWin;
+    }
+
+    @Override
+    public void setWin() {
+        this.isWin = true;
     }
 }

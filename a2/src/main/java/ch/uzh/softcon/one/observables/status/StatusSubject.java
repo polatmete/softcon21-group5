@@ -8,4 +8,6 @@ public interface StatusSubject {
     void notifyObservers();
     void setStatusMessage(String msg);
     String getStatusMessage();
+    boolean getWin();
+    void setWin();
 }

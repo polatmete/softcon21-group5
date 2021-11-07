@@ -13,7 +13,6 @@ public class TurnHandler {
     /**
      * Starts the whole turn sequence with all checks and returns the status.
      * @param turn Current turn
-     * @return Current turn status
      */
     public static void runTurnSequence(Turn turn) {
         boolean jumpRequired = isJumpRequired(turn);
@@ -27,6 +26,7 @@ public class TurnHandler {
         // Check whether a player has won
         if (checkWin(turn)) {
             GameHandling.win(turn.getActivePlayer());
+            return;
         }
 
         // Make a king out of the piece if it has reached the other side
