@@ -26,6 +26,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.util.Locale;
+
 public class GameHandling {
 
     private static int selectedPieceX = -1;
@@ -121,7 +123,7 @@ public class GameHandling {
     public static void win(Player player) {
         updatePieces();
         statusSubject.setWin();
-        statusSubject.setStatusMessage(String.format("Congratulations %s, you won! Do you want a revenge?", player));
+        statusSubject.setStatusMessage(String.format("Congratulations player %s, you won! Do you want a revenge?", player.toString().toLowerCase()));
         statusSubject.notifyObservers();
     }
 
