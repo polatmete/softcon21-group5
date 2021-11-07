@@ -91,14 +91,12 @@ public class UIDesignHelper {
         Group button = new Group();
 
         Rectangle rectangle = new Rectangle();
-        System.out.println(scene == game);
         if (scene == home) {
             //horizontally centered
 
             rectangle.setX(spacing + buttonIdx * (buttonWidth + spacing));
             rectangle.setY(windowHeight/2 - buttonHeight/2);
         } else if (scene == game) {
-            System.out.println("test");
             //vertically aligned right
             rectangle.setX(windowWidth - margin - buttonWidth);
             rectangle.setY(margin + buttonIdx * (verticalSpacing + buttonHeight));
