@@ -45,6 +45,8 @@ public class GameHandling {
     private static Group texts;
     private static final float windowWidth = 1000;
     private static final float windowHeight = 750;
+    private static Group gameButtons;
+    private static Group homeButtons;
 
     private static PlayerSubject playerSubject;
     private static StatusSubject statusSubject;
@@ -57,17 +59,19 @@ public class GameHandling {
         board = new Group();
         pieces = new Group();
         texts = new Group();
-        Group gameButtons = new Group();
+        gameButtons = new Group();
         gameRoot.getChildren().add(board);
         gameRoot.getChildren().add(pieces);
         gameRoot.getChildren().add(texts);
         gameRoot.getChildren().add(gameButtons);
 
-        Scene game = new Scene(gameRoot);
+        game = new Scene(gameRoot);
 
-        Group homeButtons = new Group();
+        homeButtons = new Group();
         Group homeRoot = new Group();
         homeRoot.getChildren().add(homeButtons);
+
+        home = new Scene(homeRoot);
 
         stage.setWidth(windowWidth);
         stage.setHeight(windowHeight);
@@ -75,7 +79,6 @@ public class GameHandling {
         stage.setResizable(false);
         stage.setScene(game);
         stage.show();
-        GameHandling.game = game;
 
         playerSubject.changePlayer(Player.RED);
         playerSubject.notifyObservers();
@@ -278,6 +281,12 @@ public class GameHandling {
         for (int buttonIdx = 0; buttonIdx < numberOfButtons; buttonIdx++) {
 
             Group button = UIDesignHelper.drawButtons(numberOfButtons, buttonIdx, buttonNames, scene, game, home);
+
+            if (scene == home) {
+                homeButtons.getChildren().add(button);
+            } else if (scene == game) {
+                gameButtons.getChildren().add(button);
+            }
 
             int finalButtonIdx = buttonIdx;
             String[] finalButtonNames = buttonNames;

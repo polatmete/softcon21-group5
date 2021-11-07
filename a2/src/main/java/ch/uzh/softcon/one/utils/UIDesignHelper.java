@@ -73,30 +73,6 @@ public class UIDesignHelper {
         return rectangle;
     }
 
-    public static Rectangle drawRematchInterface(int i) {
-        Rectangle rectangle = new Rectangle();
-        rectangle.setX(75+i*525);
-        rectangle.setY(75);
-        rectangle.setWidth(75);
-        rectangle.setHeight(75);
-
-        Text text = new Text();
-        text.setX(75+i*525);
-        text.setY(125);
-        text.setFont(Font.font("Verdana", 40));
-
-        if (i == 0) {
-            rectangle.setFill(Color.GREEN);
-            text.setText("Yes");
-        } else {
-            rectangle.setFill(Color.RED);
-            text.setText("No");
-        }
-        rectangle.setStroke(Color.BLACK);
-        rectangle.setStrokeWidth(5);
-        return rectangle;
-    }
-
     public static Group drawButtons(int numberOfButtons, int buttonIdx, String[] buttonNames, Scene scene, Scene game, Scene home) {
         float buttonHeight = 100;
         float buttonWidth = 200;
