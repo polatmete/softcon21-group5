@@ -50,8 +50,6 @@ public class GameHandling {
 
     public static void initialize(Stage stage) {
         registerObservers();
-        playerSubject.changePlayer(Player.RED);
-        playerSubject.notifyObservers();
 
         GameHandling.stage = stage;
         Group gameRoot = new Group();
@@ -78,6 +76,10 @@ public class GameHandling {
         stage.setResizable(false);
         stage.setScene(game);
         stage.show();
+        GameHandling.game = game;
+
+        playerSubject.changePlayer(Player.RED);
+        playerSubject.notifyObservers();
 
         updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
         drawBoard();
@@ -272,7 +274,7 @@ public class GameHandling {
                 public void handle(MouseEvent e) {
                     if (x == 0) {
                         GameHandling.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
-                        Launcher.gameLoop(null);
+//                        Launcher.gameLoop(null);
                         clearRematchInterface();
                         updatePieces();
                     } else {
