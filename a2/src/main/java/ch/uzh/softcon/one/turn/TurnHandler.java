@@ -17,7 +17,7 @@ public class TurnHandler {
         boolean jumpRequired = isJumpRequired(turn);
 
         // Validate the move or jump and return the status based on it
-        Status validationResult = TurnValidator.validateMove(turn, jumpRequired);
+        if (!TurnValidator.validateMove(turn, jumpRequired)) return;
 
         // Execute the move or jump
         executeTurn(turn);
@@ -32,15 +32,15 @@ public class TurnHandler {
         if (checkTransformNeeded(turn)) {
             activePiece.promote();
             GameHandling.changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
-            return; //Status.COMPLETED;
+            return;
         }
 
         // If the player had to make a jump it is possible he must continue with a multi-jump.
         if (jumpRequired) {
             activePiece.startMultiJump();
             if (isJumpRequired(turn)) {
-                GameHandling.anotherJumpRequired();
-                return; //Status.ANOTHER_JUMP_REQUIRED;
+                GameHandling.setAndNotifyStatusChange(GameHandling.activePlayer() + ": Another jump is required.");
+                return;
             }
         }
 

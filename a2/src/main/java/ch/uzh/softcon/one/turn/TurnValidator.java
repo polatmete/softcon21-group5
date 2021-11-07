@@ -1,8 +1,8 @@
 package ch.uzh.softcon.one.turn;
 
 import ch.uzh.softcon.one.abstraction.Board;
+import ch.uzh.softcon.one.abstraction.GameHandling;
 import ch.uzh.softcon.one.abstraction.Piece;
-import ch.uzh.softcon.one.turn.Turn.Status;
 import ch.uzh.softcon.one.abstraction.Player;
 
 public class TurnValidator {
@@ -13,52 +13,42 @@ public class TurnValidator {
      * @param hasToJump Does the player have to make a jump?
      * @return Returns the in which the move (provisionally) ends.
      */
-    public static Status validateMove(Turn turn, boolean hasToJump) {
+    public static boolean validateMove(Turn turn, boolean hasToJump) {
         int fromX = turn.from().x(); int toX = turn.to().x();
         int fromY = turn.from().y(); int toY = turn.to().y();
         Piece piece = Board.getPiece(fromX, fromY);
         Player p = turn.getActivePlayer();
 
         // Attempt to move backwards but piece is not a king
-        if (!piece.isKing()) {
-            if (p == Player.RED) {
-                if (toY < fromY) {
-                    return Status.ILLEGAL_BACKWARDS;
-                }
-            } else {
-                if (toY > fromY) {
-                    return Status.ILLEGAL_BACKWARDS;
-                }
-            }
+        if(!piece.isKing() && ((p == Player.RED && toY < fromY)|| p == Player.WHITE && toY > fromY)) {
+            GameHandling.setAndNotifyStatusChange(GameHandling.activePlayer() + ": Non-King piece cannot move backwards.");
+            return false;
         }
 
         // A jump has to be performed but the turn is not a (possible) jump
         if (hasToJump) {
             if (Piece.activeMultiJump() && !piece.isInMultiJump()) {
-                return Status.NOT_MULTI_JUMP_PIECE;
+                GameHandling.setAndNotifyStatusChange(GameHandling.activePlayer() + ": Another piece is in a multi-jump already.");
+                return false;
             }
-            if (Math.abs(fromX - toX) != 2
-                    || Math.abs(fromY - toY) != 2) {
-                return Status.JUMP_REQUIRED;
-            }
-            if (!isJumpPossible(fromX, fromY, toX, toY, p)) {
-                return Status.JUMP_REQUIRED;
+            if (Math.abs(fromX - toX) != 2 || Math.abs(fromY - toY) != 2 || !isJumpPossible(fromX, fromY, toX, toY, p)) {
+                GameHandling.setAndNotifyStatusChange(GameHandling.activePlayer() + ": A jump is required.");
+                return false;
             }
         // A move has to be performed but the turn is not a (possible) move
         } else {
-            if (Math.abs(fromX - toX) != 1
-                    || Math.abs(fromY - toY) != 1) {
-                return Status.ILLEGAL_TURN;
-            }
-            if (!canMoveDiagonally(toX, toY)) {
-                return Status.ILLEGAL_TURN;
+            if (Math.abs(fromX - toX) != 1 || Math.abs(fromY - toY) != 1 || !canMoveDiagonally(toX, toY)) {
+                GameHandling.setAndNotifyStatusChange(GameHandling.activePlayer() + ": Desired move is not possible.");
+                return false;
             }
         }
 
         //Another piece is at the turn destination
         if (Board.getPiece(toX, toY) != null) {
-            return Status.PIECE_AT_DESTINATION;
+            GameHandling.setAndNotifyStatusChange(GameHandling.activePlayer() + ": A piece blocks the desired destination.");
+            return false;
         }
+        return true;
     }
 
     /**
