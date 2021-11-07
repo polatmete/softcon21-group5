@@ -123,8 +123,70 @@ public class UIDesignHelper {
         button.getChildren().add(rectangle);
         button.getChildren().add(text);
 
-        button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {rectangle.setFill(Color.LIGHTGRAY); game.setCursor(Cursor.HAND);});
-        button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> {rectangle.setFill((Color.WHITE)); game.setCursor(Cursor.DEFAULT);});
+        button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {rectangle.setFill(Color.LIGHTGRAY); scene.setCursor(Cursor.HAND);});
+        button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> {rectangle.setFill((Color.WHITE)); scene.setCursor(Cursor.DEFAULT);});
+
         return button;
     }
+
+    public static Group drawHomeTitle() {
+        String titleName = "Checkers";
+        int fontSize = 100;
+        int marginTop = 30;
+
+        float titleBoxWidth = 800;
+        float titleBoxHeight = 200;
+
+        Group title = new Group();
+
+        // Set title box (background of title, contains title text)
+        Rectangle rectangle = new Rectangle();
+
+        rectangle.setX((windowWidth - titleBoxWidth) / 2);
+        rectangle.setY(marginTop);
+        rectangle.setWidth(titleBoxWidth);
+        rectangle.setHeight(titleBoxHeight);
+        rectangle.setFill(Color.LIGHTGRAY);
+        rectangle.setStrokeWidth(5);
+        rectangle.setStroke(Color.BLACK);
+
+        // Set and center text in title box
+        Text text = new Text(titleName);
+
+        text.setBoundsType(TextBoundsType.VISUAL);
+        text.setFont(new Font(fontSize));
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setTextOrigin(VPos.CENTER);
+
+        text.setX(((windowWidth - titleBoxWidth) / 2)+ titleBoxWidth/2 - text.getLayoutBounds().getWidth() / 2);
+        text.setY(marginTop + titleBoxHeight/2);
+
+        title.getChildren().add(rectangle);
+        title.getChildren().add(text);
+
+        return title;
+    }
+
+    public static Group drawHomeBackground() {
+        Group background = new Group();
+        for (int i = 0; i < windowHeight/tileHeight; i++) {
+            for (int j = 0; j < windowWidth/tileWidth; j++) {
+                Rectangle rectangle = new Rectangle();
+                rectangle.setX(j*tileWidth);
+                rectangle.setY(i*tileHeight);
+                rectangle.setWidth(tileWidth);
+                rectangle.setHeight(tileHeight);
+                if ((i + j) % 2 == 0) {
+                    rectangle.setFill(Color.WHITE);
+                } else {
+                    rectangle.setFill(Color.web("#3C3F41"));
+                }
+
+                background.getChildren().add(rectangle);
+            }
+        }
+
+        return background;
+    }
+
 }
