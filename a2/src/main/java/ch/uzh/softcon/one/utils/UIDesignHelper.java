@@ -3,6 +3,7 @@ package ch.uzh.softcon.one.utils;
 import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.abstraction.Player;
 import javafx.geometry.VPos;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -50,9 +51,9 @@ public class UIDesignHelper {
                 circle.setFill(Color.DARKRED);
             }
         } else {
-            circle.setFill(Color.LIGHTGRAY);
+            circle.setFill(Color.SEASHELL);
             if (piece.isKing()) {
-                circle.setFill(Color.GRAY);
+                circle.setFill(Color.HONEYDEW);
             }
         }
         return circle;
@@ -87,7 +88,6 @@ public class UIDesignHelper {
         Rectangle rectangle = new Rectangle();
         if (scene == home) {
             //horizontally centered
-
             rectangle.setX(spacing + buttonIdx * (buttonWidth + spacing));
             rectangle.setY(windowHeight/2 - buttonHeight/2);
         } else if (scene == game) {
@@ -98,7 +98,7 @@ public class UIDesignHelper {
 
         rectangle.setWidth(buttonWidth);
         rectangle.setHeight(buttonHeight);
-        rectangle.setFill(Color.GRAY);
+        rectangle.setFill(Color.WHITE);
         rectangle.setStrokeWidth(5);
         rectangle.setStroke(Color.BLACK);
 
@@ -123,8 +123,8 @@ public class UIDesignHelper {
         button.getChildren().add(rectangle);
         button.getChildren().add(text);
 
-        button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> rectangle.setFill(Color.LIGHTGRAY));
-        button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> rectangle.setFill((Color.GREY)));
+        button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {rectangle.setFill(Color.LIGHTGRAY); game.setCursor(Cursor.HAND);});
+        button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> {rectangle.setFill((Color.WHITE)); game.setCursor(Cursor.DEFAULT);});
         return button;
     }
 }

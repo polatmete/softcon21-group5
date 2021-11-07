@@ -18,11 +18,8 @@ public class Board {
 
     public static void placePiece(int posX, int posY, Piece piece) {
         if (getPiece(posX, posY) == null) {
-            if (piece.getColor() == Player.RED) {
-                pieceCountRed++;
-            } else {
-                pieceCountWhite++;
-            }
+            if (piece.getColor() == Player.RED) pieceCountRed++;
+            else pieceCountWhite++;
             board[posX][posY] = piece;
         }
     }
@@ -35,11 +32,8 @@ public class Board {
 
     public static void removePiece(int posX, int posY) {
         if (getPiece(posX, posY) != null) {
-            if (getPiece(posX, posY).getColor() == Player.RED) {
-                pieceCountRed--;
-            } else {
-                pieceCountWhite--;
-            }
+            if (getPiece(posX, posY).getColor() == Player.RED) pieceCountRed--;
+            else pieceCountWhite--;
             board[posX][posY] = null;
         }
     }
@@ -49,11 +43,8 @@ public class Board {
     }
 
     public static boolean hasNoPieces(Player player) {
-        if (player == Player.RED) {
-            return pieceCountRed == 0;
-        } else {
-            return pieceCountWhite == 0;
-        }
+        if (player == Player.RED) return pieceCountRed == 0;
+        else return pieceCountWhite == 0;
     }
 
     public static void cleanBoard() {
@@ -64,36 +55,21 @@ public class Board {
         return board.length;
     }
 
-    private static void createOriginalBoard() {
+    private static void createOriginalBoard() { // In case initialBoard file could not be read
         cleanBoard();
+        int[][] initialPosRed   = {{1, 3, 5, 7},
+                                   {0, 2, 4, 6},
+                                   {1, 3, 5, 7}};
 
-        int[][][] initialPosRed = {
-                {{0}, {1, 3, 5, 7}},
-                {{1}, {0, 2, 4, 6}},
-                {{2}, {1, 3, 5, 7}}
-        };
+        int[][] initialPosWhite = {{0, 2, 4, 6},
+                                   {1, 3, 5, 7},
+                                   {0, 2, 4, 6}};
 
-        int[][][] initialPosWhite = {
-                {{5}, {0, 2, 4, 6}},
-                {{6}, {1, 3, 5, 7}},
-                {{7}, {0, 2, 4, 6}}
-        };
-
-        for (int[][] value : initialPosRed) {
-            int row = value[0][0];
-            int[] columns = value[1];
-
-            for (int column : columns) {
-                placePiece(column, row, new Piece(Player.RED));
-            }
-        }
-
-        for (int[][] ints : initialPosWhite) {
-            int row = ints[0][0];
-            int[] columns = ints[1];
-
-            for (int column : columns) {
-                placePiece(column, row, new Piece(Player.WHITE));
+        //Put red pieces on the board
+        for (int i = 0; i < initialPosRed.length; ++i) {
+            for (int j = 0; j < initialPosRed[0].length; ++j) {
+                placePiece(initialPosRed[i][j], i, new Piece((Player.RED)));
+                placePiece(initialPosWhite[i][j], board.length-1-i, new Piece((Player.WHITE)));
             }
         }
     }
