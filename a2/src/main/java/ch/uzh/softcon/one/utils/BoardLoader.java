@@ -7,7 +7,6 @@ import ch.uzh.softcon.one.abstraction.Player;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
-import java.util.regex.Pattern;
 
 import static ch.uzh.softcon.one.abstraction.Board.*;
 import static ch.uzh.softcon.one.abstraction.Piece.activeMultiJump;
@@ -18,15 +17,17 @@ public class BoardLoader {
         loadBoard(null);
     }
 
+    //TODO PATH RESOLVEMENT
+
     public static boolean loadBoard(String fileName) {
         try {
             BufferedReader reader;
             if (fileName == null) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle("Load Game");
-                fileChooser.setCurrentDirectory(new File("./resources/"));
+                fileChooser.setCurrentDirectory(new File("a2/resources/"));
                 fileChooser.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
-                int response = fileChooser.showOpenDialog(fileChooser.getParent());
+                int response = fileChooser.showOpenDialog(null);
 
                 if (response == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile().isFile()) {
                     reader = new BufferedReader(new FileReader(fileChooser.getSelectedFile().getAbsolutePath()));
@@ -39,7 +40,7 @@ public class BoardLoader {
                 }
             } else {
                 try {
-                    reader = new BufferedReader(new FileReader("./resources/" + fileName));
+                    reader = new BufferedReader(new FileReader("a2/resources/" + fileName));
                 } catch (FileNotFoundException ex) {
                     return false;
                 }
@@ -54,7 +55,7 @@ public class BoardLoader {
                 }
                 String[] fields = row.split(",");
 
-                    if (row.startsWith("activePlayer")) {
+                    if (y > size() - 1) {
                         if (fields[0].split(":")[1].equals("RED")) {
                             GameHandling.playerSubject().changePlayer(Player.RED);
                         } else {
@@ -65,14 +66,14 @@ public class BoardLoader {
 
                 Piece p;
                 for (int x = 0; x < fields.length; x++) {
-                    if (!Pattern.matches("\\[[RW][_+][PK]]", fields[x])) {
+                    /*if (!Pattern.matches("\\[[RW][_+][PK]]", fields[x])) {
                         throw new Exception();
-                    }
+                    }*/
                     if (fields[x].charAt(1) == ' ') {
                         continue;
                     } else if (fields[x].charAt(1) == 'R') {
                         p = new Piece(Player.RED);
-                    } else{
+                    } else {
                         p = new Piece(Player.WHITE);
                     }
                     if (fields[x].charAt(2) == '+') {
@@ -103,13 +104,13 @@ public class BoardLoader {
         try {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Save Game");
-            fileChooser.setCurrentDirectory(new File("resources/"));
+            fileChooser.setCurrentDirectory(new File("a2/resources/"));
             fileChooser.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
 
-            File file = new File("resources/boardState.csv");
+            File file = new File("a2/resources/boardState.csv");
             int files = 1;
             while (file.exists()) {
-                file = new File("resources/boardState" + files + ".csv");
+                file = new File("a2/resources/boardState" + files++ + ".csv");
             }
             fileChooser.setSelectedFile(file);
             int response = fileChooser.showSaveDialog(fileChooser.getParent());

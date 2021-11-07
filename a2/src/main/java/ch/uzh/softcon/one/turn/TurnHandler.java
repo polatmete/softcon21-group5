@@ -41,7 +41,8 @@ public class TurnHandler {
         if (jumpRequired) {
             activePiece.startMultiJump();
             if (isJumpRequired(turn)) {
-                GameHandling.setAndNotifyStatusChange("Player " + GameHandling.activePlayer().toString().toLowerCase() + ": Another jump is required.");
+                GameHandling.setAndNotifyStatusChange("Player "
+                        + GameHandling.activePlayer().toString().toLowerCase() + ": Another jump is required.");
                 return;
             }
         }

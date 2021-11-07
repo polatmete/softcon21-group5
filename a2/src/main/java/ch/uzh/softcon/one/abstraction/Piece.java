@@ -5,12 +5,13 @@ public class Piece {
     private final Player color;
     private boolean isKing;
     private boolean isMultiJumping;
-    private static boolean globalMultiJump = false;
+    private static boolean globalMultiJump;
 
     public Piece(Player color) {
         this.color = color;
         isKing = false;
         isMultiJumping = false;
+        globalMultiJump = false;
     }
 
     public Player getColor() {

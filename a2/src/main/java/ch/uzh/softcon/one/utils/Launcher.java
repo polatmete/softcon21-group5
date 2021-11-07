@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 public class Launcher extends Application {
 
     public static void main(String[] args) { // Setup and initialize game
-        Board.initialize();
         launch(args);
     }
 

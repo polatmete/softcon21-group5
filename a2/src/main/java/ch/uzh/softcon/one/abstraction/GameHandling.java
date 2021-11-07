@@ -75,6 +75,7 @@ public class GameHandling {
 
         playerSubject.changePlayer(Player.RED);
         playerSubject.notifyObservers();
+        Board.initialize();
 
         updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
         drawBoard();
@@ -190,14 +191,12 @@ public class GameHandling {
     private static void handleButtonClick(String[] buttonNames, int finalButtonIdx) {
         switch (buttonNames[finalButtonIdx]) {
             case "New Game" -> {
-                playerSubject.changePlayer(Player.RED);
-                Board.initialize();
                 reset();
                 updatePieces();
             }
             case "Load Game" -> {
-                updatePieces();
                 BoardLoader.loadBoard();
+                updatePieces();
             }
             case "Save Game" -> {
                 BoardLoader.saveBoard();
