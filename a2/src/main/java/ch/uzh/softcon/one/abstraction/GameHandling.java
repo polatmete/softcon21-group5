@@ -36,10 +36,10 @@ public class GameHandling {
     private static Group pieces;
     private static Group board;
     private static Group texts;
+    private static Group homeButtons;
+    private static Group gameButtons;
     private static final float windowWidth = 1000;
     private static final float windowHeight = 750;
-    private static Group gameButtons;
-    private static Group homeButtons;
 
     private static PlayerSubject playerSubject;
     private static StatusSubject statusSubject;
@@ -53,6 +53,7 @@ public class GameHandling {
         pieces = new Group();
         texts = new Group();
         gameButtons = new Group();
+        homeButtons = new Group();
         gameRoot.getChildren().add(board);
         gameRoot.getChildren().add(pieces);
         gameRoot.getChildren().add(texts);
@@ -60,9 +61,7 @@ public class GameHandling {
 
         game = new Scene(gameRoot, Color.DARKSEAGREEN);
 
-        homeButtons = new Group();
         Group homeRoot = new Group();
-        homeRoot.getChildren().add(homeButtons);
 
         home = new Scene(homeRoot);
 
@@ -70,7 +69,8 @@ public class GameHandling {
         stage.setWidth(windowWidth);
         stage.setHeight(windowHeight);
         stage.setResizable(false);
-        stage.setScene(game);
+        //stage.setScene(game);
+        stage.setScene(home);
         stage.show();
 
         playerSubject.changePlayer(Player.RED);
@@ -82,6 +82,8 @@ public class GameHandling {
         updatePieces();
         drawButtons(game);
         drawButtons(home);
+
+        drawHomePage(homeRoot);
 
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, GameHandling::closeWindowEvent);
     }
@@ -191,10 +193,12 @@ public class GameHandling {
     private static void handleButtonClick(String[] buttonNames, int finalButtonIdx) {
         switch (buttonNames[finalButtonIdx]) {
             case "New Game" -> {
+                stage.setScene(game);
                 reset();
                 updatePieces();
             }
             case "Load Game" -> {
+                stage.setScene(game);
                 BoardLoader.loadBoard();
                 updatePieces();
             }
@@ -263,7 +267,7 @@ public class GameHandling {
         if (scene == game) {
             buttonNames = new String[]{"New Game", "Load Game", "Save Game"};
         } else if (scene == home) {
-            buttonNames = new String[]{"Load Game", "Save Game"};
+            buttonNames = new String[]{"New Game", "Load Game"};
         }
         int numberOfButtons = buttonNames.length;
 
@@ -281,5 +285,18 @@ public class GameHandling {
             String[] finalButtonNames = buttonNames;
             button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleButtonClick(finalButtonNames, finalButtonIdx));
         }
+    }
+
+
+    private static void drawHomePage(Group homeRoot) {
+
+        Group background = UIDesignHelper.drawHomeBackground();
+        Group title = UIDesignHelper.drawHomeTitle();
+        drawButtons(home); //to add buttons to gameButtons
+
+        homeRoot.getChildren().add(background);
+        homeRoot.getChildren().add(homeButtons); //added here to make sure that the background is in the background
+        homeRoot.getChildren().add(title);
+
     }
 }
