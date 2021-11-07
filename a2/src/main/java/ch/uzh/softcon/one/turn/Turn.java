@@ -17,10 +17,6 @@ public class Turn {
      */
     public enum Status {
         /**
-         * Turn is being processed
-         */
-        PENDING,
-        /**
          * Turn was finished
          */
         COMPLETED,
@@ -32,18 +28,6 @@ public class Turn {
          * Another jump is possible and must be made
          */
         ANOTHER_JUMP_REQUIRED,
-        /**
-         * Targeted piece does not exist
-         */
-        NO_PIECE,
-        /**
-         * Targeted piece is an enemy piece
-         */
-        ENEMY_PIECE,
-        /**
-         * Turn would result outside the board
-         */
-        OUTSIDE_BOARD,
         /**
          * Piece at destination
          */

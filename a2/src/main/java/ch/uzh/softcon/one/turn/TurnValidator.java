@@ -59,8 +59,6 @@ public class TurnValidator {
         if (Board.getPiece(toX, toY) != null) {
             return Status.PIECE_AT_DESTINATION;
         }
-
-        return Status.PENDING;
     }
 
     /**

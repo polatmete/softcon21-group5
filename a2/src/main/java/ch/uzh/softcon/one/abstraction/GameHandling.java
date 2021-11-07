@@ -2,10 +2,9 @@ package ch.uzh.softcon.one.abstraction;
 
 import ch.uzh.softcon.one.observables.Observer;
 import ch.uzh.softcon.one.observables.player.ActivePlayerChannel;
-import ch.uzh.softcon.one.observables.player.PlayerChangeNotifier;
+import ch.uzh.softcon.one.observables.player.PlayerChangeSubscriber;
 import ch.uzh.softcon.one.observables.player.PlayerSubject;
 import ch.uzh.softcon.one.turn.Turn;
-import ch.uzh.softcon.one.turn.Turn.Status;
 import ch.uzh.softcon.one.turn.TurnHandler;
 import ch.uzh.softcon.one.utils.BoardLoader;
 import ch.uzh.softcon.one.utils.Launcher;
@@ -90,7 +89,7 @@ public class GameHandling {
 
     private static void registerObservers() {
         // Active Player
-        playerSubject = new PlayerChangeNotifier();
+        playerSubject = new PlayerChangeSubscriber();
         Observer activePlayerObserver = new ActivePlayerChannel();
 
         playerSubject.registerObserver(activePlayerObserver);
@@ -151,7 +150,6 @@ public class GameHandling {
             // TODO: Das isch grusig
             //when clicking on any piece while a piece is selected it unselects that selected piece
             Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
-            statusSubject.setStatus(Status.PENDING);
             TurnHandler.runTurnSequence(turn);
             unselectPiece();
             game.setCursor(Cursor.DEFAULT);
@@ -295,9 +293,6 @@ public class GameHandling {
             //button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> rectangle.setFill(Color.LIGHTGRAY));
             //button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> rectangle.setFill((Color.GREY)));
         }
-    }
-    public static void win(turn.getActivePlayer()) {
-        
     }
 }
 

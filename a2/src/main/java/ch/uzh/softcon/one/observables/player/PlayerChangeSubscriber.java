@@ -6,7 +6,7 @@ import ch.uzh.softcon.one.observables.Observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerChangeNotifier implements PlayerSubject {
+public class PlayerChangeSubscriber implements PlayerSubject {
     private Player activePlayer;
     private final List<Observer> observers = new ArrayList<>();
 

@@ -19,11 +19,6 @@ public class TurnHandler {
         // Validate the move or jump and return the status based on it
         Status validationResult = TurnValidator.validateMove(turn, jumpRequired);
 
-        //If the desired turn is invalid it returns the status
-        if (validationResult != Status.PENDING) {
-            return; //validationResult;
-        }
-
         // Execute the move or jump
         executeTurn(turn);
 
