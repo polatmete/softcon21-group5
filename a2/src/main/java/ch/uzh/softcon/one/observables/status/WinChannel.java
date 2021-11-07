@@ -1,10 +1,10 @@
-package ch.uzh.softcon.one.observables.player;
+package ch.uzh.softcon.one.observables.status;
 
 import ch.uzh.softcon.one.abstraction.Player;
 import ch.uzh.softcon.one.observables.Observer;
 import ch.uzh.softcon.one.abstraction.GameHandling;
 
-public class PlayerWinChannel implements Observer {
+public class WinChannel implements Observer {
 
     @Override
     public void update(Object p) {
