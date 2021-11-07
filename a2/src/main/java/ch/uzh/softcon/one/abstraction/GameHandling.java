@@ -5,9 +5,11 @@ import ch.uzh.softcon.one.observables.player.ActivePlayerChannel;
 import ch.uzh.softcon.one.observables.player.PlayerChangeNotifier;
 import ch.uzh.softcon.one.observables.player.PlayerSubject;
 import ch.uzh.softcon.one.turn.Turn;
-import ch.uzh.softcon.one.utils.BoardLoader;
+import ch.uzh.softcon.one.turn.Turn.Status;
+import ch.uzh.softcon.one.turn.TurnHandler;
 import ch.uzh.softcon.one.utils.Launcher;
 import ch.uzh.softcon.one.utils.UIDesignHelper;
+
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -18,7 +20,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -113,20 +114,19 @@ public class GameHandling {
     }
 
     private static void closeWindowEvent(WindowEvent event) {
-        if (!isGameOver() && !Board.isCurrentBoardSaved() && !Board.isInitial()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.getButtonTypes().remove(ButtonType.OK);
-            alert.getButtonTypes().add(ButtonType.CANCEL);
-            alert.getButtonTypes().add(ButtonType.YES);
-            alert.setTitle("Quit application");
-            alert.setContentText("Close without saving?");
-            alert.initOwner(stage.getOwner());
-            Optional<ButtonType> res = alert.showAndWait();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.getButtonTypes().remove(ButtonType.OK);
+        alert.getButtonTypes().add(ButtonType.CANCEL);
+        alert.getButtonTypes().add(ButtonType.YES);
+        alert.setTitle("Quit game");
+        alert.setHeaderText("There might be unsaved changes");
+        alert.setContentText("Are you sure you want to quit?");
+        alert.initOwner(stage.getOwner());
+        Optional<ButtonType> res = alert.showAndWait();
 
-            if(res.isPresent()) {
-                if(res.get().equals(ButtonType.CANCEL))
-                    event.consume();
-            }
+        if(res.isPresent()) {
+            if(res.get().equals(ButtonType.CANCEL))
+                event.consume();
         }
     }
 
@@ -154,7 +154,8 @@ public class GameHandling {
             // TODO: Das isch grusig
             //when clicking on any piece while a piece is selected it unselects that selected piece
             Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
-            Launcher.gameLoop(turn); //performs one iteration of the game loop (to update status message)
+            statusSubject.setStatus(Status.PENDING);
+            TurnHandler.runTurnSequence(turn);
             unselectPiece();
             game.setCursor(Cursor.DEFAULT);
             updatePieces();
@@ -194,12 +195,10 @@ public class GameHandling {
             }
             case "Load Game" -> {
                 System.out.println("Load Game");
-                BoardLoader.loadBoard();
                 updatePieces();
             }
             case "Save Game" -> {
                 System.out.println("Save Game");
-                BoardLoader.saveBoard();
             }
         }
     }
