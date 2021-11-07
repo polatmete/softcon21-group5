@@ -10,37 +10,6 @@ public class Turn {
 
     private final TilePosition from;
     private final TilePosition to;
-    private final Player activePlayer;
-
-    /**
-     * Turn Status
-     */
-    public enum Status {
-        /**
-         * At least one jump is possible and must be made
-         */
-        JUMP_REQUIRED,
-        /**
-         * Another jump is possible and must be made
-         */
-        ANOTHER_JUMP_REQUIRED,
-        /**
-         * Piece at destination
-         */
-        PIECE_AT_DESTINATION,
-        /**
-         * Attempt to move backwards while not being a king
-         */
-        ILLEGAL_BACKWARDS,
-        /**
-         * Trying to jump with a piece that is not in the active multi jump
-         */
-        NOT_MULTI_JUMP_PIECE,
-        /**
-         * Turn is not possible otherwise
-         */
-        ILLEGAL_TURN,
-    }
 
     /**
      * Class constructor for the turn class.
@@ -49,12 +18,10 @@ public class Turn {
      * @param y_from FROM y axis
      * @param x_to TO x axis
      * @param y_to TO y axis
-     * @param p Active player
      */
-    public Turn(int x_from, int y_from, int x_to, int y_to, Player p) {
+    public Turn(int x_from, int y_from, int x_to, int y_to) {
         from = new TilePosition(x_from, y_from);
         to = new TilePosition(x_to, y_to);
-        activePlayer = p;
     }
 
     /**
@@ -80,13 +47,5 @@ public class Turn {
      */
     public TilePosition to() {
         return to;
-    }
-
-    /**
-     * Returns the active player
-     * @return active player
-     */
-    public Player getActivePlayer() {
-        return activePlayer;
     }
 }

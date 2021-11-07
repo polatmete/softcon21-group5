@@ -51,9 +51,9 @@ public class UIDesignHelper {
                 circle.setFill(Color.DARKRED);
             }
         } else {
-            circle.setFill(Color.LIGHTGRAY);
+            circle.setFill(Color.SEASHELL);
             if (piece.isKing()) {
-                circle.setFill(Color.GRAY);
+                circle.setFill(Color.HONEYDEW);
             }
         }
         return circle;
@@ -125,6 +125,7 @@ public class UIDesignHelper {
 
         button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {rectangle.setFill(Color.LIGHTGRAY); scene.setCursor(Cursor.HAND);});
         button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> {rectangle.setFill((Color.WHITE)); scene.setCursor(Cursor.DEFAULT);});
+
         return button;
     }
 
@@ -168,7 +169,6 @@ public class UIDesignHelper {
 
     public static Group drawHomeBackground() {
         Group background = new Group();
-        System.out.println(windowWidth/tileWidth);
         for (int i = 0; i < windowHeight/tileHeight; i++) {
             for (int j = 0; j < windowWidth/tileWidth; j++) {
                 Rectangle rectangle = new Rectangle();

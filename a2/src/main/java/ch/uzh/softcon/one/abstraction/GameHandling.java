@@ -26,8 +26,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.util.Locale;
-
 public class GameHandling {
 
     private static int selectedPieceX = -1;
@@ -60,7 +58,6 @@ public class GameHandling {
         gameRoot.getChildren().add(pieces);
         gameRoot.getChildren().add(texts);
         gameRoot.getChildren().add(gameButtons);
-
 
         game = new Scene(gameRoot, Color.DARKSEAGREEN);
 
@@ -163,7 +160,7 @@ public class GameHandling {
         Player activePlayer = playerSubject.activePlayer();
         if (isPieceSelected()) {
             //when clicking on any piece while a piece is selected it unselects that selected piece
-            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
+            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y);
             TurnHandler.runTurnSequence(turn);
             unselectPiece();
             game.setCursor(Cursor.DEFAULT);
@@ -247,7 +244,7 @@ public class GameHandling {
         texts.getChildren().clear();
         Text text = new Text();
         text.setText(string);
-        text.setX(50);
+        text.setX(75);
         text.setY(50);
         text.setFont(Font.font("Verdana", 15));
         texts.getChildren().add(text);
