@@ -3,10 +3,7 @@ package ch.uzh.softcon.one.turn;
 import ch.uzh.softcon.one.abstraction.Board;
 import ch.uzh.softcon.one.abstraction.GameHandling;
 import ch.uzh.softcon.one.abstraction.Piece;
-import ch.uzh.softcon.one.turn.Turn.Status;
 import ch.uzh.softcon.one.abstraction.Player;
-
-import java.util.Locale;
 
 public class TurnHandler {
 
@@ -15,7 +12,7 @@ public class TurnHandler {
      * @param turn Current turn
      */
     public static void runTurnSequence(Turn turn) {
-        boolean jumpRequired = isJumpRequired(turn);
+        boolean jumpRequired = isJumpRequired();
 
         // Validate the move or jump and return the status based on it
         if (!TurnValidator.validateMove(turn, jumpRequired)) return;
@@ -24,8 +21,8 @@ public class TurnHandler {
         executeTurn(turn);
 
         // Check whether a player has won
-        if (checkWin(turn)) {
-            GameHandling.win(turn.getActivePlayer());
+        if (checkWin()) {
+            GameHandling.win(GameHandling.activePlayer());
             return;
         }
 
@@ -33,14 +30,14 @@ public class TurnHandler {
         Piece activePiece = Board.getPiece(turn.to().x(), turn.to().y());
         if (checkTransformNeeded(turn)) {
             activePiece.promote();
-            GameHandling.changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
+            GameHandling.changePlayer(GameHandling.activePlayer() != Player.RED ? Player.RED : Player.WHITE);
             return;
         }
 
         // If the player had to make a jump it is possible he must continue with a multi-jump.
         if (jumpRequired) {
             activePiece.startMultiJump();
-            if (isJumpRequired(turn)) {
+            if (isJumpRequired()) {
                 GameHandling.setAndNotifyStatusChange("Player "
                         + GameHandling.activePlayer().toString().toLowerCase() + ": Another jump is required.");
                 return;
@@ -48,7 +45,7 @@ public class TurnHandler {
         }
 
         activePiece.endMultiJump();
-        GameHandling.changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
+        GameHandling.changePlayer(GameHandling.activePlayer() != Player.RED ? Player.RED : Player.WHITE);
     }
 
     /**
@@ -68,14 +65,13 @@ public class TurnHandler {
     /**
      * Checks if the enemy is stuck or has no pieces left.
      * Determines a winner based on these checks.
-     * @param turn Current turn
      * @return Current player has won
      */
-    private static boolean checkWin(Turn turn) {
-        if (isEnemyStuck(turn.getActivePlayer())) {
+    private static boolean checkWin() {
+        if (isEnemyStuck(GameHandling.activePlayer())) {
             return true;
         }
-        if (turn.getActivePlayer() == Player.RED) {
+        if (GameHandling.activePlayer() == Player.RED) {
             return Board.hasNoPieces(Player.WHITE);
         } else {
             return Board.hasNoPieces(Player.RED);
@@ -88,7 +84,7 @@ public class TurnHandler {
      * @return Reached the end of the board
      */
     private static boolean checkTransformNeeded(Turn turn) {
-        if (turn.getActivePlayer() == Player.RED) {
+        if (GameHandling.activePlayer() == Player.RED) {
             return turn.to().y() == Board.size() - 1;
         } else {
             return turn.to().y() == 0;
@@ -98,11 +94,10 @@ public class TurnHandler {
     /**
      * Checks if there are any jumps possible on the field for the current player.
      * If there is at least one possible jump, the player has to take it.
-     * @param turn Current turn
      * @return Player has to take a jump
      */
-    private static boolean isJumpRequired(Turn turn) {
-        Player p = turn.getActivePlayer();
+    private static boolean isJumpRequired() {
+        Player p = GameHandling.activePlayer();
         for (int i = 0; i < Board.size(); i++) {
             for (int j = 0; j < Board.size(); j++) {
                 if (Board.getPiece(i, j) == null || Board.getPiece(i, j).getColor() != p) {

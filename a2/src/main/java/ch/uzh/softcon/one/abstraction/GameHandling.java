@@ -158,7 +158,7 @@ public class GameHandling {
         Player activePlayer = playerSubject.activePlayer();
         if (isPieceSelected()) {
             //when clicking on any piece while a piece is selected it unselects that selected piece
-            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
+            Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y);
             TurnHandler.runTurnSequence(turn);
             unselectPiece();
             game.setCursor(Cursor.DEFAULT);

@@ -17,35 +17,35 @@ public class TurnValidator {
         int fromX = turn.from().x(); int toX = turn.to().x();
         int fromY = turn.from().y(); int toY = turn.to().y();
         Piece piece = Board.getPiece(fromX, fromY);
-        Player p = turn.getActivePlayer();
+        Player p = GameHandling.activePlayer();
 
         // Attempt to move backwards but piece is not a king
         if(!piece.isKing() && ((p == Player.RED && toY < fromY)|| p == Player.WHITE && toY > fromY)) {
-            GameHandling.setAndNotifyStatusChange("Player " + GameHandling.activePlayer().toString().toLowerCase() + ": Non-King piece cannot move backwards.");
+            GameHandling.setAndNotifyStatusChange("Player " + p.toString().toLowerCase() + ": Non-King piece cannot move backwards.");
             return false;
         }
 
         // A jump has to be performed but the turn is not a (possible) jump
         if (hasToJump) {
             if (Piece.activeMultiJump() && !piece.isInMultiJump()) {
-                GameHandling.setAndNotifyStatusChange("Player " + GameHandling.activePlayer().toString().toLowerCase() + ": Another piece is in a multi-jump already.");
+                GameHandling.setAndNotifyStatusChange("Player " + p.toString().toLowerCase() + ": Another piece is in a multi-jump already.");
                 return false;
             }
             if (Math.abs(fromX - toX) != 2 || Math.abs(fromY - toY) != 2 || !isJumpPossible(fromX, fromY, toX, toY, p)) {
-                GameHandling.setAndNotifyStatusChange("Player " + GameHandling.activePlayer().toString().toLowerCase() + ": A jump is required.");
+                GameHandling.setAndNotifyStatusChange("Player " + p.toString().toLowerCase() + ": A jump is required.");
                 return false;
             }
         // A move has to be performed but the turn is not a (possible) move
         } else {
             if (Math.abs(fromX - toX) != 1 || Math.abs(fromY - toY) != 1 || !canMoveDiagonally(toX, toY)) {
-                GameHandling.setAndNotifyStatusChange("Player " + GameHandling.activePlayer().toString().toLowerCase() + ": Desired move is not possible.");
+                GameHandling.setAndNotifyStatusChange("Player " + p.toString().toLowerCase() + ": Desired move is not possible.");
                 return false;
             }
         }
 
         //Another piece is at the turn destination
         if (Board.getPiece(toX, toY) != null) {
-            GameHandling.setAndNotifyStatusChange("Player " + GameHandling.activePlayer().toString().toLowerCase() + ": A piece blocks the desired destination.");
+            GameHandling.setAndNotifyStatusChange("Player " + p.toString().toLowerCase() + ": A piece blocks the desired destination.");
             return false;
         }
         return true;
