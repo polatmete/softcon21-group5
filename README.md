@@ -20,4 +20,4 @@ There now exist save game features which will either read an `initialBoard.csv`,
 
 [Docs](a2/docs) for tasks 1, 2 and 3: Updated CRC, UML and Sequence Diagram plus new descriptions.
 
-Source code can be found [here](a2/src/ch/uzh/softcon/one).
+Source code can be found [here](a2/src/main/java/ch/uzh/softcon/one).
