@@ -4,9 +4,9 @@ import ch.uzh.softcon.one.abstraction.Player;
 import ch.uzh.softcon.one.observables.Observer;
 
 public interface PlayerSubject {
-    public void registerObserver(Observer o);
-    public void removeObserver(Observer o);
-    public void notifyObservers();
-    public Player activePlayer();
-    public void changePlayer(Player p);
+    void registerObserver(Observer o);
+    void removeObserver(Observer o);
+    void notifyObservers();
+    Player activePlayer();
+    void changePlayer(Player p);
 }

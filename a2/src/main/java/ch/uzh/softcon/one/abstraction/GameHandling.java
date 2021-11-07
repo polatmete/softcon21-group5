@@ -123,9 +123,15 @@ public class GameHandling {
         playerSubject.notifyObservers();
     }
 
+    public static void win(Player player) {
+        statusSubject.setStatusMessage(String.format("Congratulations %s, you won! Do you want a revenge?", player));
+        statusSubject.notifyObservers();
+    }
+
     public static void reset() {
         playerSubject.changePlayer(Player.RED);
         playerSubject.notifyObservers();
+        clearRematchInterface();
         Board.initialize();
         GameHandling.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
     }
@@ -164,7 +170,6 @@ public class GameHandling {
     private static void handleClick(int x, int y, Circle circle) {
         Player activePlayer = playerSubject.activePlayer();
         if (isPieceSelected()) {
-            // TODO: Das isch grusig
             //when clicking on any piece while a piece is selected it unselects that selected piece
             Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
             TurnHandler.runTurnSequence(turn);
@@ -283,10 +288,6 @@ public class GameHandling {
 
     private static void clearRematchInterface() {
         rematch.getChildren().clear();
-    }
-
-    private static boolean isGameOver() {
-        return !rematch.getChildren().isEmpty();
     }
 
     private static void drawButtons(Scene scene) {

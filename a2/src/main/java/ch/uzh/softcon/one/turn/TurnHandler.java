@@ -23,7 +23,9 @@ public class TurnHandler {
         executeTurn(turn);
 
         // Check whether a player has won
-        if (checkWin(turn)) GameHandling.win(turn.getActivePlayer());
+        if (checkWin(turn)) {
+            GameHandling.win(turn.getActivePlayer());
+        }
 
         // Make a king out of the piece if it has reached the other side
         Piece activePiece = Board.getPiece(turn.to().x(), turn.to().y());
