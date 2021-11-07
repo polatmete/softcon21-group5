@@ -1,14 +1,13 @@
 package ch.uzh.softcon.one.observables.status;
 
-import ch.uzh.softcon.one.abstraction.Player;
 import ch.uzh.softcon.one.observables.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatusChangeNotifier implements StatusSubject {
-    private Player currentStatus;
+public class StatusChangeSubscriber implements StatusSubject {
     private final List<Observer> observers = new ArrayList<>();
+    private String statusMessage;
 
     @Override
     public void registerObserver(Observer o) {
@@ -21,15 +20,19 @@ public class StatusChangeNotifier implements StatusSubject {
     }
 
     @Override
-    public void notifyObservers(Player p) {
-        this.currentStatus = p;
+    public void notifyObservers() {
         for (Observer observer : this.observers) {
-            observer.update(this.currentStatus);
+            observer.update(this);
         }
     }
 
     @Override
-    public Player currentStatus() {
-        return this.currentStatus;
+    public void setStatusMessage(String msg) {
+        this.statusMessage = msg;
+    }
+
+    @Override
+    public String getStatusMessage() {
+        return this.statusMessage;
     }
 }

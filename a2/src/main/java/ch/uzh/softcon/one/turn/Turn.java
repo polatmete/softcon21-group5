@@ -17,10 +17,6 @@ public class Turn {
      */
     public enum Status {
         /**
-         * Turn was finished
-         */
-        COMPLETED,
-        /**
          * At least one jump is possible and must be made
          */
         JUMP_REQUIRED,

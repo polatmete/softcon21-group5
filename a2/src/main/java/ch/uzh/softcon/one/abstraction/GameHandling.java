@@ -4,6 +4,10 @@ import ch.uzh.softcon.one.observables.Observer;
 import ch.uzh.softcon.one.observables.player.ActivePlayerChannel;
 import ch.uzh.softcon.one.observables.player.PlayerChangeSubscriber;
 import ch.uzh.softcon.one.observables.player.PlayerSubject;
+import ch.uzh.softcon.one.observables.status.StatusChangeSubscriber;
+import ch.uzh.softcon.one.observables.status.StatusMessageChannel;
+import ch.uzh.softcon.one.observables.status.StatusSubject;
+import ch.uzh.softcon.one.observables.status.WinChannel;
 import ch.uzh.softcon.one.turn.Turn;
 import ch.uzh.softcon.one.turn.TurnHandler;
 import ch.uzh.softcon.one.utils.BoardLoader;
@@ -42,6 +46,7 @@ public class GameHandling {
     private static final float windowHeight = 750;
 
     private static PlayerSubject playerSubject;
+    private static StatusSubject statusSubject;
 
     public static void initialize(Stage stage) {
         registerObservers();
@@ -94,11 +99,23 @@ public class GameHandling {
 
         playerSubject.registerObserver(activePlayerObserver);
 
+        statusSubject = new StatusChangeSubscriber();
+        Observer statusMessageObserver = new StatusMessageChannel();
+        Observer winObserver = new WinChannel();
+
+        statusSubject.registerObserver(statusMessageObserver);
+        statusSubject.registerObserver(winObserver);
+
         // ...
     }
 
     public static Player activePlayer() {
         return playerSubject.activePlayer();
+    }
+
+    public static void setAndNotifyStatusChange(String msg) {
+        statusSubject.setStatusMessage(msg);
+        statusSubject.notifyObservers();
     }
 
     public static void changePlayer(Player p) {
