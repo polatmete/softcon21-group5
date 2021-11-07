@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -122,11 +123,8 @@ public class UIDesignHelper {
         button.getChildren().add(rectangle);
         button.getChildren().add(text);
 
-//        if (scene == home) {
-//            homeButtons.getChildren().add(button);
-//        } else if (scene == game) {
-//            gameButtons.getChildren().add(button);
-//        }
+        button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> rectangle.setFill(Color.LIGHTGRAY));
+        button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> rectangle.setFill((Color.GREY)));
         return button;
     }
 }

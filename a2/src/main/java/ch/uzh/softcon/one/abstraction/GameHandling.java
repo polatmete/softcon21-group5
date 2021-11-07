@@ -11,10 +11,7 @@ import ch.uzh.softcon.one.observables.status.WinChannel;
 import ch.uzh.softcon.one.turn.Turn;
 import ch.uzh.softcon.one.turn.TurnHandler;
 import ch.uzh.softcon.one.utils.BoardLoader;
-import ch.uzh.softcon.one.utils.Launcher;
 import ch.uzh.softcon.one.utils.UIDesignHelper;
-
-import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -28,10 +25,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-import javax.swing.*;
-import java.util.Locale;
-import java.util.Optional;
 
 public class GameHandling {
 
@@ -97,7 +90,6 @@ public class GameHandling {
     }
 
     private static void registerObservers() {
-        // Active Player
         playerSubject = new PlayerChangeSubscriber();
         Observer activePlayerObserver = new ActivePlayerChannel();
 
@@ -109,8 +101,6 @@ public class GameHandling {
 
         statusSubject.registerObserver(statusMessageObserver);
         statusSubject.registerObserver(winObserver);
-
-        // ...
     }
 
     public static Player activePlayer() {
@@ -291,8 +281,6 @@ public class GameHandling {
             int finalButtonIdx = buttonIdx;
             String[] finalButtonNames = buttonNames;
             button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleButtonClick(finalButtonNames, finalButtonIdx));
-            //button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> rectangle.setFill(Color.LIGHTGRAY));
-            //button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> rectangle.setFill((Color.GREY)));
         }
     }
 }
