@@ -21,8 +21,7 @@ public class PlayerChangeNotifier implements PlayerSubject {
     }
 
     @Override
-    public void notifyObservers(Player p) {
-        this.activePlayer = p;
+    public void notifyObservers() {
         for (Observer observer : this.observers) {
             observer.update(this.activePlayer);
         }
@@ -31,5 +30,11 @@ public class PlayerChangeNotifier implements PlayerSubject {
     @Override
     public Player activePlayer() {
         return this.activePlayer;
+    }
+
+    @Override
+    public void changePlayer(Player p) {
+        this.activePlayer = p;
+        notifyObservers();
     }
 }

@@ -1,12 +1,14 @@
-package ch.uzh.softcon.one.utils;
+package ch.uzh.softcon.one.abstraction;
 
-import ch.uzh.softcon.one.abstraction.Game;
-import ch.uzh.softcon.one.abstraction.Board;
-import ch.uzh.softcon.one.abstraction.Piece;
-import ch.uzh.softcon.one.abstraction.Player;
+import ch.uzh.softcon.one.observables.Observer;
+import ch.uzh.softcon.one.observables.player.ActivePlayerChannel;
+import ch.uzh.softcon.one.observables.player.PlayerChangeNotifier;
+import ch.uzh.softcon.one.observables.player.PlayerSubject;
 import ch.uzh.softcon.one.turn.Turn;
+import ch.uzh.softcon.one.utils.BoardLoader;
+import ch.uzh.softcon.one.utils.Launcher;
+import ch.uzh.softcon.one.utils.UIDesignHelper;
 import javafx.event.EventHandler;
-import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -19,20 +21,13 @@ import javafx.scene.shape.Rectangle;
 
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
-public class UI {
+public class GameHandling {
 
-    private static final float windowWidth = 1000;
-    private static final float windowHeight = 750;
-    private static final float tileWidth = 75;
-    private static final float tileHeight = 75;
     private static int selectedPieceX = -1;
     private static int selectedPieceY = -1;
     private static Stage stage;
@@ -42,32 +37,34 @@ public class UI {
     private static Group board;
     private static Group texts;
     private static Group rematch;
-    private static Group gameButtons;
-    private static Group homeButtons;
+    private static final float windowWidth = 1000;
+    private static final float windowHeight = 750;
+
+    private static PlayerSubject playerSubject;
 
     public static void initialize(Stage stage) {
+        registerObservers();
+        playerSubject.changePlayer(Player.RED);
+        playerSubject.notifyObservers();
 
-        UI.stage = stage;
-
+        GameHandling.stage = stage;
         Group gameRoot = new Group();
         board = new Group();
         pieces = new Group();
         texts = new Group();
         rematch = new Group();
-        gameButtons = new Group();
+        Group gameButtons = new Group();
         gameRoot.getChildren().add(board);
         gameRoot.getChildren().add(pieces);
         gameRoot.getChildren().add(texts);
         gameRoot.getChildren().add(rematch);
         gameRoot.getChildren().add(gameButtons);
 
-        game = new Scene(gameRoot);
+        Scene game = new Scene(gameRoot);
 
-        homeButtons = new Group();
+        Group homeButtons = new Group();
         Group homeRoot = new Group();
         homeRoot.getChildren().add(homeButtons);
-
-        home = new Scene(homeRoot);
 
         stage.setWidth(windowWidth);
         stage.setHeight(windowHeight);
@@ -82,7 +79,30 @@ public class UI {
         drawButtons(game);
         drawButtons(home);
 
-        stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, UI::closeWindowEvent);
+        stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, GameHandling::closeWindowEvent);
+    }
+
+    public static PlayerSubject playerSubject() {
+        return playerSubject;
+    }
+
+    private static void registerObservers() {
+        // Active Player
+        playerSubject = new PlayerChangeNotifier();
+        Observer activePlayerObserver = new ActivePlayerChannel();
+
+        playerSubject.registerObserver(activePlayerObserver);
+
+        // ...
+    }
+
+    public static Player activePlayer() {
+        return playerSubject.activePlayer();
+    }
+
+    public static void changePlayer(Player p) {
+        playerSubject.changePlayer(p);
+        playerSubject.notifyObservers();
     }
 
     private static void closeWindowEvent(WindowEvent event) {
@@ -122,12 +142,12 @@ public class UI {
     }
 
     private static void handleClick(int x, int y, Circle circle) {
-        Player activePlayer = Game.activePlayer();
+        Player activePlayer = playerSubject.activePlayer();
         if (isPieceSelected()) {
             // TODO: Das isch grusig
             //when clicking on any piece while a piece is selected it unselects that selected piece
             Turn turn = new Turn(selectedPieceX, selectedPieceY, x, y, activePlayer);
-            Game.gameLoop(turn); //performs one iteration of the game loop (to update status message)
+            Launcher.gameLoop(turn); //performs one iteration of the game loop (to update status message)
             unselectPiece();
             game.setCursor(Cursor.DEFAULT);
             updatePieces();
@@ -141,7 +161,7 @@ public class UI {
     }
 
     private static void handleHover(int x, int y, Circle circle) {
-        Player activePlayer = Game.activePlayer();
+        Player activePlayer = playerSubject.activePlayer();
         if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
             circle.setStrokeWidth(3);
             circle.setStroke(Color.GOLD);
@@ -160,9 +180,9 @@ public class UI {
         switch (buttonNames[finalButtonIdx]) {
             case "New Game" -> {
                 System.out.println("New Game");
-                Game.changePlayer(Player.RED);
+                playerSubject.changePlayer(Player.RED);
                 Board.initialize();
-                Game.reset();
+                Launcher.reset();
                 updatePieces();
             }
             case "Load Game" -> {
@@ -179,26 +199,11 @@ public class UI {
 
     private static void updatePieces() {
         pieces.getChildren().clear();
-        int padding = 10;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Piece piece = Board.getPiece(j, i);
                 if (piece != null) {
-                    Circle circle = new Circle();
-                    circle.setCenterX(tileWidth+tileWidth/2 + j*tileWidth);
-                    circle.setCenterY(tileHeight+tileHeight/2 + i*tileHeight);
-                    circle.setRadius((tileWidth/2)-padding);
-                    if (piece.getColor() == Player.RED) {
-                        circle.setFill(Color.RED);
-                        if (piece.isKing()) {
-                            circle.setFill(Color.DARKRED);
-                        }
-                    } else {
-                        circle.setFill(Color.LIGHTGRAY);
-                        if (piece.isKing()) {
-                            circle.setFill(Color.GRAY);
-                        }
-                    }
+                    Circle circle = UIDesignHelper.drawPieces(i, j, piece);
                     int x = j;
                     int y = i;
                     circle.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleClick(x, y, circle));
@@ -213,18 +218,7 @@ public class UI {
     private static void drawBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                Rectangle rectangle = new Rectangle();
-                rectangle.setX(tileWidth*i+tileWidth);
-                rectangle.setY(tileHeight*j+tileHeight);
-                rectangle.setWidth(tileWidth);
-                rectangle.setHeight(tileHeight);
-                if ((i + j) % 2 == 0) {
-                    rectangle.setFill(Color.WHITE);
-                } else {
-                    rectangle.setFill(Color.BLACK);
-                }
-                rectangle.setStrokeWidth(1);
-                rectangle.setStroke(Color.BLACK);
+                Rectangle rectangle = UIDesignHelper.drawBoard(i, j);
                 int x = i;
                 int y = j;
                 rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
@@ -245,36 +239,18 @@ public class UI {
         texts.getChildren().add(text);
     }
 
+    // TODO: Change this (to e.g. buttons)!!!!!!!! Or re-add text event handler.
     public static void createRematchInterface() {
         for (int i = 0; i < 2; i++) {
-            Rectangle rectangle = new Rectangle();
-            rectangle.setX(75+i*525);
-            rectangle.setY(75);
-            rectangle.setWidth(75);
-            rectangle.setHeight(75);
-
-            Text text = new Text();
-            text.setX(75+i*525);
-            text.setY(125);
-            text.setFont(Font.font("Verdana", 40));
-
-            if (i == 0) {
-                rectangle.setFill(Color.GREEN);
-                text.setText("Yes");
-            } else {
-                rectangle.setFill(Color.RED);
-                text.setText("No");
-            }
-            rectangle.setStroke(Color.BLACK);
-            rectangle.setStrokeWidth(5);
-            int finalI = i;
+            Rectangle rectangle = UIDesignHelper.drawRematchInterface(i);
+            int x = i;
             // TODO: Remove this and replace by message box.
             EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    if (finalI == 0) {
-                        UI.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
-                        Game.gameLoop(null);
+                    if (x == 0) {
+                        GameHandling.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
+                        Launcher.gameLoop(null);
                         clearRematchInterface();
                         updatePieces();
                     } else {
@@ -283,9 +259,7 @@ public class UI {
                 }
             };
             rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-            text.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
             rematch.getChildren().add(rectangle);
-            rematch.getChildren().add(text);
         }
 
     }
@@ -300,8 +274,6 @@ public class UI {
 
     private static void drawButtons(Scene scene) {
         //add buttons
-        float buttonHeight = 100;
-        float buttonWidth = 200;
         String[] buttonNames = {"Load Game", "New Game"};
 
         if (scene == game) {
@@ -310,69 +282,16 @@ public class UI {
             buttonNames = new String[]{"Load Game", "Save Game"};
         }
         int numberOfButtons = buttonNames.length;
-        int fontSize = 30;
-        int verticalSpacing = 25;
-        int margin = 75;
-
-        float spacing = (windowWidth - numberOfButtons * buttonWidth) / (numberOfButtons + 1); //Even spacing between buttons (for horizontally centered buttons)
 
         for (int buttonIdx = 0; buttonIdx < numberOfButtons; buttonIdx++) {
 
-            Group button = new Group();
-
-            Rectangle rectangle = new Rectangle();
-            System.out.println(scene == game);
-            if (scene == home) {
-                //horizontally centered
-
-                rectangle.setX(spacing + buttonIdx * (buttonWidth + spacing));
-                rectangle.setY(windowHeight/2 - buttonHeight/2);
-            } else if (scene == game) {
-                System.out.println("test");
-                //vertically aligned right
-                rectangle.setX(windowWidth - margin - buttonWidth);
-                rectangle.setY(margin + buttonIdx * (verticalSpacing + buttonHeight));
-            }
-
-            rectangle.setWidth(buttonWidth);
-            rectangle.setHeight(buttonHeight);
-            rectangle.setFill(Color.GRAY);
-            rectangle.setStrokeWidth(5);
-            rectangle.setStroke(Color.BLACK);
-
-            String buttonName = buttonNames[buttonIdx];
-
-            Text text = new Text(buttonName);
-            text.setBoundsType(TextBoundsType.VISUAL);
-            text.setFont(new Font(fontSize));
-            text.setTextAlignment(TextAlignment.CENTER);
-            text.setTextOrigin(VPos.CENTER);
-
-            if (scene == home) {
-                //horizontally centered
-                text.setX((spacing + buttonIdx * (buttonWidth + spacing)) + buttonWidth/2 - text.getLayoutBounds().getWidth() / 2);
-                text.setY(windowHeight/2 - buttonHeight/2 + buttonHeight/2);
-            } else if (scene == game) {
-                //vertically aligned right
-                text.setX(windowWidth - margin - buttonWidth + buttonWidth/2 - text.getLayoutBounds().getWidth() / 2);
-                text.setY(margin + buttonIdx * (verticalSpacing + buttonHeight) + buttonHeight/2);
-            }
-
-            button.getChildren().add(rectangle);
-            button.getChildren().add(text);
-
-            if (scene == home) {
-                homeButtons.getChildren().add(button);
-            } else if (scene == game) {
-                gameButtons.getChildren().add(button);
-            }
+            Group button = UIDesignHelper.drawButtons(numberOfButtons, buttonIdx, buttonNames, scene, game, home);
 
             int finalButtonIdx = buttonIdx;
             String[] finalButtonNames = buttonNames;
-
             button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleButtonClick(finalButtonNames, finalButtonIdx));
-            button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> rectangle.setFill(Color.LIGHTGRAY));
-            button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> rectangle.setFill((Color.GREY)));
+            //button.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> rectangle.setFill(Color.LIGHTGRAY));
+            //button.addEventFilter(MouseEvent.MOUSE_EXITED, e -> rectangle.setFill((Color.GREY)));
         }
     }
 }

@@ -6,6 +6,7 @@ import ch.uzh.softcon.one.observables.Observer;
 public interface PlayerSubject {
     public void registerObserver(Observer o);
     public void removeObserver(Observer o);
-    public void notifyObservers(Player p);
+    public void notifyObservers();
     public Player activePlayer();
+    public void changePlayer(Player p);
 }

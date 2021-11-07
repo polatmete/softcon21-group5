@@ -1,7 +1,7 @@
 package ch.uzh.softcon.one.utils;
 
 import ch.uzh.softcon.one.abstraction.Board;
-import ch.uzh.softcon.one.abstraction.Game;
+import ch.uzh.softcon.one.abstraction.GameHandling;
 import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.abstraction.Player;
 
@@ -30,10 +30,10 @@ public class BoardLoader {
 
                     if (y > size() - 1) {
                         if (fields[0].split(":")[1].equals("RED")) {
-                            Game.changePlayer(Player.RED);
+                            GameHandling.playerSubject().changePlayer(Player.RED);
                         } else {
                             // PlayerData.activePlayerWhite()
-                            Game.changePlayer(Player.WHITE);
+                            GameHandling.playerSubject().changePlayer(Player.WHITE);
                         }
                         break;
                     }
@@ -105,7 +105,7 @@ public class BoardLoader {
                     }
                     writer.newLine();
                 }
-                writer.write("activePlayer:" + Game.activePlayer());
+                writer.write("activePlayer:" + GameHandling.playerSubject().activePlayer());
                 writer.flush();
                 writer.close();
                 Board.updateSavedBoard();

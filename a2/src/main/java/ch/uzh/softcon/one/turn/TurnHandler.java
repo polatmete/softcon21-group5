@@ -1,9 +1,10 @@
 package ch.uzh.softcon.one.turn;
 
 import ch.uzh.softcon.one.abstraction.Board;
+import ch.uzh.softcon.one.abstraction.GameHandling;
 import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.turn.Turn.Status;
-import ch.uzh.softcon.one.abstraction.Game;
+import ch.uzh.softcon.one.utils.Launcher;
 import ch.uzh.softcon.one.abstraction.Player;
 
 public class TurnHandler {
@@ -29,14 +30,14 @@ public class TurnHandler {
 
         // Check whether a player has won
         if (checkWin(turn)) {
-            Game.win(turn.getActivePlayer());
+            GameHandling.statusSubject().win(turn.getActivePlayer());
         }
 
         // Make a king out of the piece if it has reached the other side
         Piece activePiece = Board.getPiece(turn.to().x(), turn.to().y());
         if (checkTransformNeeded(turn)) {
             activePiece.promote();
-            Game.changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
+            GameHandling.playerSubject().changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
             return Status.COMPLETED;
         }
 
@@ -49,7 +50,7 @@ public class TurnHandler {
         }
 
         activePiece.endMultiJump();
-        Game.changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
+        GameHandling.playerSubject().changePlayer(turn.getActivePlayer() != Player.RED ? Player.RED : Player.WHITE);
         return Status.COMPLETED;
     }
 
