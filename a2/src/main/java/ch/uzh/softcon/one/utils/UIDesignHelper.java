@@ -51,9 +51,9 @@ public class UIDesignHelper {
                 circle.setFill(Color.DARKRED);
             }
         } else {
-            circle.setFill(Color.LIGHTGRAY);
+            circle.setFill(Color.SEASHELL);
             if (piece.isKing()) {
-                circle.setFill(Color.GRAY);
+                circle.setFill(Color.HONEYDEW);
             }
         }
         return circle;
@@ -88,7 +88,6 @@ public class UIDesignHelper {
         Rectangle rectangle = new Rectangle();
         if (scene == home) {
             //horizontally centered
-
             rectangle.setX(spacing + buttonIdx * (buttonWidth + spacing));
             rectangle.setY(windowHeight/2 - buttonHeight/2);
         } else if (scene == game) {

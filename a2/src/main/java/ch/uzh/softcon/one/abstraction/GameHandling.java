@@ -58,7 +58,7 @@ public class GameHandling {
         gameRoot.getChildren().add(texts);
         gameRoot.getChildren().add(gameButtons);
 
-        game = new Scene(gameRoot, windowWidth, windowHeight, Color.WHITE);
+        game = new Scene(gameRoot, Color.DARKSEAGREEN);
 
         homeButtons = new Group();
         Group homeRoot = new Group();
@@ -67,6 +67,8 @@ public class GameHandling {
         home = new Scene(homeRoot);
 
         stage.setTitle("Checkers Game");
+        stage.setWidth(windowWidth);
+        stage.setHeight(windowHeight);
         stage.setResizable(false);
         stage.setScene(game);
         stage.show();
@@ -238,7 +240,7 @@ public class GameHandling {
         texts.getChildren().clear();
         Text text = new Text();
         text.setText(string);
-        text.setX(50);
+        text.setX(75);
         text.setY(50);
         text.setFont(Font.font("Verdana", 15));
         texts.getChildren().add(text);
