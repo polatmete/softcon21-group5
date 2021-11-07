@@ -6,6 +6,8 @@ import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.turn.Turn.Status;
 import ch.uzh.softcon.one.abstraction.Player;
 
+import java.util.Locale;
+
 public class TurnHandler {
 
     /**
@@ -39,7 +41,7 @@ public class TurnHandler {
         if (jumpRequired) {
             activePiece.startMultiJump();
             if (isJumpRequired(turn)) {
-                GameHandling.setAndNotifyStatusChange(GameHandling.activePlayer() + ": Another jump is required.");
+                GameHandling.setAndNotifyStatusChange("Player " + GameHandling.activePlayer().toString().toLowerCase() + ": Another jump is required.");
                 return;
             }
         }
