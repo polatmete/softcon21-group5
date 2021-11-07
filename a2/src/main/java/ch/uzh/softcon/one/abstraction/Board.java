@@ -1,6 +1,7 @@
 package ch.uzh.softcon.one.abstraction;
 
 import ch.uzh.softcon.one.turn.Turn;
+import ch.uzh.softcon.one.utils.BoardLoader;
 
 public class Board {
 
@@ -11,40 +12,11 @@ public class Board {
     private static int totalMoves;
 
     public static void initialize() {
-
         totalMoves = 0;
-        cleanBoard();
 
-        int[][][] initialPosRed = {
-                {{0}, {1, 3, 5, 7}},
-                {{1}, {0, 2, 4, 6}},
-                {{2}, {1, 3, 5, 7}}
-        };
-
-        int[][][] initialPosWhite = {
-                {{5}, {0, 2, 4, 6}},
-                {{6}, {1, 3, 5, 7}},
-                {{7}, {0, 2, 4, 6}}
-        };
-
-        //Put red pieces on the board
-        for (int i = 0; i < initialPosRed.length; i++) {
-            int row = initialPosRed[i][0][0];
-            int[] columns = initialPosRed[i][1];
-
-            for (int column : columns) {
-                placePiece(column, row, new Piece(Player.RED));
-            }
-        }
-
-        //Put white pieces on the board
-        for (int i = 0; i < initialPosWhite.length; i++) {
-            int row = initialPosWhite[i][0][0];
-            int[] columns = initialPosWhite[i][1];
-
-            for (int column : columns) {
-                placePiece(column, row, new Piece(Player.WHITE));
-            }
+        if (!BoardLoader.loadBoard("initialBoard.csv")) {
+            System.err.println("Could not load initial Board. Creating an original Board.");
+            createOriginalBoard();
         }
     }
 
@@ -81,7 +53,6 @@ public class Board {
         return board[posX][posY];
     }
 
-    //checks if a player has no more pieces left
     public static boolean hasNoPieces(Player player) {
         if (player == Player.RED) {
             return pieceCountRed == 0;
@@ -90,25 +61,19 @@ public class Board {
         }
     }
 
+    //TODO Né
     public static void updateSavedBoard() {
         savedBoard = board;
     }
 
+    //TODO Né
     public static boolean isCurrentBoardSaved() {
-
-        if (savedBoard == board) {
-            return true;
-        } else {
-            return false;
-        }
+        return savedBoard == board;
     }
 
+    //TODO Né
     public static boolean isInitial() {
-        if (totalMoves == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return totalMoves == 0;
     }
 
     public static void cleanBoard() {
@@ -117,5 +82,39 @@ public class Board {
 
     public static int size() {
         return board.length;
+    }
+
+    public static void createOriginalBoard() {
+        cleanBoard();
+
+        int[][][] initialPosRed = {
+                {{0}, {1, 3, 5, 7}},
+                {{1}, {0, 2, 4, 6}},
+                {{2}, {1, 3, 5, 7}}
+        };
+
+        int[][][] initialPosWhite = {
+                {{5}, {0, 2, 4, 6}},
+                {{6}, {1, 3, 5, 7}},
+                {{7}, {0, 2, 4, 6}}
+        };
+
+        for (int[][] value : initialPosRed) {
+            int row = value[0][0];
+            int[] columns = value[1];
+
+            for (int column : columns) {
+                placePiece(column, row, new Piece(Player.RED));
+            }
+        }
+
+        for (int[][] ints : initialPosWhite) {
+            int row = ints[0][0];
+            int[] columns = ints[1];
+
+            for (int column : columns) {
+                placePiece(column, row, new Piece(Player.WHITE));
+            }
+        }
     }
 }

@@ -19,7 +19,6 @@ public class UIDesignHelper {
     private static final float tileWidth = 75;
     private static final float tileHeight = 75;
 
-
     public static Circle drawPieces(int i, int j, Piece piece) {
         int padding = 10;
         Circle circle = new Circle();
