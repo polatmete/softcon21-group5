@@ -1,6 +1,5 @@
 package ch.uzh.softcon.one.utils;
 
-import ch.uzh.softcon.one.abstraction.Board;
 import ch.uzh.softcon.one.abstraction.GameHandling;
 import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.abstraction.Player;
@@ -8,8 +7,10 @@ import ch.uzh.softcon.one.abstraction.Player;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
+import java.util.regex.Pattern;
 
 import static ch.uzh.softcon.one.abstraction.Board.*;
+import static ch.uzh.softcon.one.abstraction.Piece.activeMultiJump;
 
 public class BoardLoader {
 
@@ -48,9 +49,12 @@ public class BoardLoader {
             String row;
             int y = 0;
             while ((row = reader.readLine()) != null) {
+                if (row.startsWith("//")) {
+                    continue;
+                }
                 String[] fields = row.split(",");
 
-                    if (y > size() - 1) {
+                    if (row.startsWith("activePlayer")) {
                         if (fields[0].split(":")[1].equals("RED")) {
                             GameHandling.playerSubject().changePlayer(Player.RED);
                         } else {
@@ -61,16 +65,23 @@ public class BoardLoader {
 
                 Piece p;
                 for (int x = 0; x < fields.length; x++) {
+                    if (!Pattern.matches("\\[[RW][_+][PK]]", fields[x])) {
+                        throw new Exception();
+                    }
                     if (fields[x].charAt(1) == ' ') {
                         continue;
-                    }
-                    if (fields[x].charAt(1) == 'R') {
+                    } else if (fields[x].charAt(1) == 'R') {
                         p = new Piece(Player.RED);
-                    } else {
+                    } else{
                         p = new Piece(Player.WHITE);
                     }
                     if (fields[x].charAt(2) == '+') {
-                        p.startMultiJump();
+                        if (activeMultiJump()) {
+                            System.err.println("Another piece is already in a multiJump!" +
+                                    "Cannot have multiple multiJumps at the same time!");
+                        } else {
+                            p.startMultiJump();
+                        }
                     }
                     if (fields[x].charAt(3) == 'K') {
                         p.promote();
@@ -80,7 +91,6 @@ public class BoardLoader {
                 }
                 y++;
             }
-            Board.updateSavedBoard();
             return true;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "The given file was corrupted.",
@@ -140,7 +150,6 @@ public class BoardLoader {
                 writer.write("activePlayer:" + GameHandling.playerSubject().activePlayer());
                 writer.flush();
                 writer.close();
-                Board.updateSavedBoard();
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "The file could not be saved.", "General file error", JOptionPane.ERROR_MESSAGE);

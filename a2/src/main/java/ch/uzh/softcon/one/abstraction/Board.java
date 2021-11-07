@@ -6,14 +6,10 @@ import ch.uzh.softcon.one.utils.BoardLoader;
 public class Board {
 
     private static Piece[][] board;
-    private static Piece[][] savedBoard;
     private static int pieceCountRed;
     private static int pieceCountWhite;
-    private static int totalMoves;
 
     public static void initialize() {
-        totalMoves = 0;
-
         if (!BoardLoader.loadBoard("initialBoard.csv")) {
             System.err.println("Could not load initial Board. Creating an original Board.");
             createOriginalBoard();
@@ -35,7 +31,6 @@ public class Board {
         Piece pieceToMove = getPiece(turn.from().x(), turn.from().y());
         board[turn.to().x()][turn.to().y()] = pieceToMove;
         board[turn.from().x()][turn.from().y()] = null;
-        totalMoves++;
     }
 
     public static void removePiece(int posX, int posY) {
@@ -61,21 +56,6 @@ public class Board {
         }
     }
 
-    //TODO Né
-    public static void updateSavedBoard() {
-        savedBoard = board;
-    }
-
-    //TODO Né
-    public static boolean isCurrentBoardSaved() {
-        return savedBoard == board;
-    }
-
-    //TODO Né
-    public static boolean isInitial() {
-        return totalMoves == 0;
-    }
-
     public static void cleanBoard() {
         board = new Piece[8][8];
     }
@@ -84,7 +64,7 @@ public class Board {
         return board.length;
     }
 
-    public static void createOriginalBoard() {
+    private static void createOriginalBoard() {
         cleanBoard();
 
         int[][][] initialPosRed = {

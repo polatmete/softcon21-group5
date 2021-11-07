@@ -1,3 +1,7 @@
+//Do not modify board states on your own or loading may fail!
+//Piece Color: R/W
+//Piece multiJump: _/+
+//Piece Role: P/K
 [   ],[R_P],[   ],[R_P],[   ],[R_P],[   ],[R_P],
 [R_P],[   ],[R_P],[   ],[R_P],[   ],[R_P],[   ],
 [   ],[R_P],[   ],[R_P],[   ],[R_P],[   ],[R_P],
