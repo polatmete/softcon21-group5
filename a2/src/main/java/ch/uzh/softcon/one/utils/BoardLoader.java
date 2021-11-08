@@ -7,6 +7,7 @@ import ch.uzh.softcon.one.abstraction.Player;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
+import java.util.regex.Pattern;
 
 import static ch.uzh.softcon.one.abstraction.Board.*;
 import static ch.uzh.softcon.one.abstraction.Piece.activeMultiJump;
@@ -17,17 +18,15 @@ public class BoardLoader {
         return loadBoard(null);
     }
 
-    //TODO PATH RESOLVEMENT
-
     public static boolean loadBoard(String fileName) {
         try {
             BufferedReader reader;
             if (fileName == null) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle("Load Game");
-                fileChooser.setCurrentDirectory(new File("resources/"));
+                fileChooser.setCurrentDirectory(new File(path()));
                 fileChooser.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
-                fileChooser.setAcceptAllFileFilterUsed(false); // Remove option to choose other filetype file than csv
+                fileChooser.setAcceptAllFileFilterUsed(false);
                 int response = fileChooser.showOpenDialog(null);
 
                 if (response == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile().isFile()) {
@@ -41,7 +40,7 @@ public class BoardLoader {
                 }
             } else {
                 try {
-                    reader = new BufferedReader(new FileReader("resources/" + fileName));
+                    reader = new BufferedReader(new FileReader(path() + fileName));
                 } catch (FileNotFoundException ex) {
                     return false;
                 }
@@ -51,25 +50,25 @@ public class BoardLoader {
             String row;
             int y = 0;
             while ((row = reader.readLine()) != null) {
-                if (row.startsWith("//")) {
+                if (row.startsWith("//") || row.isEmpty()) {
                     continue;
                 }
-                String[] fields = row.split(",");
 
-                    if (y > size() - 1) {
+                String[] fields = row.split(",");
+                    if (row.startsWith("activePlayer")) {
                         if (fields[0].split(":")[1].equals("RED")) {
                             GameHandling.playerSubject().changePlayer(Player.RED);
-                        } else {
+                        } else if (fields[0].split(":")[1].equals("WHITE")) {
                             GameHandling.playerSubject().changePlayer(Player.WHITE);
-                        }
-                        break;
+                        } else throw new Exception("Active player is corrupt!");
+                        continue;
                     }
 
                 Piece p;
                 for (int x = 0; x < fields.length; x++) {
-                    /*if (!Pattern.matches("\\[[RW][_+][PK]]", fields[x])) {
-                        throw new Exception();
-                    }*/
+                    if (!Pattern.matches("\\[[RW ][_+ ][PK ]]", fields[x])) {
+                        throw new Exception("Board is corrupt or non commented text is written!");
+                    }
                     if (fields[x].charAt(1) == ' ') {
                         continue;
                     } else if (fields[x].charAt(1) == 'R') {
@@ -79,8 +78,7 @@ public class BoardLoader {
                     }
                     if (fields[x].charAt(2) == '+') {
                         if (activeMultiJump()) {
-                            System.err.println("Another piece is already in a multiJump!" +
-                                    "Cannot have multiple multiJumps at the same time!");
+                            throw new Exception("Cannot have multiple pieces in a multi jump!");
                         } else {
                             p.startMultiJump();
                         }
@@ -95,7 +93,7 @@ public class BoardLoader {
             }
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "The given file was corrupted.",
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
                     "File error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -105,14 +103,14 @@ public class BoardLoader {
         try {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Save Game");
-            fileChooser.setCurrentDirectory(new File("resources/"));
+            fileChooser.setCurrentDirectory(new File(path()));
             fileChooser.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
-            fileChooser.setAcceptAllFileFilterUsed(false); // Remove option to choose other filetype than csv
+            fileChooser.setAcceptAllFileFilterUsed(false);
 
-            File file = new File("resources/boardState.csv");
+            File file = new File(path() + "boardState.csv");
             int files = 1;
             while (file.exists()) {
-                file = new File("resources/boardState" + files++ + ".csv");
+                file = new File(path() + "boardState" + files++ + ".csv");
             }
             fileChooser.setSelectedFile(file);
             int response = fileChooser.showSaveDialog(fileChooser.getParent());
@@ -155,7 +153,16 @@ public class BoardLoader {
                 writer.close();
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "The file could not be saved.", "General file error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "The file could not be saved.",
+                    "General file error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private static String path() {
+        if (new File("a2/").exists()) {
+            return "a2/resources/";
+        } else {
+            return "resources/";
         }
     }
 }
