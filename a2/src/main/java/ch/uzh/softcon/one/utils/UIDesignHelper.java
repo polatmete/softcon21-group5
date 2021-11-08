@@ -90,10 +90,10 @@ public class UIDesignHelper {
         Rectangle rectangle = new Rectangle();
         if (scene == home) {
             //horizontally centered
-            buttonHeight = (windowWidth / 12 - 1.3);
-            buttonWidth = (windowWidth / 12 - 1.3) * 3;
-            rectangle.setX((windowWidth / 12 - 1.3) * 2 + (windowWidth / 12 - 1.3) * 5 * buttonIdx);
-            rectangle.setY((windowWidth / 12 - 1.3) * 5);
+            buttonHeight = (windowWidth / 12);
+            buttonWidth = (windowWidth / 12) * 3;
+            rectangle.setX((windowWidth / 12) * 2 + (windowWidth / 12) * 5 * buttonIdx);
+            rectangle.setY((windowWidth / 12) * 5);
         } else if (scene == game) {
             //vertically aligned right
             rectangle.setX(windowWidth - margin - buttonWidth);
@@ -131,18 +131,18 @@ public class UIDesignHelper {
         //The numbers in the sizes are determined experimentally. Do not change them.
         String titleName = "Checkers";
         int fontSize = 80;
-        double tileSize = windowWidth / 12 - 1.3; //-1.3 determined experimentally. Do not change.
+        double tileSize = windowWidth / 12;
 
-        double titleBoxWidth = (windowWidth / 12 - 1.3) * 8 - 1;
-        double titleBoxHeight = (windowWidth / 12 - 1.3) * 2 - 1;
+        double titleBoxWidth = (windowWidth / 12) * 8;
+        double titleBoxHeight = (windowWidth / 12) * 2;
 
         Group title = new Group();
 
         // Set title box (background of title, contains title text)
         Rectangle rectangle = new Rectangle();
 
-        rectangle.setX((windowWidth / 12 - 1.3) * 2 + 0.5);
-        rectangle.setY(windowWidth / 12 - 0.8);
+        rectangle.setX((windowWidth / 12) * 2);
+        rectangle.setY(windowWidth / 12);
         rectangle.setWidth(titleBoxWidth);
         rectangle.setHeight(titleBoxHeight);
         rectangle.setFill(Color.DARKGRAY);
@@ -182,7 +182,7 @@ public class UIDesignHelper {
 
     public static Group drawHomeBackground() {
         Group background = new Group();
-        double tileSize = windowWidth / 12 - 1.3; //-1.3 determined experimentally. Do not change.
+        double tileSize = windowWidth / 12;
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 12; j++) {
                 Rectangle rectangle = new Rectangle();
@@ -199,5 +199,4 @@ public class UIDesignHelper {
         }
         return background;
     }
-
 }
