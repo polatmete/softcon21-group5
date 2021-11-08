@@ -131,7 +131,7 @@ public class GameHandling {
         playerSubject.changePlayer(Player.RED);
         playerSubject.notifyObservers();
         Board.initialize();
-        GameHandling.updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
+        updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
     }
 
     private static void closeWindowEvent(WindowEvent event) {
