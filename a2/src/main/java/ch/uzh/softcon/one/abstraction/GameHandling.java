@@ -139,7 +139,11 @@ public class GameHandling {
             if (event != null) event.consume();
             ButtonType res = UIDesignHelper.showDialog("Quit game", "There might be unsaved changes",
                     "Are you sure you want to quit?", Alert.AlertType.CONFIRMATION);
-            if (res.equals(ButtonType.YES)) stage.setScene(home);
+            if (res.equals(ButtonType.YES))
+                if (event != null)
+                    stage.close();
+                else
+                    stage.setScene(home);
         }
     }
 
