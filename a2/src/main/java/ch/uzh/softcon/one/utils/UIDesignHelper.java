@@ -131,6 +131,7 @@ public class UIDesignHelper {
         //The numbers in the sizes are determined experimentally. Do not change them.
         String titleName = "Checkers";
         int fontSize = 80;
+        double tileSize = windowWidth / 12 - 1.3; //-1.3 determined experimentally. Do not change.
 
         double titleBoxWidth = (windowWidth / 12 - 1.3) * 8 - 1;
         double titleBoxHeight = (windowWidth / 12 - 1.3) * 2 - 1;
@@ -144,8 +145,7 @@ public class UIDesignHelper {
         rectangle.setY(windowWidth / 12 - 0.8);
         rectangle.setWidth(titleBoxWidth);
         rectangle.setHeight(titleBoxHeight);
-        int random = new Random().nextInt(200, 256);
-        rectangle.setFill(Color.rgb(random, random, random));
+        rectangle.setFill(Color.DARKGRAY);
         rectangle.setStrokeWidth(1);
         rectangle.setStroke(Color.BLACK);
 
@@ -160,8 +160,22 @@ public class UIDesignHelper {
         text.setX(titleBoxWidth / 2 - text.getLayoutBounds().getWidth() / 2 + rectangle.getX());
         text.setY(titleBoxHeight / 2 + rectangle.getY());
 
+        Circle redCircle = new Circle();
+        redCircle.setCenterX((text.getX() + rectangle.getX()) / 2);
+        redCircle.setCenterY(rectangle.getY() + titleBoxHeight/2);
+        redCircle.setRadius(50);
+        redCircle.setFill(Color.RED);
+
+        Circle whiteCircle = new Circle();
+        whiteCircle.setCenterX(12*tileSize - ((text.getX() + rectangle.getX()) / 2));
+        whiteCircle.setCenterY(rectangle.getY() + titleBoxHeight/2);
+        whiteCircle.setRadius(50);
+        whiteCircle.setFill(Color.WHITE);
+
         title.getChildren().add(rectangle);
         title.getChildren().add(text);
+        title.getChildren().add(redCircle);
+        title.getChildren().add(whiteCircle);
 
         return title;
     }
