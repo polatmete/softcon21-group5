@@ -59,7 +59,7 @@ public class GameHandling {
         gameRoot.getChildren().add(texts);
         gameRoot.getChildren().add(gameButtons);
 
-        game = new Scene(gameRoot, Color.DARKSEAGREEN);
+        game = new Scene(gameRoot, Color.BEIGE);
 
         Group homeRoot = new Group();
 
