@@ -136,7 +136,7 @@ public class GameHandling {
 
     private static void closeWindowEvent(WindowEvent event) {
         if (game.getWindow() != null) {
-            event.consume();
+            if (event != null) event.consume();
             ButtonType res = UIDesignHelper.showDialog("Quit game", "There might be unsaved changes",
                     "Are you sure you want to quit?", Alert.AlertType.CONFIRMATION);
             if (res.equals(ButtonType.YES)) stage.setScene(home);
@@ -207,6 +207,9 @@ public class GameHandling {
             case "Save Game" -> {
                 BoardLoader.saveBoard();
             }
+            case "Back to main" -> {
+                closeWindowEvent(null);
+            }
         }
     }
 
@@ -266,7 +269,7 @@ public class GameHandling {
         //add buttons
         String[] buttonNames;
 
-        if (scene == game) buttonNames = new String[]{"Save Game"};
+        if (scene == game) buttonNames = new String[]{"Save Game", "Back to main"};
         else buttonNames = new String[]{"New Game", "Load Game"};
 
         int numberOfButtons = buttonNames.length;

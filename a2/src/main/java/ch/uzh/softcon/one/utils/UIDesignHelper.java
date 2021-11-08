@@ -177,8 +177,8 @@ public class UIDesignHelper {
                 rectangle.setWidth(tileSize);
                 rectangle.setHeight(tileSize);
                 int rand;
-                if ((i + j) % 2 == 0) rand  = new Random().nextInt(175, 256); //rectangle.setFill(Color.WHITE);
-                else rand  = new Random().nextInt(81); //rectangle.setFill(Color.web("#3C3F41"));
+                if ((i + j) % 2 == 0) rand  = new Random().nextInt(175, 256);
+                else rand  = new Random().nextInt(81);
                 rectangle.setFill(Color.rgb(rand, rand, rand));
                 background.getChildren().add(rectangle);
             }
