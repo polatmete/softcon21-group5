@@ -1,7 +1,5 @@
 package ch.uzh.softcon.one.turn;
 
-import ch.uzh.softcon.one.abstraction.Player;
-
 /**
  * The Turn class.
  * Each player move is wrapped into a Turn for further processing.
