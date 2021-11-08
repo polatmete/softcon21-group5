@@ -297,7 +297,7 @@ public class GameHandling {
     private static void drawHomePage(Group homeRoot) {
         Group background = UIDesignHelper.drawHomeBackground();
         Group title = UIDesignHelper.drawHomeTitle();
-        drawButtons(home); //to add buttons to gameButtons
+        drawButtons(home); //to add buttons to homeButtons
 
         homeRoot.getChildren().add(background);
         homeRoot.getChildren().add(homeButtons); //added here to make sure that the background is in the background
