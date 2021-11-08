@@ -13,8 +13,8 @@ import static ch.uzh.softcon.one.abstraction.Piece.activeMultiJump;
 
 public class BoardLoader {
 
-    public static void loadBoard() {
-        loadBoard(null);
+    public static boolean loadBoard() {
+        return loadBoard(null);
     }
 
     //TODO PATH RESOLVEMENT

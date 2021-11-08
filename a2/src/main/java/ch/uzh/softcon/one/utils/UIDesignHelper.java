@@ -18,6 +18,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextBoundsType;
 
 import java.util.Optional;
+import java.util.Random;
 
 public class UIDesignHelper {
     private static final float windowWidth = 1000;
@@ -76,20 +77,23 @@ public class UIDesignHelper {
     }
 
     public static Group drawButtons(int numberOfButtons, int buttonIdx, String[] buttonNames, Scene scene, Scene game, Scene home) {
-        float buttonHeight = 100;
-        float buttonWidth = 200;
+        //TODO FINISH
+        double buttonHeight = 100;
+        double buttonWidth = 200;
         int fontSize = 30;
         int verticalSpacing = 25;
         int margin = 75;
 
-        float spacing = (windowWidth - numberOfButtons * buttonWidth) / (numberOfButtons + 1); //Even spacing between buttons (for horizontally centered buttons)
+        double spacing = (windowWidth - numberOfButtons * buttonWidth) / (numberOfButtons + 1); //Even spacing between buttons (for horizontally centered buttons)
         Group button = new Group();
 
         Rectangle rectangle = new Rectangle();
         if (scene == home) {
             //horizontally centered
-            rectangle.setX(spacing + buttonIdx * (buttonWidth + spacing));
-            rectangle.setY(windowHeight/2 - buttonHeight/2);
+            buttonHeight = (windowWidth / 12 - 1.3);
+            buttonWidth = (windowWidth / 12 - 1.3) * 3;
+            rectangle.setX((windowWidth / 12 - 1.3) * 2 + (windowWidth / 12 - 1.3) * 5 * buttonIdx);
+            rectangle.setY((windowWidth / 12 - 1.3) * 5);
         } else if (scene == game) {
             //vertically aligned right
             rectangle.setX(windowWidth - margin - buttonWidth);
@@ -99,7 +103,7 @@ public class UIDesignHelper {
         rectangle.setWidth(buttonWidth);
         rectangle.setHeight(buttonHeight);
         rectangle.setFill(Color.WHITE);
-        rectangle.setStrokeWidth(5);
+        rectangle.setStrokeWidth(1);
         rectangle.setStroke(Color.BLACK);
 
         String buttonName = buttonNames[buttonIdx];
@@ -110,15 +114,9 @@ public class UIDesignHelper {
         text.setTextAlignment(TextAlignment.CENTER);
         text.setTextOrigin(VPos.CENTER);
 
-        if (scene == home) {
-            //horizontally centered
-            text.setX((spacing + buttonIdx * (buttonWidth + spacing)) + buttonWidth/2 - text.getLayoutBounds().getWidth() / 2);
-            text.setY(windowHeight/2 - buttonHeight/2 + buttonHeight/2);
-        } else if (scene == game) {
-            //vertically aligned right
-            text.setX(windowWidth - margin - buttonWidth + buttonWidth/2 - text.getLayoutBounds().getWidth() / 2);
-            text.setY(margin + buttonIdx * (verticalSpacing + buttonHeight) + buttonHeight/2);
-        }
+        //horizontally centered
+        text.setX(rectangle.getWidth() / 2 - text.getLayoutBounds().getWidth() / 2 + rectangle.getX());
+        text.setY(rectangle.getHeight() / 2 + rectangle.getY());
 
         button.getChildren().add(rectangle);
         button.getChildren().add(text);
@@ -130,24 +128,25 @@ public class UIDesignHelper {
     }
 
     public static Group drawHomeTitle() {
+        //The numbers in the sizes are determined experimentally. Do not change them.
         String titleName = "Checkers";
-        int fontSize = 100;
-        int marginTop = 30;
+        int fontSize = 80;
 
-        float titleBoxWidth = 800;
-        float titleBoxHeight = 200;
+        double titleBoxWidth = (windowWidth / 12 - 1.3) * 8 - 1;
+        double titleBoxHeight = (windowWidth / 12 - 1.3) * 2 - 1;
 
         Group title = new Group();
 
         // Set title box (background of title, contains title text)
         Rectangle rectangle = new Rectangle();
 
-        rectangle.setX((windowWidth - titleBoxWidth) / 2);
-        rectangle.setY(marginTop);
+        rectangle.setX((windowWidth / 12 - 1.3) * 2 + 0.5);
+        rectangle.setY(windowWidth / 12 - 0.8);
         rectangle.setWidth(titleBoxWidth);
         rectangle.setHeight(titleBoxHeight);
-        rectangle.setFill(Color.LIGHTGRAY);
-        rectangle.setStrokeWidth(5);
+        int random = new Random().nextInt(200, 256);
+        rectangle.setFill(Color.rgb(random, random, random));
+        rectangle.setStrokeWidth(1);
         rectangle.setStroke(Color.BLACK);
 
         // Set and center text in title box
@@ -158,8 +157,8 @@ public class UIDesignHelper {
         text.setTextAlignment(TextAlignment.CENTER);
         text.setTextOrigin(VPos.CENTER);
 
-        text.setX(((windowWidth - titleBoxWidth) / 2)+ titleBoxWidth/2 - text.getLayoutBounds().getWidth() / 2);
-        text.setY(marginTop + titleBoxHeight/2);
+        text.setX(titleBoxWidth / 2 - text.getLayoutBounds().getWidth() / 2 + rectangle.getX());
+        text.setY(titleBoxHeight / 2 + rectangle.getY());
 
         title.getChildren().add(rectangle);
         title.getChildren().add(text);
@@ -169,23 +168,21 @@ public class UIDesignHelper {
 
     public static Group drawHomeBackground() {
         Group background = new Group();
-        for (int i = 0; i < windowHeight/tileHeight; i++) {
-            for (int j = 0; j < windowWidth/tileWidth; j++) {
+        double tileSize = windowWidth / 12 - 1.3; //-1.3 determined experimentally. Do not change.
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 12; j++) {
                 Rectangle rectangle = new Rectangle();
-                rectangle.setX(j*tileWidth);
-                rectangle.setY(i*tileHeight);
-                rectangle.setWidth(tileWidth);
-                rectangle.setHeight(tileHeight);
-                if ((i + j) % 2 == 0) {
-                    rectangle.setFill(Color.WHITE);
-                } else {
-                    rectangle.setFill(Color.web("#3C3F41"));
-                }
-
+                rectangle.setX(j*tileSize);
+                rectangle.setY(i*tileSize);
+                rectangle.setWidth(tileSize);
+                rectangle.setHeight(tileSize);
+                int rand;
+                if ((i + j) % 2 == 0) rand  = new Random().nextInt(175, 256); //rectangle.setFill(Color.WHITE);
+                else rand  = new Random().nextInt(81); //rectangle.setFill(Color.web("#3C3F41"));
+                rectangle.setFill(Color.rgb(rand, rand, rand));
                 background.getChildren().add(rectangle);
             }
         }
-
         return background;
     }
 

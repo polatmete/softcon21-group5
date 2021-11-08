@@ -135,11 +135,12 @@ public class GameHandling {
     }
 
     private static void closeWindowEvent(WindowEvent event) {
-        ButtonType res = UIDesignHelper.showDialog("Quit game", "There might be unsaved changes",
-                "Are you sure you want to quit?", Alert.AlertType.CONFIRMATION);
-
-        if(!res.equals(ButtonType.YES))
+        if (game.getWindow() != null) {
             event.consume();
+            ButtonType res = UIDesignHelper.showDialog("Quit game", "There might be unsaved changes",
+                    "Are you sure you want to quit?", Alert.AlertType.CONFIRMATION);
+            if (res.equals(ButtonType.YES)) stage.setScene(home);
+        }
     }
 
     private static boolean isPieceSelected() {
@@ -198,9 +199,10 @@ public class GameHandling {
                 updatePieces();
             }
             case "Load Game" -> {
-                stage.setScene(game);
-                BoardLoader.loadBoard();
-                updatePieces();
+                if(BoardLoader.loadBoard()) {
+                    stage.setScene(game);
+                    updatePieces();
+                }
             }
             case "Save Game" -> {
                 BoardLoader.saveBoard();
@@ -262,17 +264,14 @@ public class GameHandling {
 
     private static void drawButtons(Scene scene) {
         //add buttons
-        String[] buttonNames = {"Load Game", "New Game"};
+        String[] buttonNames;
 
-        if (scene == game) {
-            buttonNames = new String[]{"New Game", "Load Game", "Save Game"};
-        } else if (scene == home) {
-            buttonNames = new String[]{"New Game", "Load Game"};
-        }
+        if (scene == game) buttonNames = new String[]{"Save Game"};
+        else buttonNames = new String[]{"New Game", "Load Game"};
+
         int numberOfButtons = buttonNames.length;
 
         for (int buttonIdx = 0; buttonIdx < numberOfButtons; buttonIdx++) {
-
             Group button = UIDesignHelper.drawButtons(numberOfButtons, buttonIdx, buttonNames, scene, game, home);
 
             if (scene == home) {
@@ -289,7 +288,6 @@ public class GameHandling {
 
 
     private static void drawHomePage(Group homeRoot) {
-
         Group background = UIDesignHelper.drawHomeBackground();
         Group title = UIDesignHelper.drawHomeTitle();
         drawButtons(home); //to add buttons to gameButtons
@@ -297,6 +295,5 @@ public class GameHandling {
         homeRoot.getChildren().add(background);
         homeRoot.getChildren().add(homeButtons); //added here to make sure that the background is in the background
         homeRoot.getChildren().add(title);
-
     }
 }
