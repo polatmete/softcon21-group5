@@ -56,6 +56,7 @@ public class Board {
     }
 
     private static void createOriginalBoard() { // In case initialBoard file could not be read
+
         cleanBoard();
         int[][] initialPosRed   = {{1, 3, 5, 7},
                                    {0, 2, 4, 6},
@@ -65,7 +66,6 @@ public class Board {
                                    {1, 3, 5, 7},
                                    {0, 2, 4, 6}};
 
-        //Put red pieces on the board
         for (int i = 0; i < initialPosRed.length; ++i) {
             for (int j = 0; j < initialPosRed[0].length; ++j) {
                 placePiece(initialPosRed[i][j], i, new Piece((Player.RED)));
