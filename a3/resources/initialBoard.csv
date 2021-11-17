@@ -1,0 +1,15 @@
+//Do not modify board states on your own or loading may fail!
+//Field borders: []
+//Piece Color: R/W
+//Piece multiJump: _/+
+//Piece Role: P/K
+//Empty fields must contain three space characters!
+[   ],[R_P],[   ],[R_P],[   ],[R_P],[   ],[R_P],
+[R_P],[   ],[R_P],[   ],[R_P],[   ],[R_P],[   ],
+[   ],[R_P],[   ],[R_P],[   ],[R_P],[   ],[R_P],
+[   ],[   ],[   ],[   ],[   ],[   ],[   ],[   ],
+[   ],[   ],[   ],[   ],[   ],[   ],[   ],[   ],
+[W_P],[   ],[W_P],[   ],[W_P],[   ],[W_P],[   ],
+[   ],[W_P],[   ],[W_P],[   ],[W_P],[   ],[W_P],
+[W_P],[   ],[W_P],[   ],[W_P],[   ],[W_P],[   ],
+activePlayer:RED
