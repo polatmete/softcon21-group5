@@ -15,21 +15,20 @@ public class MoveStorage {
 
     public static void push(Turn turn, Piece captured) {
         if (top == max) {
-            int i = max - 1;
-            while (i > 0) {
-                moves[254 - i] = moves[255 - i];
-                captures[254 - i] = captures[255 - i];
-                i--;
+            int i = 1;
+            while (i < max) {
+                moves[i - 1] = moves[i];
+                captures[i - 1] = captures[i];
+                i++;
             }
+            top--;
             System.out.println("Can only store " + max + " moves; first move got deleted.");
         }
         moves[top] = turn;
         if (captured != null) {
             captures[top] = captured;
         }
-        if (top != max) {
-            top++;
-        }
+        top++;
     }
 
     public static Map<Turn, Piece> pop() {
