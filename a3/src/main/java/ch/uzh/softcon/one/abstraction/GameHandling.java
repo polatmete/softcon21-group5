@@ -8,6 +8,7 @@ import ch.uzh.softcon.one.observables.status.StatusChangeSubscriber;
 import ch.uzh.softcon.one.observables.status.StatusMessageChannel;
 import ch.uzh.softcon.one.observables.status.StatusSubject;
 import ch.uzh.softcon.one.observables.status.WinChannel;
+import ch.uzh.softcon.one.statecontrol.CommandTurn;
 import ch.uzh.softcon.one.turn.Turn;
 import ch.uzh.softcon.one.turn.TurnHandler;
 import ch.uzh.softcon.one.utils.BoardLoader;
@@ -211,8 +212,12 @@ public class GameHandling {
             case "Save Game" -> {
                 BoardLoader.saveBoard();
             }
-            case "Back to main" -> {
+            case "Back to Main" -> {
                 closeWindowEvent(null);
+            }
+            case "Undo Move" -> {
+                new CommandTurn().undo();
+                updatePieces();
             }
         }
     }
@@ -273,7 +278,7 @@ public class GameHandling {
         //add buttons
         String[] buttonNames;
 
-        if (scene == game) buttonNames = new String[]{"Save Game", "Back to main"};
+        if (scene == game) buttonNames = new String[]{"Save Game", "Back to Main", "Undo Move"};
         else buttonNames = new String[]{"New Game", "Load Game"};
 
         int numberOfButtons = buttonNames.length;
