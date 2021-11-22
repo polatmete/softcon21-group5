@@ -49,30 +49,30 @@ public class UIDesignHelper {
         if (piece.getColor() == Player.RED) {
             circle.setFill(Color.RED);
             if (piece.isKing()) {
-                circle.setFill(Color.DARKRED);
+                circle.setFill(Color.GOLD);
             }
         } else {
-            circle.setFill(Color.SEASHELL);
+            circle.setFill(Color.WHITE);
             if (piece.isKing()) {
-                circle.setFill(Color.HONEYDEW);
+                circle.setFill(Color.DARKGRAY);
             }
         }
         return circle;
     }
 
-    public static Rectangle drawBoard(int i, int j) {
+    public static Rectangle drawBoard(int i, int j, Color darkColor, Color lightColor) {
         Rectangle rectangle = new Rectangle();
         rectangle.setX(tileWidth*i+tileWidth);
         rectangle.setY(tileHeight*j+tileHeight);
         rectangle.setWidth(tileWidth);
         rectangle.setHeight(tileHeight);
         if ((i + j) % 2 == 0) {
-            rectangle.setFill(Color.WHITE);
+            rectangle.setFill(lightColor);
         } else {
-            rectangle.setFill(Color.BLACK);
+            rectangle.setFill(darkColor);
         }
         rectangle.setStrokeWidth(1);
-        rectangle.setStroke(Color.BLACK);
+        rectangle.setStroke(darkColor);
         return rectangle;
     }
 
@@ -92,12 +92,26 @@ public class UIDesignHelper {
             //horizontally centered
             buttonHeight = (windowWidth / 12);
             buttonWidth = (windowWidth / 12) * 3;
-            rectangle.setX((windowWidth / 12) * 2 + (windowWidth / 12) * 5 * buttonIdx);
-            rectangle.setY((windowWidth / 12) * 5);
+            if (buttonIdx == 2) {
+                rectangle.setX(windowWidth/2 - buttonWidth/2);
+                rectangle.setY((windowWidth / 12) * 7);
+            } else {
+                rectangle.setX((windowWidth / 12) * 2 + (windowWidth / 12) * 5 * buttonIdx);
+                rectangle.setY((windowWidth / 12) * 5);
+            }
         } else if (scene == game) {
             //vertically aligned right
             rectangle.setX(windowWidth - margin - buttonWidth);
             rectangle.setY(margin + buttonIdx * (verticalSpacing + buttonHeight));
+        } else {
+            //horizontally centered (placeholder)
+            if (buttonIdx >= 3) {
+                rectangle.setX((windowWidth / 12) * 2 + (windowWidth / 12) * 2.8 * (buttonIdx - 3));
+                rectangle.setY((windowWidth / 12) * 6);
+            } else {
+                rectangle.setX((windowWidth / 12) * 2 + (windowWidth / 12) * 2.8 * buttonIdx);
+                rectangle.setY((windowWidth / 12) * 4);
+            }
         }
 
         rectangle.setWidth(buttonWidth);
@@ -127,9 +141,9 @@ public class UIDesignHelper {
         return button;
     }
 
-    public static Group drawHomeTitle() {
+    public static Group drawTitle(String titleName) {
         //The numbers in the sizes are determined experimentally. Do not change them.
-        String titleName = "Checkers";
+
         int fontSize = 80;
         double tileSize = windowWidth / 12;
 
@@ -180,7 +194,7 @@ public class UIDesignHelper {
         return title;
     }
 
-    public static Group drawHomeBackground() {
+    public static Group drawBackground(Color darkBackgroundTiles, Color lightBackgroundTiles) {
         Group background = new Group();
         double tileSize = windowWidth / 12;
         for (int i = 0; i < 12; i++) {
@@ -190,10 +204,14 @@ public class UIDesignHelper {
                 rectangle.setY(i*tileSize);
                 rectangle.setWidth(tileSize);
                 rectangle.setHeight(tileSize);
+                /*
                 int rand;
                 if ((i + j) % 2 == 0) rand  = new Random().nextInt(175, 256);
                 else rand  = new Random().nextInt(81);
                 rectangle.setFill(Color.rgb(rand, rand, rand));
+                 */
+                if ((i + j) % 2 == 0) rectangle.setFill(lightBackgroundTiles);
+                else rectangle.setFill(darkBackgroundTiles);
                 background.getChildren().add(rectangle);
             }
         }
