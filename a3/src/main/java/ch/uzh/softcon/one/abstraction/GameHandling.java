@@ -8,12 +8,23 @@ import ch.uzh.softcon.one.observables.status.StatusChangeSubscriber;
 import ch.uzh.softcon.one.observables.status.StatusMessageChannel;
 import ch.uzh.softcon.one.observables.status.StatusSubject;
 import ch.uzh.softcon.one.observables.status.WinChannel;
+import ch.uzh.softcon.one.themes.ThemeSelector;
+import ch.uzh.softcon.one.themes.commands.BlueThemeCommandOn;
+import ch.uzh.softcon.one.themes.commands.DefaultThemeCommandOn;
+import ch.uzh.softcon.one.themes.commands.GreenThemeCommandOn;
+import ch.uzh.softcon.one.themes.commands.RedThemeCommandOn;
+import ch.uzh.softcon.one.themes.themes.BlueTheme;
+import ch.uzh.softcon.one.themes.themes.DefaultTheme;
+import ch.uzh.softcon.one.themes.themes.GreenTheme;
+import ch.uzh.softcon.one.themes.themes.RedTheme;
 import ch.uzh.softcon.one.turn.Turn;
 import ch.uzh.softcon.one.turn.TurnHandler;
 import ch.uzh.softcon.one.utils.BoardLoader;
 import ch.uzh.softcon.one.utils.UIDesignHelper;
+
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -33,16 +44,22 @@ public class GameHandling {
     private static Stage stage;
     private static Scene game;
     private static Scene home;
+    private static Scene theme;
     private static Group pieces;
     private static Group board;
     private static Group texts;
     private static Group homeButtons;
     private static Group gameButtons;
+    private static Group themeButtons;
+    private static Group homeRoot;
+    private static Group themeRoot;
     private static final float windowWidth = 1000;
     private static final float windowHeight = 750;
 
     private static PlayerSubject playerSubject;
     private static StatusSubject statusSubject;
+
+    private static ThemeSelector themeSelector;
 
     public static void initialize(Stage stage) {
         registerObservers();
@@ -53,7 +70,6 @@ public class GameHandling {
         pieces = new Group();
         texts = new Group();
         gameButtons = new Group();
-        homeButtons = new Group();
         gameRoot.getChildren().add(board);
         gameRoot.getChildren().add(pieces);
         gameRoot.getChildren().add(texts);
@@ -61,15 +77,20 @@ public class GameHandling {
 
         game = new Scene(gameRoot, Color.BEIGE);
 
-        Group homeRoot = new Group();
+        homeRoot = new Group();
+        homeButtons = new Group();
 
         home = new Scene(homeRoot);
+
+        themeRoot = new Group();
+        themeButtons = new Group();
+
+        theme = new Scene(themeRoot);
 
         stage.setTitle("Checkers Game");
         stage.setWidth(windowWidth);
         stage.setHeight(windowHeight);
         stage.setResizable(false);
-        //stage.setScene(game);
         stage.setScene(home);
         stage.show();
 
@@ -78,12 +99,16 @@ public class GameHandling {
         Board.initialize();
 
         updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
-        drawBoard();
+        drawBoard(Color.BLACK, Color.WHITE);
         updatePieces();
         drawButtons(game);
-        drawButtons(home);
 
-        drawHomePage(homeRoot);
+        drawHomePage(Color.BLACK, Color.WHITE);
+        drawThemePage(Color.BLACK, Color.WHITE);
+
+        initializeThemeSelector();
+        stage.setScene(theme);
+
 
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, GameHandling::closeWindowEvent);
     }
@@ -121,7 +146,6 @@ public class GameHandling {
     }
 
     public static void win(Player player) {
-        updatePieces();
         statusSubject.setWin();
         statusSubject.setStatusMessage(String.format("Congratulations player %s, you won! Do you want a revenge?", player.toString().toLowerCase()));
         statusSubject.notifyObservers();
@@ -144,6 +168,10 @@ public class GameHandling {
                     stage.close();
                 else
                     stage.setScene(home);
+        } else {
+            if (theme.getWindow() != null) {
+                stage.setScene(home);
+            }
         }
     }
 
@@ -214,6 +242,24 @@ public class GameHandling {
             case "Back to main" -> {
                 closeWindowEvent(null);
             }
+            case "Themes" -> {
+                stage.setScene(theme);
+            }
+            case "Blue Theme" -> {
+                ThemeSelector.pressButton(0);
+            }
+            case "Green Theme" -> {
+                ThemeSelector.pressButton(1);
+            }
+            case "Red Theme" -> {
+                ThemeSelector.pressButton(2);
+            }
+            case "Default Theme" -> {
+                ThemeSelector.pressButton(3);
+            }
+            case "Undo" -> {
+                ThemeSelector.pressUndo();
+            }
         }
     }
 
@@ -235,10 +281,10 @@ public class GameHandling {
         }
     }
 
-    private static void drawBoard() {
+    private static void drawBoard(Color darkColor, Color lightColor) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                Rectangle rectangle = UIDesignHelper.drawBoard(i, j);
+                Rectangle rectangle = UIDesignHelper.drawBoard(i, j, darkColor, lightColor);
                 int x = i;
                 int y = j;
                 rectangle.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
@@ -274,7 +320,8 @@ public class GameHandling {
         String[] buttonNames;
 
         if (scene == game) buttonNames = new String[]{"Save Game", "Back to main"};
-        else buttonNames = new String[]{"New Game", "Load Game"};
+        else if (scene == home) buttonNames = new String[]{"New Game", "Load Game", "Themes"};
+        else buttonNames = new String[]{"Blue Theme", "Green Theme", "Red Theme", "Default Theme", "Back to main", "Undo"};
 
         int numberOfButtons = buttonNames.length;
 
@@ -285,6 +332,8 @@ public class GameHandling {
                 homeButtons.getChildren().add(button);
             } else if (scene == game) {
                 gameButtons.getChildren().add(button);
+            } else {
+                themeButtons.getChildren().add(button);
             }
 
             int finalButtonIdx = buttonIdx;
@@ -294,13 +343,56 @@ public class GameHandling {
     }
 
 
-    private static void drawHomePage(Group homeRoot) {
-        Group background = UIDesignHelper.drawHomeBackground();
-        Group title = UIDesignHelper.drawHomeTitle();
+    private static void drawHomePage(Color darkBoardTiles, Color lightBoardTiles) {
+
+        homeRoot.getChildren().clear();
+
+        Group background = UIDesignHelper.drawBackground(darkBoardTiles, lightBoardTiles);
+        Group title = UIDesignHelper.drawTitle("Checkers");
         drawButtons(home); //to add buttons to homeButtons
 
         homeRoot.getChildren().add(background);
         homeRoot.getChildren().add(homeButtons); //added here to make sure that the background is in the background
         homeRoot.getChildren().add(title);
+    }
+
+    private static void drawThemePage(Color darkBoardTiles, Color lightBoardTiles) {
+
+        themeRoot.getChildren().clear();
+
+        Group background = UIDesignHelper.drawBackground(darkBoardTiles, lightBoardTiles);
+        Group title = UIDesignHelper.drawTitle("Themes");
+        drawButtons(theme);
+
+        themeRoot.getChildren().add(background);
+        themeRoot.getChildren().add(themeButtons);
+        themeRoot.getChildren().add(title);
+    }
+
+    public static void initializeThemeSelector() {
+        GameHandling.themeSelector = new ThemeSelector();
+
+        BlueTheme blueTheme = new BlueTheme();
+        BlueThemeCommandOn blueThemeOn = new BlueThemeCommandOn(blueTheme);
+
+        GreenTheme greenTheme = new GreenTheme();
+        GreenThemeCommandOn greenThemeOn = new GreenThemeCommandOn(greenTheme);
+
+        RedTheme redTheme = new RedTheme();
+        RedThemeCommandOn redThemeOn = new RedThemeCommandOn(redTheme);
+
+        DefaultTheme defaultTheme = new DefaultTheme();
+        DefaultThemeCommandOn defaultThemeOn = new DefaultThemeCommandOn(defaultTheme);
+
+        themeSelector.setCommand(0, blueThemeOn);
+        themeSelector.setCommand(1, greenThemeOn);
+        themeSelector.setCommand(2, redThemeOn);
+        themeSelector.setCommand(3, defaultThemeOn);
+    }
+
+    public static void updateColors(Color darkBoardTiles, Color lightBoardTiles) {
+        drawBoard(darkBoardTiles, lightBoardTiles);
+        drawThemePage(darkBoardTiles, lightBoardTiles);
+        drawHomePage(darkBoardTiles, lightBoardTiles);
     }
 }
