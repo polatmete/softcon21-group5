@@ -107,7 +107,6 @@ public class GameHandling {
         drawThemePage(Color.BLACK, Color.WHITE);
 
         initializeThemeSelector();
-        stage.setScene(theme);
 
 
         stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, GameHandling::closeWindowEvent);
