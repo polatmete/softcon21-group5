@@ -8,6 +8,9 @@ import ch.uzh.softcon.one.observables.status.StatusChangeSubscriber;
 import ch.uzh.softcon.one.observables.status.StatusMessageChannel;
 import ch.uzh.softcon.one.observables.status.StatusSubject;
 import ch.uzh.softcon.one.observables.status.WinChannel;
+import ch.uzh.softcon.one.statecontrol.Command;
+import ch.uzh.softcon.one.statecontrol.CommandLoadBoard;
+import ch.uzh.softcon.one.statecontrol.CommandSaveBoard;
 import ch.uzh.softcon.one.statecontrol.CommandTurn;
 import ch.uzh.softcon.one.turn.Turn;
 import ch.uzh.softcon.one.turn.TurnHandler;
@@ -45,6 +48,10 @@ public class GameHandling {
     private static PlayerSubject playerSubject;
     private static StatusSubject statusSubject;
 
+    private static Command loadBoard;
+    private static Command saveBoard;
+    private static Command move;
+
     public static void initialize(Stage stage) {
         registerObservers();
 
@@ -77,6 +84,10 @@ public class GameHandling {
         playerSubject.changePlayer(Player.RED);
         playerSubject.notifyObservers();
         Board.initialize();
+
+        loadBoard = new CommandLoadBoard(null);
+        saveBoard = new CommandSaveBoard();
+        move = new CommandTurn(null, null, null);
 
         updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
         drawBoard();
@@ -204,19 +215,19 @@ public class GameHandling {
                 updatePieces();
             }
             case "Load Game" -> {
-                if(BoardLoader.loadBoard()) {
+                if(loadBoard.execute()) {
                     stage.setScene(game);
                     updatePieces();
                 }
             }
             case "Save Game" -> {
-                BoardLoader.saveBoard();
+                saveBoard.execute();
             }
             case "Back to Main" -> {
                 closeWindowEvent(null);
             }
             case "Undo Move" -> {
-                new CommandTurn().undo();
+                move.undo();
                 updatePieces();
             }
         }

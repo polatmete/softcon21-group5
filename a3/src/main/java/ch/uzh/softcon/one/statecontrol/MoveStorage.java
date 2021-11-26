@@ -1,47 +1,66 @@
 package ch.uzh.softcon.one.statecontrol;
 
 import ch.uzh.softcon.one.abstraction.Piece;
+import ch.uzh.softcon.one.abstraction.Player;
 import ch.uzh.softcon.one.turn.Turn;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class MoveStorage {
 
     private static final int max = 255;
     private static int top = 0;
-    private static Turn[] moves = new Turn[max];
-    private static Piece[] captures = new Piece[max];
+    //private static ArrayList<ArrayList<Object>> turnInfo = new ArrayList<>(max); // [0][0-2] turn, activeP, piece ???
 
-    public static void push(Turn turn, Piece captured) {
+    private static final Map<Turn, Player>[] moves = new HashMap[max];
+    private static final Piece[] capturedPieces = new Piece[max];
+
+    public static void push(Turn turn, Player activePlayer, Piece captured) {
         if (top == max) {
             int i = 1;
             while (i < max) {
                 moves[i - 1] = moves[i];
-                captures[i - 1] = captures[i];
+                capturedPieces[i - 1] = capturedPieces[i];
                 i++;
             }
             top--;
             System.out.println("Can only store " + max + " moves; first move got deleted.");
         }
-        moves[top] = turn;
+        moves[top] = new HashMap<>();
+        moves[top].put(turn, activePlayer);
         if (captured != null) {
-            captures[top] = captured;
+            capturedPieces[top] = captured;
         }
         top++;
     }
 
-    public static Map<Turn, Piece> pop() {
+    public static Map<Map<Turn, Player>, Piece> pop() {
         if (top - 1 < 0) {
             System.err.println("No more prior moves stored!");
             return null;
         } else {
             top--;
-            Map<Turn, Piece> move = new HashMap<>();
-            move.put(moves[top], captures[top]);
+            Map<Map<Turn, Player>, Piece> move = new HashMap<>();
+            move.put(moves[top], capturedPieces[top]);
             moves[top] = null;
-            captures[top] = null;
+            capturedPieces[top] = null;
             return move;
         }
+    }
+
+    public static Player lastPlayer() {
+        Player lastP = null;
+        if (top - 1 < 0) {
+            return null;
+        } else {
+            Optional<Turn> turnMap = moves[top - 1].keySet().stream().findFirst();
+            if (turnMap.isPresent()) {
+                lastP = moves[top - 1].get(turnMap.get());
+            }
+        }
+        return lastP;
     }
 }

@@ -4,6 +4,7 @@ import ch.uzh.softcon.one.abstraction.Board;
 import ch.uzh.softcon.one.abstraction.GameHandling;
 import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.abstraction.Player;
+import ch.uzh.softcon.one.statecontrol.Command;
 import ch.uzh.softcon.one.statecontrol.CommandTurn;
 
 public class TurnHandler {
@@ -62,7 +63,8 @@ public class TurnHandler {
             enemy = Board.getPiece(enemyX, enemyY);
             Board.removePiece(enemyX, enemyY);
         }
-        new CommandTurn().execute(turn, enemy);
+        Command move = new CommandTurn(turn, GameHandling.activePlayer(), enemy);
+        move.execute();
     }
 
     /**
