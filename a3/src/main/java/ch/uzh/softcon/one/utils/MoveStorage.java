@@ -1,10 +1,9 @@
-package ch.uzh.softcon.one.statecontrol;
+package ch.uzh.softcon.one.utils;
 
 import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.abstraction.Player;
 import ch.uzh.softcon.one.turn.Turn;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

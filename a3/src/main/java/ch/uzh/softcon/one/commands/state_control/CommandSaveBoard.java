@@ -1,5 +1,6 @@
-package ch.uzh.softcon.one.statecontrol;
+package ch.uzh.softcon.one.commands.state_control;
 
+import ch.uzh.softcon.one.commands.Command;
 import ch.uzh.softcon.one.utils.BoardLoader;
 
 public class CommandSaveBoard implements Command {

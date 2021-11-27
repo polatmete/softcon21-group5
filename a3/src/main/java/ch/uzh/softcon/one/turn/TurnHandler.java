@@ -4,8 +4,8 @@ import ch.uzh.softcon.one.abstraction.Board;
 import ch.uzh.softcon.one.abstraction.GameHandling;
 import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.abstraction.Player;
-import ch.uzh.softcon.one.statecontrol.Command;
-import ch.uzh.softcon.one.statecontrol.CommandTurn;
+import ch.uzh.softcon.one.commands.Command;
+import ch.uzh.softcon.one.commands.state_control.CommandTurn;
 
 public class TurnHandler {
 

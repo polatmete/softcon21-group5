@@ -1,9 +1,8 @@
 package ch.uzh.softcon.one.abstraction;
 
-import ch.uzh.softcon.one.statecontrol.Command;
-import ch.uzh.softcon.one.statecontrol.CommandLoadBoard;
+import ch.uzh.softcon.one.commands.Command;
+import ch.uzh.softcon.one.commands.state_control.CommandLoadBoard;
 import ch.uzh.softcon.one.turn.Turn;
-import ch.uzh.softcon.one.utils.BoardLoader;
 
 public class Board {
 

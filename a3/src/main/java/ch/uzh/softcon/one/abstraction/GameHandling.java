@@ -8,27 +8,25 @@ import ch.uzh.softcon.one.observables.status.StatusChangeSubscriber;
 import ch.uzh.softcon.one.observables.status.StatusMessageChannel;
 import ch.uzh.softcon.one.observables.status.StatusSubject;
 import ch.uzh.softcon.one.observables.status.WinChannel;
-import ch.uzh.softcon.one.themes.ThemeSelector;
-import ch.uzh.softcon.one.themes.commands.BlueThemeCommandOn;
-import ch.uzh.softcon.one.themes.commands.DefaultThemeCommandOn;
-import ch.uzh.softcon.one.themes.commands.GreenThemeCommandOn;
-import ch.uzh.softcon.one.themes.commands.RedThemeCommandOn;
-import ch.uzh.softcon.one.themes.themes.BlueTheme;
-import ch.uzh.softcon.one.themes.themes.DefaultTheme;
-import ch.uzh.softcon.one.themes.themes.GreenTheme;
-import ch.uzh.softcon.one.themes.themes.RedTheme;
-import ch.uzh.softcon.one.statecontrol.Command;
-import ch.uzh.softcon.one.statecontrol.CommandLoadBoard;
-import ch.uzh.softcon.one.statecontrol.CommandSaveBoard;
-import ch.uzh.softcon.one.statecontrol.CommandTurn;
+import ch.uzh.softcon.one.commands.theme_selector.ThemeSelector;
+import ch.uzh.softcon.one.commands.theme_selector.BlueThemeCommandOn;
+import ch.uzh.softcon.one.commands.theme_selector.DefaultThemeCommandOn;
+import ch.uzh.softcon.one.commands.theme_selector.GreenThemeCommandOn;
+import ch.uzh.softcon.one.commands.theme_selector.RedThemeCommandOn;
+import ch.uzh.softcon.one.commands.theme_selector.themes.BlueTheme;
+import ch.uzh.softcon.one.commands.theme_selector.themes.DefaultTheme;
+import ch.uzh.softcon.one.commands.theme_selector.themes.GreenTheme;
+import ch.uzh.softcon.one.commands.theme_selector.themes.RedTheme;
+import ch.uzh.softcon.one.commands.Command;
+import ch.uzh.softcon.one.commands.state_control.CommandLoadBoard;
+import ch.uzh.softcon.one.commands.state_control.CommandSaveBoard;
+import ch.uzh.softcon.one.commands.state_control.CommandTurn;
 import ch.uzh.softcon.one.turn.Turn;
 import ch.uzh.softcon.one.turn.TurnHandler;
-import ch.uzh.softcon.one.utils.BoardLoader;
 import ch.uzh.softcon.one.utils.UIDesignHelper;
 
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -336,7 +334,7 @@ public class GameHandling {
 
         if (scene == game) buttonNames = new String[]{"Save Game", "Back to Main", "Undo Move"};
         else if (scene == home) buttonNames = new String[]{"New Game", "Load Game", "Themes"};
-        else buttonNames = new String[]{"Blue Theme", "Green Theme", "Red Theme", "Default Theme", "Back to main", "Undo"};
+        else buttonNames = new String[]{"Blue Theme", "Green Theme", "Red Theme", "Default Theme", "Back to Main", "Undo"};
 
         int numberOfButtons = buttonNames.length;
 

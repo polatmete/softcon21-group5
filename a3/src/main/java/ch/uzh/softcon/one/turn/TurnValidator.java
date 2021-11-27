@@ -19,6 +19,7 @@ public class TurnValidator {
         Piece piece = Board.getPiece(fromX, fromY);
         Player p = GameHandling.activePlayer();
 
+        if (piece == null) return false;
         // Attempt to move backwards but piece is not a king
         if(!piece.isKing() && ((p == Player.RED && toY < fromY)|| p == Player.WHITE && toY > fromY)) {
             GameHandling.setAndNotifyStatusChange("Player " + p.toString().toLowerCase() + ": Non-King piece cannot move backwards.");

@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.uzh</groupId>
-    <artifactId>a2</artifactId>
-    <version>0.0.6</version>
+    <artifactId>a3</artifactId>
+    <version>0.0.7</version>
     <name>Assignment3</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
