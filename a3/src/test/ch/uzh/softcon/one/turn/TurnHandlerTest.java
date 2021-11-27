@@ -27,7 +27,7 @@ class TurnHandlerTest {
     }
 
     @Test
-    void runTurnSequenceCheckTransformIsNeededRed() {
+    void checkTransformIsNeededRed() {
         boardInstance.placePiece(5, 6, new Piece(Player.RED));
         turn = new Turn(5, 6, 6, 7);
 
@@ -45,11 +45,11 @@ class TurnHandlerTest {
             fail();
         }
 
-        assertTrue(result);
+        assertTrue(result, "Transformation to king must occur");
     }
 
     @Test
-    void runTurnSequenceCheckTransformNotNeededWhite() {
+    void checkTransformNotNeededWhite() {
         boardInstance.placePiece(3, 3, new Piece(Player.WHITE));
         turn = new Turn(3, 3, 4, 2);
 
@@ -67,7 +67,7 @@ class TurnHandlerTest {
             fail();
         }
 
-        assertFalse(result);
+        assertFalse(result, "No transformation must occur.");
     }
 
     @Test

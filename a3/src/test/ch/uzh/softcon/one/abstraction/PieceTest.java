@@ -1,34 +1,67 @@
 package ch.uzh.softcon.one.abstraction;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PieceTest {
 
-    @org.junit.jupiter.api.Test
-    void getColor() {
+    @Test
+    void getColorRed() {
+        Piece redPiece = new Piece(Player.RED);
+
+        assertEquals(Player.RED, redPiece.getColor(), "Why is this piece not red?");
     }
 
-    @org.junit.jupiter.api.Test
-    void isKing() {
+    @Test
+    void isNotKing() {
+        Piece freshPiece = new Piece(Player.RED);
+
+        assertFalse(freshPiece.isKing(), "Piece should be pawn");
     }
 
-    @org.junit.jupiter.api.Test
-    void promote() {
+    @Test
+    void promoteToKing() {
+        Piece aspiringKing = new Piece(Player.RED);
+
+        aspiringKing.promote();
+
+        assertTrue(aspiringKing.isKing(), "Promotions usually turn pawn into king");
     }
 
-    @org.junit.jupiter.api.Test
-    void isInMultiJump() {
+    @Test
+    void isNotInMultiJump() {
+        Piece jumpyPiece = new Piece(Player.RED);
+
+        assertFalse(jumpyPiece.isInMultiJump());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void activeMultiJump() {
+        Piece multiPiece = new Piece(Player.RED);
+
+        multiPiece.startMultiJump();
+
+        assertTrue(Piece.activeMultiJump());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void startMultiJump() {
+        Piece multiPiece = new Piece(Player.RED);
+
+        multiPiece.startMultiJump();
+
+        assertTrue(multiPiece.isInMultiJump());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void endMultiJump() {
+        Piece multiPiece = new Piece(Player.RED);
+
+        multiPiece.startMultiJump();
+        multiPiece.endMultiJump();
+
+        assertFalse(multiPiece.isInMultiJump());
     }
 }
