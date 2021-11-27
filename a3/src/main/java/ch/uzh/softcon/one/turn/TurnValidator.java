@@ -7,6 +7,8 @@ import ch.uzh.softcon.one.abstraction.Player;
 
 public class TurnValidator {
 
+    private static final Board boardInstance = Board.getInstance();
+
     /**
      * Checks if the attempted turn, whether a jump or a move, is valid.
      * @param turn Current turn
@@ -16,7 +18,7 @@ public class TurnValidator {
     public static boolean validateMove(Turn turn, boolean hasToJump) {
         int fromX = turn.from().x(); int toX = turn.to().x();
         int fromY = turn.from().y(); int toY = turn.to().y();
-        Piece piece = Board.getPiece(fromX, fromY);
+        Piece piece = boardInstance.getPiece(fromX, fromY);
         Player p = GameHandling.activePlayer();
 
         // Attempt to move backwards but piece is not a king
@@ -44,7 +46,7 @@ public class TurnValidator {
         }
 
         //Another piece is at the turn destination
-        if (Board.getPiece(toX, toY) != null) {
+        if (boardInstance.getPiece(toX, toY) != null) {
             GameHandling.setAndNotifyStatusChange("Player " + p.toString().toLowerCase() + ": A piece blocks the desired destination.");
             return false;
         }
@@ -66,9 +68,9 @@ public class TurnValidator {
 
         return !isOutsideBoard(enemyX, enemyY)
                 && !isOutsideBoard(toX, toY)
-                && Board.getPiece(enemyX, enemyY) != null
-                && Board.getPiece(enemyX, enemyY).getColor() != p
-                && Board.getPiece(toX, toY) == null;
+                && boardInstance.getPiece(enemyX, enemyY) != null
+                && boardInstance.getPiece(enemyX, enemyY).getColor() != p
+                && boardInstance.getPiece(toX, toY) == null;
     }
 
     /**
@@ -79,7 +81,7 @@ public class TurnValidator {
      */
     public static boolean canMoveDiagonally(int toX, int toY) {
         return !isOutsideBoard(toX, toY)
-                && Board.getPiece(toX, toY) == null;
+                && boardInstance.getPiece(toX, toY) == null;
     }
 
     /**

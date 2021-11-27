@@ -5,9 +5,20 @@ import ch.uzh.softcon.one.utils.BoardLoader;
 
 public class Board {
 
+    private static Board instance;
+
     private static Piece[][] board;
     private static int pieceCountRed;
     private static int pieceCountWhite;
+
+    private Board() {}
+
+    public static synchronized Board getInstance() {
+        if (instance == null) {
+            instance = new Board();
+        }
+        return instance;
+    }
 
     public static void initialize() {
         if (!BoardLoader.loadBoard("initialBoard.csv")) {
