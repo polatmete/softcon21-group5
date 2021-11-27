@@ -41,6 +41,8 @@ import javafx.stage.WindowEvent;
 
 public class GameHandling {
 
+    private static Board boardInstance;
+
     private static int selectedPieceX = -1;
     private static int selectedPieceY = -1;
     private static Stage stage;
@@ -68,6 +70,7 @@ public class GameHandling {
     private static Command move;
 
     public static void initialize(Stage stage) {
+        boardInstance = Board.getInstance();
         registerObservers();
 
         GameHandling.stage = stage;
@@ -102,7 +105,7 @@ public class GameHandling {
 
         playerSubject.changePlayer(Player.RED);
         playerSubject.notifyObservers();
-        Board.initialize();
+        boardInstance.initialize();
 
         loadBoard = new CommandLoadBoard(null);
         saveBoard = new CommandSaveBoard();
@@ -163,7 +166,7 @@ public class GameHandling {
     public static void reset() {
         playerSubject.changePlayer(Player.RED);
         playerSubject.notifyObservers();
-        Board.initialize();
+        boardInstance.initialize();
         updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
     }
 
@@ -208,7 +211,7 @@ public class GameHandling {
             game.setCursor(Cursor.DEFAULT);
             updatePieces();
         } else {
-            if (Board.getPiece(x, y).getColor() == activePlayer) {
+            if (boardInstance.getPiece(x, y).getColor() == activePlayer) {
                 circle.setStrokeWidth(6);
                 circle.setStroke(Color.GOLD);
                 selectPiece(x, y);
@@ -218,7 +221,7 @@ public class GameHandling {
 
     private static void handleHover(int x, int y, Circle circle) {
         Player activePlayer = playerSubject.activePlayer();
-        if (!isPieceSelected() && Board.getPiece(x, y).getColor() == activePlayer) {
+        if (!isPieceSelected() && boardInstance.getPiece(x, y).getColor() == activePlayer) {
             circle.setStrokeWidth(3);
             circle.setStroke(Color.GOLD);
             game.setCursor(Cursor.HAND);
@@ -280,7 +283,7 @@ public class GameHandling {
         pieces.getChildren().clear();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                Piece piece = Board.getPiece(j, i);
+                Piece piece = boardInstance.getPiece(j, i);
                 if (piece != null) {
                     Circle circle = UIDesignHelper.drawPieces(i, j, piece);
                     int x = j;
@@ -350,8 +353,7 @@ public class GameHandling {
             }
 
             int finalButtonIdx = buttonIdx;
-            String[] finalButtonNames = buttonNames;
-            button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleButtonClick(finalButtonNames, finalButtonIdx));
+            button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleButtonClick(buttonNames, finalButtonIdx));
         }
     }
 

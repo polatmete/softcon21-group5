@@ -6,9 +6,20 @@ import ch.uzh.softcon.one.turn.Turn;
 
 public class Board {
 
+    private static Board instance;
+
     private static Piece[][] board;
     private static int pieceCountRed;
     private static int pieceCountWhite;
+
+    private Board() {}
+
+    public static synchronized Board getInstance() {
+        if (instance == null) {
+            instance = new Board();
+        }
+        return instance;
+    }
 
     public static void initialize() {
         Command loadBoard = new CommandLoadBoard("initialBoard.csv");

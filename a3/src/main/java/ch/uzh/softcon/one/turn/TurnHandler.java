@@ -9,6 +9,8 @@ import ch.uzh.softcon.one.commands.state_control.CommandTurn;
 
 public class TurnHandler {
 
+    private static final Board boardInstance = Board.getInstance();
+
     /**
      * Starts the whole turn sequence with all checks and returns the status.
      * @param turn Current turn
@@ -29,7 +31,7 @@ public class TurnHandler {
         }
 
         // Make a king out of the piece if it has reached the other side
-        Piece activePiece = Board.getPiece(turn.to().x(), turn.to().y());
+        Piece activePiece = boardInstance.getPiece(turn.to().x(), turn.to().y());
         if (checkTransformNeeded(turn)) {
             activePiece.promote();
             GameHandling.changePlayer(GameHandling.activePlayer() != Player.RED ? Player.RED : Player.WHITE);
@@ -60,8 +62,8 @@ public class TurnHandler {
         int enemyY = (turn.from().y() + turn.to().y()) / 2;
 
         if (Math.abs(turn.from().x() - turn.to().x()) == 2 || Math.abs(turn.from().y() - turn.to().y()) == 2) {
-            enemy = Board.getPiece(enemyX, enemyY);
-            Board.removePiece(enemyX, enemyY);
+            enemy = boardInstance.getPiece(enemyX, enemyY);
+            boardInstance.removePiece(enemyX, enemyY);
         }
         Command move = new CommandTurn(turn, GameHandling.activePlayer(), enemy);
         move.execute();
@@ -77,9 +79,9 @@ public class TurnHandler {
             return true;
         }
         if (GameHandling.activePlayer() == Player.RED) {
-            return Board.hasNoPieces(Player.WHITE);
+            return boardInstance.hasNoPieces(Player.WHITE);
         } else {
-            return Board.hasNoPieces(Player.RED);
+            return boardInstance.hasNoPieces(Player.RED);
         }
     }
 
@@ -90,7 +92,7 @@ public class TurnHandler {
      */
     private static boolean checkTransformNeeded(Turn turn) {
         if (GameHandling.activePlayer() == Player.RED) {
-            return turn.to().y() == Board.size() - 1;
+            return turn.to().y() == boardInstance.size() - 1;
         } else {
             return turn.to().y() == 0;
         }
@@ -103,21 +105,21 @@ public class TurnHandler {
      */
     private static boolean isJumpRequired() {
         Player p = GameHandling.activePlayer();
-        for (int i = 0; i < Board.size(); i++) {
-            for (int j = 0; j < Board.size(); j++) {
-                if (Board.getPiece(i, j) == null || Board.getPiece(i, j).getColor() != p) {
+        for (int i = 0; i < boardInstance.size(); i++) {
+            for (int j = 0; j < boardInstance.size(); j++) {
+                if (boardInstance.getPiece(i, j) == null || boardInstance.getPiece(i, j).getColor() != p) {
                     continue;
                 }
-                if (Piece.activeMultiJump() && !Board.getPiece(i, j).isInMultiJump()) {
+                if (Piece.activeMultiJump() && !boardInstance.getPiece(i, j).isInMultiJump()) {
                     continue;
                 }
-                if (Board.getPiece(i, j).getColor() == Player.RED || Board.getPiece(i, j).isKing()) {
+                if (boardInstance.getPiece(i, j).getColor() == Player.RED || boardInstance.getPiece(i, j).isKing()) {
                     if (TurnValidator.isJumpPossible(i, j, i + 2, j + 2, p)
                             || TurnValidator.isJumpPossible(i, j, i - 2, j + 2, p)) {
                         return true;
                     }
                 }
-                if (Board.getPiece(i, j).getColor() == Player.WHITE || Board.getPiece(i, j).isKing()) {
+                if (boardInstance.getPiece(i, j).getColor() == Player.WHITE || boardInstance.getPiece(i, j).isKing()) {
                     if (TurnValidator.isJumpPossible(i, j, i + 2, j - 2, p)
                             || TurnValidator.isJumpPossible(i, j, i - 2, j - 2, p)) {
                         return true;
@@ -136,12 +138,12 @@ public class TurnHandler {
     private static boolean isEnemyStuck(Player p) {
         Player enemy = p == Player.RED ? Player.WHITE : Player.RED;
 
-        for (int i = 0; i < Board.size(); i++) {
-            for (int j = 0; j < Board.size(); j++) {
-                if (Board.getPiece(i, j) == null || Board.getPiece(i, j).getColor() != enemy) {
+        for (int i = 0; i < boardInstance.size(); i++) {
+            for (int j = 0; j < boardInstance.size(); j++) {
+                if (boardInstance.getPiece(i, j) == null || boardInstance.getPiece(i, j).getColor() != enemy) {
                     continue;
                 }
-                if (Board.getPiece(i, j).getColor() == Player.RED || Board.getPiece(i, j).isKing()) {
+                if (boardInstance.getPiece(i, j).getColor() == Player.RED || boardInstance.getPiece(i, j).isKing()) {
                     if (TurnValidator.canMoveDiagonally(i + 1, j + 1)
                             || TurnValidator.isJumpPossible(i, j, i + 2, j + 2, enemy)
                             || TurnValidator.canMoveDiagonally(i - 1, j + 1)
@@ -149,7 +151,7 @@ public class TurnHandler {
                         return false;
                     }
                 }
-                if (Board.getPiece(i, j).getColor() == Player.WHITE || Board.getPiece(i, j).isKing()) {
+                if (boardInstance.getPiece(i, j).getColor() == Player.WHITE || boardInstance.getPiece(i, j).isKing()) {
                     if (TurnValidator.canMoveDiagonally(i + 1, j - 1)
                             || TurnValidator.isJumpPossible(i, j, i + 2, j - 2, enemy)
                             || TurnValidator.canMoveDiagonally(i - 1, j - 1)
