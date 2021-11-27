@@ -17,6 +17,10 @@ import ch.uzh.softcon.one.themes.themes.BlueTheme;
 import ch.uzh.softcon.one.themes.themes.DefaultTheme;
 import ch.uzh.softcon.one.themes.themes.GreenTheme;
 import ch.uzh.softcon.one.themes.themes.RedTheme;
+import ch.uzh.softcon.one.statecontrol.Command;
+import ch.uzh.softcon.one.statecontrol.CommandLoadBoard;
+import ch.uzh.softcon.one.statecontrol.CommandSaveBoard;
+import ch.uzh.softcon.one.statecontrol.CommandTurn;
 import ch.uzh.softcon.one.turn.Turn;
 import ch.uzh.softcon.one.turn.TurnHandler;
 import ch.uzh.softcon.one.utils.BoardLoader;
@@ -61,6 +65,10 @@ public class GameHandling {
 
     private static ThemeSelector themeSelector;
 
+    private static Command loadBoard;
+    private static Command saveBoard;
+    private static Command move;
+
     public static void initialize(Stage stage) {
         registerObservers();
 
@@ -97,6 +105,10 @@ public class GameHandling {
         playerSubject.changePlayer(Player.RED);
         playerSubject.notifyObservers();
         Board.initialize();
+
+        loadBoard = new CommandLoadBoard(null);
+        saveBoard = new CommandSaveBoard();
+        move = new CommandTurn(null, null, null);
 
         updateStatusMessage("Welcome to the Checkers Game. Player red may begin. Please enter your move");
         drawBoard(Color.BLACK, Color.WHITE);
@@ -230,15 +242,15 @@ public class GameHandling {
                 updatePieces();
             }
             case "Load Game" -> {
-                if(BoardLoader.loadBoard()) {
+                if(loadBoard.execute()) {
                     stage.setScene(game);
                     updatePieces();
                 }
             }
             case "Save Game" -> {
-                BoardLoader.saveBoard();
+                saveBoard.execute();
             }
-            case "Back to main" -> {
+            case "Back to Main" -> {
                 closeWindowEvent(null);
             }
             case "Themes" -> {
@@ -258,6 +270,10 @@ public class GameHandling {
             }
             case "Undo" -> {
                 ThemeSelector.pressUndo();
+            }
+            case "Undo Move" -> {
+                move.undo();
+                updatePieces();
             }
         }
     }
@@ -318,7 +334,7 @@ public class GameHandling {
         //add buttons
         String[] buttonNames;
 
-        if (scene == game) buttonNames = new String[]{"Save Game", "Back to main"};
+        if (scene == game) buttonNames = new String[]{"Save Game", "Back to Main", "Undo Move"};
         else if (scene == home) buttonNames = new String[]{"New Game", "Load Game", "Themes"};
         else buttonNames = new String[]{"Blue Theme", "Green Theme", "Red Theme", "Default Theme", "Back to main", "Undo"};
 
