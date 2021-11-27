@@ -13,6 +13,8 @@ import java.util.Optional;
 
 public class CommandTurn implements Command {
 
+    private static Board boardInstance;
+
     private static boolean undone;
     private static boolean noMove;
 
@@ -24,11 +26,12 @@ public class CommandTurn implements Command {
         this.turn = turn;
         this.activePlayer = activePlayer;
         this.capturedEnemy = enemy;
+        boardInstance = Board.getInstance();
     }
 
     @Override
     public boolean execute() {
-        Board.movePiece(turn);
+        boardInstance.movePiece(turn);
         MoveStorage.push(turn, activePlayer, capturedEnemy);
         undone = false;
         return true;
@@ -62,7 +65,7 @@ public class CommandTurn implements Command {
                     int oldXFrom = oldMove.from().x(); int oldYFrom = oldMove.from().y();
                     int oldXTo = oldMove.to().x(); int oldYTo = oldMove.to().y();
                     Turn undoMove = new Turn(oldXTo, oldYTo, oldXFrom, oldYFrom);
-                    Board.movePiece(undoMove);
+                    boardInstance.movePiece(undoMove);
 
                     //Since the coordinates only get swapped for the undoMove,
                     //it doesn't matter which coordinates we take to get the captured coordinates.
@@ -70,7 +73,7 @@ public class CommandTurn implements Command {
                         Piece captured = stackTop.get(lastMove);
                         int capturedX = (oldXFrom + oldXTo) / 2;
                         int capturedY = (oldYFrom + oldYTo) / 2;
-                        Board.placePiece(capturedX, capturedY, captured);
+                        boardInstance.placePiece(capturedX, capturedY, captured);
                     }
 
                     //If a move was part of a multijump, the whole multijump shall be reverted

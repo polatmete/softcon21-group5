@@ -9,12 +9,15 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.util.regex.Pattern;
 
-import static ch.uzh.softcon.one.abstraction.Board.*;
+import ch.uzh.softcon.one.abstraction.Board;
 import static ch.uzh.softcon.one.abstraction.Piece.activeMultiJump;
 
 public class BoardLoader {
 
+    private static Board boardInstance;
+
     public static boolean loadBoard(String fileName) {
+        boardInstance = Board.getInstance();
         try {
             BufferedReader reader;
             if (fileName == null) {
@@ -42,7 +45,7 @@ public class BoardLoader {
                 }
             }
 
-            cleanBoard();
+            boardInstance.cleanBoard();
             String row;
             int y = 0;
             while ((row = reader.readLine()) != null) {
@@ -83,7 +86,7 @@ public class BoardLoader {
                         p.promote();
                     }
 
-                    placePiece(x, y, p);
+                    boardInstance.placePiece(x, y, p);
                 }
                 y++;
             }
@@ -96,6 +99,7 @@ public class BoardLoader {
     }
 
     public static void saveBoard() {
+        boardInstance = Board.getInstance();
         try {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Save Game");
@@ -115,9 +119,9 @@ public class BoardLoader {
                 BufferedWriter writer = new BufferedWriter(
                         new FileWriter(fileChooser.getSelectedFile().getAbsolutePath()));
 
-                for (int i = 0; i < size(); i++) {
-                    for (int j = 0; j < size(); j++) {
-                        Piece piece = getPiece(j, i);
+                for (int i = 0; i < boardInstance.size(); i++) {
+                    for (int j = 0; j < boardInstance.size(); j++) {
+                        Piece piece = boardInstance.getPiece(j, i);
                         StringBuilder stringedPiece = new StringBuilder();
                         if (piece == null) {
                             stringedPiece.append("[   ],");

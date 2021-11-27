@@ -312,13 +312,15 @@ public class GameHandling {
     }
 
     public static void updateStatusMessage(String string) {
-        texts.getChildren().clear();
-        Text text = new Text();
-        text.setText(string);
-        text.setX(75);
-        text.setY(50);
-        text.setFont(Font.font("Verdana", 15));
-        texts.getChildren().add(text);
+        if (texts != null) {
+            texts.getChildren().clear();
+            Text text = new Text();
+            text.setText(string);
+            text.setX(75);
+            text.setY(50);
+            text.setFont(Font.font("Verdana", 15));
+            texts.getChildren().add(text);
+        }
     }
 
     public static void createRematchInterface() {

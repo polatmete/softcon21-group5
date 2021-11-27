@@ -8,11 +8,13 @@ public class Board {
 
     private static Board instance;
 
-    private static Piece[][] board;
-    private static int pieceCountRed;
-    private static int pieceCountWhite;
+    private Piece[][] board;
+    private int pieceCountRed;
+    private int pieceCountWhite;
 
-    private Board() {}
+    private Board() {
+        cleanBoard();
+    }
 
     public static synchronized Board getInstance() {
         if (instance == null) {
@@ -21,7 +23,7 @@ public class Board {
         return instance;
     }
 
-    public static void initialize() {
+    public void initialize() {
         Command loadBoard = new CommandLoadBoard("initialBoard.csv");
         if (!loadBoard.execute()) {
             System.err.println("Could not load initial Board. Creating an original Board.");
@@ -29,7 +31,7 @@ public class Board {
         }
     }
 
-    public static void placePiece(int posX, int posY, Piece piece) {
+    public void placePiece(int posX, int posY, Piece piece) {
         if (getPiece(posX, posY) == null) {
             if (piece.getColor() == Player.RED) pieceCountRed++;
             else pieceCountWhite++;
@@ -37,13 +39,13 @@ public class Board {
         }
     }
 
-    public static void movePiece(Turn turn) {
+    public void movePiece(Turn turn) {
         Piece pieceToMove = getPiece(turn.from().x(), turn.from().y());
         board[turn.to().x()][turn.to().y()] = pieceToMove;
         board[turn.from().x()][turn.from().y()] = null;
     }
 
-    public static void removePiece(int posX, int posY) {
+    public void removePiece(int posX, int posY) {
         if (getPiece(posX, posY) != null) {
             if (getPiece(posX, posY).getColor() == Player.RED) pieceCountRed--;
             else pieceCountWhite--;
@@ -51,24 +53,24 @@ public class Board {
         }
     }
 
-    public static Piece getPiece(int posX, int posY) {
+    public Piece getPiece(int posX, int posY) {
         return board[posX][posY];
     }
 
-    public static boolean hasNoPieces(Player player) {
+    public boolean hasNoPieces(Player player) {
         if (player == Player.RED) return pieceCountRed == 0;
         else return pieceCountWhite == 0;
     }
 
-    public static void cleanBoard() {
+    public void cleanBoard() {
         board = new Piece[8][8];
     }
 
-    public static int size() {
+    public int size() {
         return board.length;
     }
 
-    private static void createOriginalBoard() { // In case initialBoard file could not be read
+    private void createOriginalBoard() { // In case initialBoard file could not be read
 
         cleanBoard();
         int[][] initialPosRed   = {{1, 3, 5, 7},
