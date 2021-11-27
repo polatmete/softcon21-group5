@@ -1,7 +1,8 @@
 package ch.uzh.softcon.one.abstraction;
 
+import ch.uzh.softcon.one.commands.Command;
+import ch.uzh.softcon.one.commands.state_control.CommandLoadBoard;
 import ch.uzh.softcon.one.turn.Turn;
-import ch.uzh.softcon.one.utils.BoardLoader;
 
 public class Board {
 
@@ -10,7 +11,8 @@ public class Board {
     private static int pieceCountWhite;
 
     public static void initialize() {
-        if (!BoardLoader.loadBoard("initialBoard.csv")) {
+        Command loadBoard = new CommandLoadBoard("initialBoard.csv");
+        if (!loadBoard.execute()) {
             System.err.println("Could not load initial Board. Creating an original Board.");
             createOriginalBoard();
         }

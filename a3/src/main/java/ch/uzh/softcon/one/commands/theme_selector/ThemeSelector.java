@@ -1,9 +1,7 @@
-package ch.uzh.softcon.one.themes;
+package ch.uzh.softcon.one.commands.theme_selector;
 
-import ch.uzh.softcon.one.themes.commands.Command;
-import ch.uzh.softcon.one.themes.commands.DefaultThemeCommandOn;
-import ch.uzh.softcon.one.themes.commands.NoCommand;
-import ch.uzh.softcon.one.themes.themes.DefaultTheme;
+import ch.uzh.softcon.one.commands.Command;
+import ch.uzh.softcon.one.commands.theme_selector.themes.DefaultTheme;
 
 import java.util.Stack;
 

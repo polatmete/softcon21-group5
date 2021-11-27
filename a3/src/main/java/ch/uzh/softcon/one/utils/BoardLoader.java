@@ -14,10 +14,6 @@ import static ch.uzh.softcon.one.abstraction.Piece.activeMultiJump;
 
 public class BoardLoader {
 
-    public static boolean loadBoard() {
-        return loadBoard(null);
-    }
-
     public static boolean loadBoard(String fileName) {
         try {
             BufferedReader reader;
@@ -159,8 +155,8 @@ public class BoardLoader {
     }
 
     private static String path() {
-        if (new File("a2/").exists()) {
-            return "a2/resources/";
+        if (new File("a3/").exists()) {
+            return "a3/resources/";
         } else {
             return "resources/";
         }

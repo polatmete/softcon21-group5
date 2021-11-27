@@ -1,4 +1,4 @@
-package ch.uzh.softcon.one.themes.themes;
+package ch.uzh.softcon.one.commands.theme_selector.themes;
 
 
 import ch.uzh.softcon.one.abstraction.GameHandling;
