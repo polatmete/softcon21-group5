@@ -75,14 +75,17 @@ public class TurnHandler {
      * @return Current player has won
      */
     private static boolean checkWin() {
-        if (isEnemyStuck(GameHandling.activePlayer())) {
-            return true;
-        }
+        boolean won = false;
         if (GameHandling.activePlayer() == Player.RED) {
-            return boardInstance.hasNoPieces(Player.WHITE);
-        } else {
-            return boardInstance.hasNoPieces(Player.RED);
+            won = boardInstance.hasNoPieces(Player.WHITE);
         }
+        if (GameHandling.activePlayer() == Player.WHITE) {
+            won = boardInstance.hasNoPieces(Player.RED);
+        }
+        if (!won) {
+            won = isEnemyStuck(GameHandling.activePlayer());
+        }
+        return won;
     }
 
     /**

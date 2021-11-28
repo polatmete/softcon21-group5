@@ -36,6 +36,8 @@ public class Board {
             if (piece.getColor() == Player.RED) pieceCountRed++;
             else pieceCountWhite++;
             board[posX][posY] = piece;
+        } else {
+            System.err.println("There is already a piece on this tile!");
         }
     }
 
@@ -64,6 +66,8 @@ public class Board {
 
     public void cleanBoard() {
         board = new Piece[8][8];
+        pieceCountRed = 0;
+        pieceCountWhite = 0;
     }
 
     public int size() {
