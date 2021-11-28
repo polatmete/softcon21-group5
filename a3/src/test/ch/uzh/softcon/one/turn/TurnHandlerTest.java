@@ -36,6 +36,47 @@ class TurnHandlerTest {
     }
 
     @Test
+    void checkRunTurnSequence() {
+        GameHandling.changePlayer(Player.RED);
+        boardInstance.placePiece(3, 2, new Piece(Player.RED));
+        boardInstance.placePiece(6, 7, new Piece(Player.WHITE));
+        turn = new Turn(3, 2, 4, 3);
+
+        try {
+            Method executeMethod = TurnHandler.class.getDeclaredMethod("runTurnSequence", Turn.class);
+            executeMethod.setAccessible(true);
+            executeMethod.invoke(TurnHandler.class, turn);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            fail(e.getMessage());
+        }
+
+        assertEquals(Player.WHITE, GameHandling.activePlayer(),
+                "Player should be changed at the end of the turn!");
+    }
+
+    @Test
+    void checkExecuteTurn() {
+        GameHandling.changePlayer(Player.RED);
+        Piece jumpingRedPiece = new Piece(Player.RED);
+        boardInstance.placePiece(3, 2, jumpingRedPiece);
+        boardInstance.placePiece(4, 3, new Piece(Player.WHITE));
+        turn = new Turn(3, 2, 5, 4);
+
+        try {
+            Method executeMethod = TurnHandler.class.getDeclaredMethod("executeTurn", Turn.class);
+            executeMethod.setAccessible(true);
+            executeMethod.invoke(TurnHandler.class, turn);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            fail(e.getMessage());
+        }
+
+        assertEquals(jumpingRedPiece, boardInstance.getPiece(5, 4),
+                "Jumping Piece is not on desired tile!");
+        assertNull(boardInstance.getPiece(3, 2), "Old Tile is not cleared!");
+        assertNull(boardInstance.getPiece(4, 3), "Enemy Piece did not get removed!");
+    }
+
+    @Test
     void checkWinRed() {
         GameHandling.changePlayer(Player.RED);
         boardInstance.placePiece(3, 4, new Piece(Player.RED));
@@ -88,6 +129,24 @@ class TurnHandlerTest {
     }
 
     @Test
+    void checkWinWhiteBecauseRedStuck() {
+        GameHandling.changePlayer(Player.WHITE);
+        boardInstance.placePiece(1, 7, new Piece(Player.WHITE));
+        boardInstance.placePiece(0, 6, new Piece(Player.RED));
+        boolean result = false;
+
+        try {
+            Method winMethod = TurnHandler.class.getDeclaredMethod("checkWin");
+            winMethod.setAccessible(true);
+            result = (boolean) winMethod.invoke(TurnHandler.class);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            fail(e.getMessage());
+        }
+
+        assertTrue(result, "Player White should have won because Red should be stuck!");
+    }
+
+    @Test
     void checkTransformIsNeededRed() {
         GameHandling.changePlayer(Player.RED);
         boardInstance.placePiece(5, 6, new Piece(Player.RED));
@@ -124,6 +183,38 @@ class TurnHandlerTest {
     }
 
     @Test
-    void runTurnSequenceXYZ() {
+    void checkIsJumpRequiredRed() {
+        GameHandling.changePlayer(Player.RED);
+        boardInstance.placePiece(3, 3, new Piece(Player.RED));
+        boardInstance.placePiece(2, 4, new Piece(Player.WHITE));
+        boolean result = false;
+
+        try {
+            Method jumpRequiredMethod = TurnHandler.class.getDeclaredMethod("isJumpRequired");
+            jumpRequiredMethod.setAccessible(true);
+            result = (boolean) jumpRequiredMethod.invoke(TurnHandler.class);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            fail();
+        }
+
+        assertTrue(result, "Player Red should have a jump that he must take!");
+    }
+
+    @Test
+    void checkIsJumpRequiredWhite() {
+        GameHandling.changePlayer(Player.WHITE);
+        boardInstance.placePiece(3, 3, new Piece(Player.RED));
+        boardInstance.placePiece(4, 4, new Piece(Player.WHITE));
+        boolean result = false;
+
+        try {
+            Method jumpRequiredMethod = TurnHandler.class.getDeclaredMethod("isJumpRequired");
+            jumpRequiredMethod.setAccessible(true);
+            result = (boolean) jumpRequiredMethod.invoke(TurnHandler.class);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            fail();
+        }
+
+        assertTrue(result, "Player Red should have a jump that he must take!");
     }
 }
