@@ -33,6 +33,7 @@ class TurnHandlerTest {
     void setUp() {
         boardInstance = Board.getInstance();
         boardInstance.cleanBoard();
+        turn = null;
     }
 
     @Test
