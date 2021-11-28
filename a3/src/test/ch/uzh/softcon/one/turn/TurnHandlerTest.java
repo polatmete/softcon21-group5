@@ -7,13 +7,10 @@ import ch.uzh.softcon.one.abstraction.Player;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.support.ReflectionSupport;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static ch.uzh.softcon.one.turn.TurnHandler.runTurnSequence;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TurnHandlerTest {
