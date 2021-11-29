@@ -1,4 +1,4 @@
-package ch.uzh.softcon.one.utils;
+package ch.uzh.softcon.one;
 
 import ch.uzh.softcon.one.abstraction.GameHandling;
 import javafx.application.Application;
