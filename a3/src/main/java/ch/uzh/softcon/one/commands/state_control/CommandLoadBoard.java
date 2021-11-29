@@ -13,7 +13,11 @@ public class CommandLoadBoard implements Command {
 
     @Override
     public boolean execute() {
-        return BoardLoader.loadBoard(file);
+        try {
+            return BoardLoader.loadBoard(file);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

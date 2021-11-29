@@ -16,7 +16,7 @@ public class BoardLoader {
 
     private static Board boardInstance;
 
-    public static boolean loadBoard(String fileName) {
+    public static boolean loadBoard(String fileName) throws Exception {
         boardInstance = Board.getInstance();
         try {
             BufferedReader reader;
@@ -26,10 +26,16 @@ public class BoardLoader {
                 fileChooser.setCurrentDirectory(new File(path()));
                 fileChooser.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
                 fileChooser.setAcceptAllFileFilterUsed(false);
-                int response = fileChooser.showOpenDialog(null);
 
-                if (response == JFileChooser.APPROVE_OPTION && fileChooser.getSelectedFile().isFile()) {
-                    reader = new BufferedReader(new FileReader(fileChooser.getSelectedFile().getAbsolutePath()));
+                fileName = new File(path() + "initialBoard.csv").getAbsolutePath();
+                int response = JFileChooser.APPROVE_OPTION;
+                if (GameHandling.playerSubject() != null) {
+                    response = fileChooser.showOpenDialog(null);
+                    fileName = fileChooser.getSelectedFile().getAbsolutePath();
+                }
+
+                if (response == JFileChooser.APPROVE_OPTION && new File(fileName).isFile()) {
+                    reader = new BufferedReader(new FileReader(fileName));
                 } else {
                     if (response != JFileChooser.CANCEL_OPTION) {
                         JOptionPane.showMessageDialog(JOptionPane.getRootFrame(),
@@ -54,16 +60,20 @@ public class BoardLoader {
                 }
 
                 String[] fields = row.split(",");
-                    if (row.startsWith("activePlayer")) {
-                        if (fields[0].split(":")[1].equals("RED")) {
+                if (row.startsWith("activePlayer")) {
+                    if (fields[0].split(":")[1].equals("RED")) {
+                        if (GameHandling.playerSubject() != null)
                             GameHandling.playerSubject().changePlayer(Player.RED);
-                        } else if (fields[0].split(":")[1].equals("WHITE")) {
+                    } else if (fields[0].split(":")[1].equals("WHITE")) {
+                        if (GameHandling.playerSubject() != null)
                             GameHandling.playerSubject().changePlayer(Player.WHITE);
-                        } else throw new Exception("Active player is corrupt!");
-                        continue;
-                    }
+                    } else throw new Exception("Active player is corrupt!");
+                    continue;
+                }
 
                 Piece p;
+                Piece multiJumpPiece = null;
+                boolean alreadyJumping = false;
                 for (int x = 0; x < fields.length; x++) {
                     if (!Pattern.matches("\\[[RW ][_+ ][PK ]]", fields[x])) {
                         throw new Exception("Board is corrupt or non commented text is written!");
@@ -76,10 +86,11 @@ public class BoardLoader {
                         p = new Piece(Player.WHITE);
                     }
                     if (fields[x].charAt(2) == '+') {
-                        if (activeMultiJump()) {
+                        if (alreadyJumping) {
                             throw new Exception("Cannot have multiple pieces in a multi jump!");
                         } else {
-                            p.startMultiJump();
+                            alreadyJumping = true;
+                            multiJumpPiece = p;
                         }
                     }
                     if (fields[x].charAt(3) == 'K') {
@@ -88,17 +99,25 @@ public class BoardLoader {
 
                     boardInstance.placePiece(x, y, p);
                 }
+                if (multiJumpPiece != null)
+                    multiJumpPiece.promote();
                 y++;
             }
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
-                    "File error", JOptionPane.ERROR_MESSAGE);
+            if (GameHandling.playerSubject() != null)
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), e.getMessage(),
+                        "File error", JOptionPane.ERROR_MESSAGE);
+            else throw e;
             return false;
         }
     }
 
     public static void saveBoard() {
+        saveBoard("boardState");
+    }
+
+    public static void saveBoard(String fileName) {
         boardInstance = Board.getInstance();
         try {
             JFileChooser fileChooser = new JFileChooser();
@@ -107,17 +126,24 @@ public class BoardLoader {
             fileChooser.setFileFilter(new FileNameExtensionFilter("*.csv", "csv"));
             fileChooser.setAcceptAllFileFilterUsed(false);
 
-            File file = new File(path() + "boardState.csv");
+            File file = new File(path() + fileName + ".csv");
             int files = 1;
             while (file.exists()) {
-                file = new File(path() + "boardState" + files++ + ".csv");
+                file = new File(path() + fileName + files++ + ".csv");
             }
             fileChooser.setSelectedFile(file);
-            int response = fileChooser.showSaveDialog(fileChooser.getParent());
+            int response = JFileChooser.APPROVE_OPTION;
+            String activePlayer = "";
+            String path = new File(fileName + ".csv").getAbsolutePath();
+            if (GameHandling.playerSubject() != null) {
+                response = fileChooser.showSaveDialog(fileChooser.getParent());
+                path = fileChooser.getSelectedFile().getAbsolutePath();
+                activePlayer = GameHandling.playerSubject().activePlayer().toString();
+            }
 
             if (response == JFileChooser.APPROVE_OPTION) {
                 BufferedWriter writer = new BufferedWriter(
-                        new FileWriter(fileChooser.getSelectedFile().getAbsolutePath()));
+                        new FileWriter(path));
 
                 for (int i = 0; i < boardInstance.size(); i++) {
                     for (int j = 0; j < boardInstance.size(); j++) {
@@ -148,7 +174,7 @@ public class BoardLoader {
                     }
                     writer.newLine();
                 }
-                writer.write("activePlayer:" + GameHandling.playerSubject().activePlayer());
+                writer.write("activePlayer:" + activePlayer);
                 writer.flush();
                 writer.close();
             }

@@ -9,7 +9,7 @@ public class Piece {
 
     public Piece(Player color) {
         this.color = color;
-        isKing = false;
+        this.isKing = false;
         isMultiJumping = false;
         globalMultiJump = false;
     }
