@@ -5,7 +5,8 @@ import ch.uzh.softcon.one.abstraction.GameHandling;
 import ch.uzh.softcon.one.abstraction.Piece;
 import ch.uzh.softcon.one.abstraction.Player;
 import ch.uzh.softcon.one.turn.Turn;
-import org.junit.jupiter.api.BeforeAll;
+import ch.uzh.softcon.one.utils.MoveStorage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +19,19 @@ class CommandTurnTest {
 
     private Board boardInstance;
 
-    @BeforeAll
-    static void init() {
+    @AfterEach
+    void tearDown() {
+        try {
+            Method unregister = GameHandling.class.getDeclaredMethod("unregisterObservers");
+            unregister.setAccessible(true);
+            unregister.invoke(null);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @BeforeEach
+    void setUp() {
         try {
             Method register = GameHandling.class.getDeclaredMethod("registerObservers");
             register.setAccessible(true);
@@ -28,13 +40,10 @@ class CommandTurnTest {
             fail(e.getMessage());
         }
 
-    }
-
-    @BeforeEach
-    void setUp() {
         boardInstance = Board.getInstance();
         boardInstance.cleanBoard();
         GameHandling.changePlayer(Player.RED);
+        MoveStorage.clear();
     }
 
     @Test
@@ -68,9 +77,6 @@ class CommandTurnTest {
 
         CommandTurn cmdUndo = new CommandTurn(null, null, null);
         cmdUndo.undo();
-
-        System.out.println(boardInstance.getPiece(4, 2));
-        System.out.println(red);
 
         assertEquals(red, boardInstance.getPiece(4, 2));
         assertNull(boardInstance.getPiece(6, 4));

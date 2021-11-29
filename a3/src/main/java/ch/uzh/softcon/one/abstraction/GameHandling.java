@@ -60,6 +60,9 @@ public class GameHandling {
     private static final float windowWidth = 1000;
     private static final float windowHeight = 750;
 
+    private static Observer activePlayerObserver;
+    private static Observer statusMessageObserver;
+    private static Observer winObserver;
     private static PlayerSubject playerSubject;
     private static StatusSubject statusSubject;
 
@@ -131,16 +134,22 @@ public class GameHandling {
 
     private static void registerObservers() {
         playerSubject = new PlayerChangeSubscriber();
-        Observer activePlayerObserver = new ActivePlayerChannel();
+        activePlayerObserver = new ActivePlayerChannel();
 
         playerSubject.registerObserver(activePlayerObserver);
 
         statusSubject = new StatusChangeSubscriber();
-        Observer statusMessageObserver = new StatusMessageChannel();
-        Observer winObserver = new WinChannel();
+        statusMessageObserver = new StatusMessageChannel();
+        winObserver = new WinChannel();
 
         statusSubject.registerObserver(statusMessageObserver);
         statusSubject.registerObserver(winObserver);
+    }
+
+    private static void unregisterObservers() {
+        playerSubject.removeObserver(activePlayerObserver);
+        statusSubject.removeObserver(statusMessageObserver);
+        statusSubject.removeObserver(winObserver);
     }
 
     public static Player activePlayer() {

@@ -10,12 +10,12 @@ import java.util.Optional;
 
 public class MoveStorage {
 
-    private static final int max = 255;
+    private static final int max = 64;
     private static int top = 0;
     //private static ArrayList<ArrayList<Object>> turnInfo = new ArrayList<>(max); // [0][0-2] turn, activeP, piece ???
 
-    private static final Map<Turn, Player>[] moves = new HashMap[max];
-    private static final Piece[] capturedPieces = new Piece[max];
+    private static Map<Turn, Player>[] moves = new HashMap[max];
+    private static Piece[] capturedPieces = new Piece[max];
 
     public static void push(Turn turn, Player activePlayer, Piece captured) {
         if (top == max) {
@@ -61,5 +61,11 @@ public class MoveStorage {
             }
         }
         return lastP;
+    }
+
+    public static void clear() {
+        top = 0;
+        moves = new HashMap[max];
+        capturedPieces = new Piece[max];
     }
 }
