@@ -10,7 +10,6 @@ import java.io.*;
 import java.util.regex.Pattern;
 
 import ch.uzh.softcon.one.abstraction.Board;
-import static ch.uzh.softcon.one.abstraction.Piece.activeMultiJump;
 
 public class BoardLoader {
 
