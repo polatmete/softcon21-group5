@@ -52,7 +52,7 @@ class TurnHandlerTest {
         }
 
         assertEquals(Player.WHITE, GameHandling.activePlayer(),
-                "Player should be changed at the end of the turn!");
+                "Player should be changed at the end of a successful turn!");
     }
 
     @Test

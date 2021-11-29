@@ -80,7 +80,7 @@ class BoardLoaderTest {
         File file = new File("testBoard_save.csv").getAbsoluteFile();
         if (file.exists()) {
             try {
-                actual = Files.readString(file.toPath());
+                actual = Files.readString(file.toPath()).replace("\r\n", "\n");
             } catch (IOException e) {
                 fail();
             }

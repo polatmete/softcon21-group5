@@ -50,7 +50,7 @@ public class CommandTurn implements Command {
     }
 
     //Good luck reading & understanding this.
-    public void undoMove() {
+    public static void undoMove() {
         Map<Map<Turn, Player>, Piece> stackTop = MoveStorage.pop();
         if (stackTop != null) {
             noMove = false;
