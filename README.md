@@ -28,4 +28,4 @@ Source code can be found [here](a2/src/main/java/ch/uzh/softcon/one).
 
 Source code can be found [here](a3/src/main/java/ch/uzh/softcon/one).
 
-Test suite can be found [here](a3/src/test/java/ch/uzh/softcon/one).
+Test suite can be found [here](a3/src/test/ch/uzh/softcon/one).
