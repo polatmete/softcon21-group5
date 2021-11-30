@@ -5,7 +5,7 @@ import ch.uzh.softcon.one.commands.theme_selector.themes.GreenTheme;
 
 public class GreenThemeCommandOn implements Command {
 
-    GreenTheme greenTheme;
+    private GreenTheme greenTheme;
 
     public GreenThemeCommandOn(GreenTheme greenTheme) {
         this.greenTheme = greenTheme;
@@ -13,7 +13,7 @@ public class GreenThemeCommandOn implements Command {
 
     @Override
     public boolean execute() {
-        GreenTheme.updateColors();
+        greenTheme.updateColors();
         return true;
     }
 
