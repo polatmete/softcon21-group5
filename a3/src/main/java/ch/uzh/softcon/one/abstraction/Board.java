@@ -73,7 +73,6 @@ public class Board {
     }
 
     private void createOriginalBoard() { // In case initialBoard file could not be read
-
         cleanBoard();
         int[][] initialPosRed   = {{1, 3, 5, 7},
                                    {0, 2, 4, 6},
