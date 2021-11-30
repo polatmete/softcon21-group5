@@ -72,6 +72,8 @@ public class GameHandling {
     private static Command saveBoard;
     private static Command move;
 
+    private static Scene lastScene;
+
     public static void initialize(Stage stage) {
         boardInstance = Board.getInstance();
         registerObservers();
@@ -104,6 +106,7 @@ public class GameHandling {
         stage.setHeight(windowHeight);
         stage.setResizable(false);
         stage.setScene(home);
+        lastScene = home;
         stage.show();
 
         playerSubject.changePlayer(Player.RED);
@@ -247,12 +250,14 @@ public class GameHandling {
     private static void handleButtonClick(String[] buttonNames, int finalButtonIdx) {
         switch (buttonNames[finalButtonIdx]) {
             case "New Game" -> {
+                lastScene = game;
                 stage.setScene(game);
                 reset();
                 updatePieces();
             }
             case "Load Game" -> {
                 if(loadBoard.execute()) {
+                    lastScene = game;
                     stage.setScene(game);
                     updatePieces();
                 }
@@ -261,7 +266,12 @@ public class GameHandling {
                 saveBoard.execute();
             }
             case "Back to Main" -> {
-                closeWindowEvent(null);
+                lastScene = home;
+                stage.setScene(home);
+            }
+            case "Back" -> {
+                if (lastScene == home) stage.setScene(home);
+                else if (lastScene == game) stage.setScene(game);
             }
             case "Themes" -> {
                 stage.setScene(theme);
@@ -346,9 +356,9 @@ public class GameHandling {
         //add buttons
         String[] buttonNames;
 
-        if (scene == game) buttonNames = new String[]{"Save Game", "Back to Main", "Undo Move"};
+        if (scene == game) buttonNames = new String[]{"Save Game", "Back to Main", "Undo Move", "Themes"};
         else if (scene == home) buttonNames = new String[]{"New Game", "Load Game", "Themes"};
-        else buttonNames = new String[]{"Blue Theme", "Green Theme", "Red Theme", "Default Theme", "Back to Main", "Undo"};
+        else buttonNames = new String[]{"Blue Theme", "Green Theme", "Red Theme", "Default Theme", "Back", "Undo"};
 
         int numberOfButtons = buttonNames.length;
 
