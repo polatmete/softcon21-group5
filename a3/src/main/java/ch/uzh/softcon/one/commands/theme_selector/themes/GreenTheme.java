@@ -7,7 +7,8 @@ public class GreenTheme {
 
     private static final Color darkBoardColor = Color.DARKGREEN;
     private static final Color lightBoardColor = Color.LIGHTGREEN;
-    public static void updateColors() {
+
+    public void updateColors() {
         GameHandling.updateColors(darkBoardColor, lightBoardColor);
     }
 }

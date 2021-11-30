@@ -8,7 +8,7 @@ public class DefaultTheme {
     private static final Color darkBoardColor = Color.BLACK;
     private static final Color lightBoardColor = Color.WHITE;
 
-    public static void updateColors() {
+    public void updateColors() {
         GameHandling.updateColors(darkBoardColor, lightBoardColor);
     }
 }
