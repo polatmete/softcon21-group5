@@ -69,7 +69,7 @@ class BoardTest {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             fail();
         }
-        for (int i = 0; i < 8; ++i) for (int j = 0; j < 8; ++j) if (expected[j][i] != extractedBoard[i][j]) assertTrue(expected[j][i].getColor() == extractedBoard[i][j].getColor() && expected[j][i].isKing() == extractedBoard[i][j].isKing());
+        for (int i = 0; i < 8; ++i) for (int j = 0; j < 8; ++j) assertTrue(expected[j][i] == extractedBoard[i][j] || (expected[j][i].getColor() == extractedBoard[i][j].getColor() && expected[j][i].isKing() == extractedBoard[i][j].isKing()));
     }
 
     @Test
