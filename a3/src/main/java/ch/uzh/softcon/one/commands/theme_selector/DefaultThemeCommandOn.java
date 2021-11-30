@@ -4,14 +4,15 @@ import ch.uzh.softcon.one.commands.Command;
 import ch.uzh.softcon.one.commands.theme_selector.themes.DefaultTheme;
 
 public class DefaultThemeCommandOn implements Command {
-    DefaultTheme defaultTheme;
+
+    private DefaultTheme defaultTheme;
 
     public DefaultThemeCommandOn(DefaultTheme defaultTheme) {
         this.defaultTheme = defaultTheme;
     }
 
     public boolean execute() {
-        DefaultTheme.updateColors();
+        defaultTheme.updateColors();
         return true;
     }
 
