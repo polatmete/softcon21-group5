@@ -24,7 +24,7 @@ Source code can be found [here](a2/src/main/java/ch/uzh/softcon/one).
 
 ### A3
 
-[Docs](a3/docs) with tasks 1: CRC and text, UML and Sequence Diagram, 2: test docs and coverage report, and 3: UML and descriptions.
+[Docs](a3/docs) with tasks 1: text, UML and Sequence Diagram, 2: test docs and coverage report, and 3: UML and descriptions.
 
 Source code can be found [here](a3/src/main/java/ch/uzh/softcon/one).
 
