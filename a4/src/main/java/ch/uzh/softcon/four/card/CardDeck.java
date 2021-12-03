@@ -1,4 +1,4 @@
-package ch.uzh.softcon.four;
+package ch.uzh.softcon.four.card;
 
 import java.util.Collections;
 import java.util.Stack;
