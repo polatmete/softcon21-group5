@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Game {
-    
+
     Map<String, Integer> bets = new HashMap<>();
 
     public static void distributeCards(Player[] players) {
