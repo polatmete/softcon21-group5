@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.Stack;
 
 public class CardDeck {
-    private Stack<Card> cards;
 
+    private Stack<Card> cards;
     private static CardDeck instance;
     
     private CardDeck() {}
@@ -20,6 +20,10 @@ public class CardDeck {
         for (int i = 0; i < cardSet.size(); i++) {
             this.cards.push(cardSet.drawCards()[i]);
         }
+    }
+
+    public Card drawCard() {
+        return cards.pop();
     }
 
     public void shuffle() {

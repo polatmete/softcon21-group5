@@ -1,7 +1,8 @@
 package ch.uzh.softcon.four.card;
 
 public class CardSet {
-    private Card[] cards;
+
+    private final Card[] cards;
 
     public CardSet(Card[] cards) {
         this.cards = cards;

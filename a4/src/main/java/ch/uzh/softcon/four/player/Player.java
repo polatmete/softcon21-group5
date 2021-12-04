@@ -14,16 +14,21 @@ public class Player extends PlayerSubject {
         this.name = name;
     }
 
-    public void giveCard(Card card, int handIdx) {
-        if (super.hands().get(handIdx) == null) {
-            //TODO: Replace with HandOverflowException
+    public void giveCard(Card card, Hand hand) {
+        if (hand == null) {
+            //TODO: NullHandException
             return;
         }
-        super.hands().get(handIdx).addCard(card);
+        if (!super.hands().contains(hand)) {
+            //TODO: NoSuchHandException
+            return;
+        }
+        super.hands().get(super.hands().indexOf(hand)).addCard(card);
     }
 
     public void splitHand() {
         //TODO implement
+
         super.hands().add(new Hand());
     }
 

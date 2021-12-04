@@ -1,6 +1,5 @@
 package ch.uzh.softcon.four.player;
 
-import ch.uzh.softcon.four.card.Card;
 import ch.uzh.softcon.four.card.Hand;
 
 import java.util.ArrayList;

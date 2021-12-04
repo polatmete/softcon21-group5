@@ -15,7 +15,7 @@ public class Hand {
 
     public void addCard(Card card) {
         cards.add(card);
-        points += card.getRank().getValue();
+        points += card.getValue();
     }
 
     public List<Card> cards() {
@@ -25,5 +25,4 @@ public class Hand {
     public int points() {
         return points;
     }
-
 }
