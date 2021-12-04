@@ -1,5 +1,7 @@
 package ch.uzh.softcon.four;
 
+import ch.uzh.softcon.four.player.Player;
+
 import java.util.HashMap;
 
 public class Game {

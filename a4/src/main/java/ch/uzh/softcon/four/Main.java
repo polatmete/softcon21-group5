@@ -1,7 +1,13 @@
 package ch.uzh.softcon.four;
 
+import ch.uzh.softcon.four.card.Card;
+import ch.uzh.softcon.four.card.Card.Suit;
+import ch.uzh.softcon.four.card.Card.Rank;
+import ch.uzh.softcon.four.player.Player;
+
+
 public class Main {
-    private static Player players = new Player[5];
+    private static Player[] players = new Player[5];
     private static int difficulty;
 
     public static void main(String[] args) {
@@ -30,5 +36,7 @@ public class Main {
         } while (gameGoesOn);
 
          */
+
+        Card card = new Card(Suit.SPADES, Rank.ACE);
     }
 }
