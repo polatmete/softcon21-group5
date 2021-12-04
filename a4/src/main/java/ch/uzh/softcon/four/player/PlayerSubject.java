@@ -14,13 +14,12 @@ public abstract class PlayerSubject {
         hands.add(new Hand());
     }
 
-    //TODO check modifier
-    protected List<Hand> hands() {
+    //TODO: getter?
+    public List<Hand> getHands() {
         return hands;
     }
 
-    //TODO check modifier
-    protected void clearHands() {
+    public void clearHands() {
         hands = new ArrayList<>();
     }
 }

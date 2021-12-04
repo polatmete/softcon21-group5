@@ -1,4 +1,4 @@
-package ch.uzh.softcon.four;
+package ch.uzh.softcon.four.logic;
 
 public class IOFormatter {
 

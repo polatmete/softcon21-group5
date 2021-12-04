@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Hand {
 
-    private final List<Card> cards;
+    private List<Card> cards;
     private int points;
 
     public Hand() {
@@ -18,10 +18,13 @@ public class Hand {
         points += card.getValue();
     }
 
-    public List<Card> cards() {
+    //TODO: getter? -> access specific index and return copy of that card: getCard(idx) & cardsOnHand():int (size)
+    //TODO: -> is final ..
+    public List<Card> getCards() {
         return cards;
     }
 
+    //TODO getter?
     public int points() {
         return points;
     }

@@ -8,7 +8,9 @@ public class CardDeck {
     private Stack<Card> cards;
     private static CardDeck instance;
     
-    private CardDeck() {}
+    private CardDeck() {
+        cards = new Stack<>();
+    }
 
     public static synchronized CardDeck getInstance() {
         if (instance == null)

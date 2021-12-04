@@ -3,6 +3,8 @@ package ch.uzh.softcon.four;
 import ch.uzh.softcon.four.card.Card;
 import ch.uzh.softcon.four.card.Card.Suit;
 import ch.uzh.softcon.four.card.Card.Rank;
+import ch.uzh.softcon.four.card.CardDeck;
+import ch.uzh.softcon.four.card.CardSet;
 import ch.uzh.softcon.four.player.Player;
 
 
@@ -37,6 +39,23 @@ public class Main {
 
          */
 
+        //TODO: remove, this is only for initial testing and small overview
+
         Card card = new Card(Suit.SPADES, Rank.ACE);
+        Card c2 = new Card(Suit.CLUBS, Rank.ACE);
+
+        Player p = new Player("BJ King");
+        CardSet set = new CardSet();
+        CardDeck deck = CardDeck.getInstance();
+        deck.addSet(set);
+        deck.shuffle();
+
+        p.giveCard(card, p.getHands().get(0));
+        p.giveCard(c2, p.getHands().get(0));
+        p.splitHand(p.getHands().get(0));
+
+        System.out.println(p.getHands());
+        System.out.println(p.getHands().get(0).getCards());
+        System.out.println(p.getHands().get(1).getCards());
     }
 }
