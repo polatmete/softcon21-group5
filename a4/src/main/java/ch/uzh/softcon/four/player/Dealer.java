@@ -8,7 +8,7 @@ public class Dealer extends PlayerSubject {
         super();
     }
 
-    private void giveCard(Card card) {
-        super.getHands().get(0).addCard(card);
+    public void giveCard(Card card) {
+        super.getHand(0).addCard(card);
     }
 }

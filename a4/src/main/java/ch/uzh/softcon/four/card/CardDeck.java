@@ -9,7 +9,7 @@ public class CardDeck {
     private static CardDeck instance;
     
     private CardDeck() {
-        cards = new Stack<>();
+        this.cards = new Stack<>();
     }
 
     public static synchronized CardDeck getInstance() {
@@ -25,7 +25,7 @@ public class CardDeck {
     }
 
     public Card drawCard() {
-        return cards.pop();
+        return this.cards.pop();
     }
 
     public void shuffle() {

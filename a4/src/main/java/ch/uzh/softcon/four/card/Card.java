@@ -13,27 +13,23 @@ public class Card {
     }
 
     public Suit getSuit() {
-        if (hidden) {
+        if (this.hidden) {
             //TODO CardHiddenException
             return null;
         }
-        return suit;
+        return this.suit;
     }
 
     public Rank getRank() {
-        if (hidden) {
+        if (this.hidden) {
             //TODO CardHiddenException
             return null;
         }
-        return rank;
+        return this.rank;
     }
 
     public void reveal() {
         this.hidden = false;
-    }
-
-    protected int getValue() {
-        return rank.value;
     }
 
     public enum Suit {
@@ -62,6 +58,10 @@ public class Card {
 
         Rank(int value) {
             this.value = value;
+        }
+
+        public int getValue() {
+            return this.value;
         }
     }
 }

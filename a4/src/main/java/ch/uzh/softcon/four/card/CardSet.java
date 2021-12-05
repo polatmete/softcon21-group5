@@ -3,22 +3,26 @@ package ch.uzh.softcon.four.card;
 import ch.uzh.softcon.four.card.Card.Suit;
 import ch.uzh.softcon.four.card.Card.Rank;
 
+import java.util.Arrays;
+
 public class CardSet {
 
-    private final Card[] cards;
+    private Card[] cards;
 
     public CardSet() {
-        cards = new Card[52];
+        this.cards = new Card[52];
         int i = 0;
         for (Suit s : Suit.values()) {
             for (Rank r : Rank.values()) {
-                cards[i++] = new Card(s, r);
+                this.cards[i++] = new Card(s, r);
             }
         }
     }
 
     public Card[] drawCards() {
-        return this.cards;
+        Card[] drawnCards = Arrays.copyOf(this.cards, this.cards.length);
+        this.cards = null;
+        return drawnCards;
     }
 
     public int size() {

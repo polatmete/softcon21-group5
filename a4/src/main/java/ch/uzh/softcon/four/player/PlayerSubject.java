@@ -10,16 +10,31 @@ public abstract class PlayerSubject {
     private List<Hand> hands;
 
     public PlayerSubject() {
-        hands = new ArrayList<>();
-        hands.add(new Hand());
+        this.hands = new ArrayList<>();
+        this.hands.add(new Hand());
     }
 
-    //TODO: getter?
-    public List<Hand> getHands() {
-        return hands;
+    public Hand getHand(int handIdx) {
+        if (this.hands.size() <= handIdx) {
+            //TODO: NullHandException?
+            return null;
+        }
+        return this.hands.get(handIdx);
+    }
+
+    public boolean hasHand(Hand hand) {
+        return this.hands.contains(hand);
+    }
+
+    public void addHand(Hand hand) {
+        this.hands.add(hand);
+    }
+
+    public void removeHand(Hand hand) {
+        this.hands.remove(hand);
     }
 
     public void clearHands() {
-        hands = new ArrayList<>();
+        this.hands = new ArrayList<>();
     }
 }
