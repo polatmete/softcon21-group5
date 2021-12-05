@@ -64,4 +64,13 @@ public class Card {
             this.value = value;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "suit=" + suit +
+                ", rank=" + rank +
+                ", hidden=" + hidden +
+                '}';
+    }
 }

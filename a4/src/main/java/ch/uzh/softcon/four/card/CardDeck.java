@@ -10,6 +10,10 @@ public class CardDeck {
     
     private CardDeck() {
         cards = new Stack<>();
+        for (int i = 0; i < 6; i++) {
+            addSet(new CardSet());
+        }
+        shuffle();
     }
 
     public static synchronized CardDeck getInstance() {
