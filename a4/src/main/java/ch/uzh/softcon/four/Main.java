@@ -33,7 +33,7 @@ public class Main {
         // difficulty level: [e]asy: 1 deck / [m]edium: 3 decks / [h]ard: 6 decks
         difficulty = 6;
         // initialize decks
-        deck = new CardDeck(6);
+        deck = new CardDeck();
     }
 
     private static void loop() {
@@ -52,8 +52,8 @@ public class Main {
             dealer.giveCard(deck.drawCard());
 
             for (Player p : players) {
-                p.giveCard(deck.drawCard());
-                p.giveCard(deck.drawCard());
+                p.giveCard(deck.drawCard(), p.getHands().get(0));
+                p.giveCard(deck.drawCard(), p.getHands().get(0));
             }
 
 
