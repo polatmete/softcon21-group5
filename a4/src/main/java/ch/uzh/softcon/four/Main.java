@@ -1,10 +1,11 @@
 package ch.uzh.softcon.four;
 
 import ch.uzh.softcon.four.card.Card;
-import ch.uzh.softcon.four.card.Card.Suit;
 import ch.uzh.softcon.four.card.Card.Rank;
+import ch.uzh.softcon.four.card.Card.Suit;
 import ch.uzh.softcon.four.card.CardDeck;
 import ch.uzh.softcon.four.card.CardSet;
+import ch.uzh.softcon.four.card.Hand;
 import ch.uzh.softcon.four.player.Player;
 
 
@@ -47,14 +48,17 @@ public class Main {
         Player p = new Player("BJ King");
         CardSet set = new CardSet();
         CardDeck deck = CardDeck.getInstance();
-        deck.addSet(set);
-        deck.shuffle();
+        // It's populated and shuffled right away now
+        //deck.addSet(set);
+        //deck.shuffle();
 
         p.giveCard(card, p.getHands().get(0));
         p.giveCard(c2, p.getHands().get(0));
         p.splitHand(p.getHands().get(0));
 
-        System.out.println(p.getHands());
+        for (Hand hand : p.getHands()) {
+            System.out.println(hand);
+        }
         System.out.println(p.getHands().get(0).getCards());
         System.out.println(p.getHands().get(1).getCards());
     }

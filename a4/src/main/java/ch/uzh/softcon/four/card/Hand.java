@@ -28,4 +28,12 @@ public class Hand {
     public int points() {
         return points;
     }
+
+    @Override
+    public String toString() {
+        return "Hand{" +
+                "cards=" + cards +
+                ", points=" + points +
+                '}';
+    }
 }
