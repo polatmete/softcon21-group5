@@ -29,7 +29,7 @@ public class CardDeck {
     }
 
     public Card drawCard() {
-        return cards.pop();
+        return this.cards.pop();
     }
 
     public void shuffle() {

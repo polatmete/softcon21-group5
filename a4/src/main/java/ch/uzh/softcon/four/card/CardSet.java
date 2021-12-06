@@ -8,11 +8,12 @@ public class CardSet {
     private final Card[] cards;
 
     public CardSet() {
-        cards = new Card[52];
+        this.cards = new Card[52];
         int i = 0;
         for (Suit s : Suit.values()) {
             for (Rank r : Rank.values()) {
-                cards[i++] = new Card(s, r);
+                this.cards[i] = new Card(s, r);
+                i++;
             }
         }
     }

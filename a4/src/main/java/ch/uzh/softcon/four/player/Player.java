@@ -10,45 +10,49 @@ public class Player extends PlayerSubject {
 
     public Player(String name) {
         super();
-        money = 100;
+        this.money = 100;
         this.name = name;
     }
 
     public void giveCard(Card card, Hand hand) {
         if (hand == null) {
-            //TODO: NullHandException
+            //TODO: NullHandException?
             return;
         }
-        if (!super.getHands().contains(hand)) {
-            //TODO: NoSuchHandException
+        if (!super.hasHand(hand)) {
+            //TODO: NoSuchHandException?
             return;
         }
-        super.getHands().get(super.getHands().indexOf(hand)).addCard(card);
+        hand.addCard(card);
     }
 
     public void splitHand(Hand hand) {
         if (hand == null) {
-            //TODO: NullHandException
+            //TODO: NullHandException?
             return;
         }
-        if (hand.getCards().size() != 2) {
-            //TODO: HandWrongSizeException
+        if (!super.hasHand(hand)) {
+            //TODO: NoSuchHandException?
             return;
         }
-        if (hand.getCards().get(0).getRank() != hand.getCards().get(1).getRank()) {
-            //TODO: CardsNotEqualRankException
+        if (hand.size() != 2) {
+            //TODO: HandWrongSizeException?
             return;
         }
-        Card card1 = hand.getCards().get(0);
-        Card card2 = hand.getCards().get(1);
+        if (hand.getCard(0).getRank() != hand.getCard(1).getRank()) {
+            //TODO: CardsNotEqualRankException?
+            return;
+        }
+        Card card1 = hand.getCard(0);
+        Card card2 = hand.getCard(1);
         Hand hand1 = new Hand();
-        hand1.addCard(card1);
         Hand hand2 = new Hand();
+        hand1.addCard(card1);
         hand2.addCard(card2);
 
-        super.getHands().remove(hand);
-        super.getHands().add(hand1);
-        super.getHands().add(hand2);
+        super.removeHand(hand);
+        super.addHand(hand1);
+        super.addHand(hand2);
     }
 
     public void pay(int money) {
