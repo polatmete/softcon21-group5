@@ -7,13 +7,20 @@ public class CardDeck {
 
     private Stack<Card> cards;
     private static CardDeck instance;
+
+    // TODO: Set useful value!
+    private final int THRESHOLD = 26;
     
     private CardDeck() {
-        cards = new Stack<>();
-        for (int i = 0; i < 6; i++) {
+        this.cards = new Stack<>();
+        fillDeck(3);
+        shuffle();
+    }
+
+    private void fillDeck(int count) {
+        for (int i = 0; i < count; i++) {
             addSet(new CardSet());
         }
-        shuffle();
     }
 
     public static synchronized CardDeck getInstance() {
@@ -22,18 +29,27 @@ public class CardDeck {
         return instance;
     }
 
-    public void addSet(CardSet cardSet) {
+    private void addSet(CardSet cardSet) {
         for (int i = 0; i < cardSet.size(); i++) {
             this.cards.push(cardSet.drawCards()[i]);
         }
     }
 
     public Card drawCard() {
-        return cards.pop();
+        Card poppedCard = cards.pop();
+        if (this.cards.size() < THRESHOLD)
+            addSet(new CardSet());
+        return poppedCard;
     }
 
-    public void shuffle() {
+    private void shuffle() {
         Collections.shuffle(this.cards);
+    }
+
+    public void regenerateWithSetCount(int count) {
+        this.cards = new Stack<>();
+        fillDeck(count);
+        shuffle();
     }
 
     public int size() {
