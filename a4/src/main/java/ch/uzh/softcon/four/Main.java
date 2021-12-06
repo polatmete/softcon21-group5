@@ -28,7 +28,7 @@ public class Main {
         // Scoreboard.print
         // how many players? max 5(?)
         int countPlayers = 5;
-        for (int i = 0; i < countPlayers; ++i) players[countPlayers] = new Player(("Player " + i+1));
+        for (int i = 0; i < countPlayers; ++i) players[i] = new Player("Player " + (i+1));
         // enter names of players
         // difficulty level: [e]asy: 1 deck / [m]edium: 3 decks / [h]ard: 6 decks
         difficulty = 6;
@@ -46,15 +46,18 @@ public class Main {
                     break;
                 }
             }
-            if (playerLeft) break;
+            if (!playerLeft) break;
 
             dealer.giveCard(deck.drawCard());
             dealer.giveCard(deck.drawCard());
 
             for (Player p : players) {
-                p.giveCard(deck.drawCard(), p.getHands().get(0));
-                p.giveCard(deck.drawCard(), p.getHands().get(0));
+                p.giveCard(deck.drawCard(), p.getHand(0));
+                p.giveCard(deck.drawCard(), p.getHand(0));
+                p.bet(10);
             }
+
+
 
 
             /*Give each player and dealer cards.. dealar as to reveal first card (?)
@@ -62,6 +65,7 @@ public class Main {
             After every player is done reveal each players and dealers cards.
             Pay out player twice his bet (since player already payed in the beginning)
             Kick out player without money and ask whether player wants to join*/
+            break; //ToDo remove after it works
         }
 
         //TODO: remove, this is only for initial testing and small overview
@@ -76,14 +80,14 @@ public class Main {
         //deck.addSet(set);
         //deck.shuffle();
 
-        p.giveCard(card, p.getHands().get(0));
-        p.giveCard(c2, p.getHands().get(0));
-        p.splitHand(p.getHands().get(0));
+        p.giveCard(card, p.getHand(0));
+        p.giveCard(c2, p.getHand(0));
+        p.splitHand(p.getHand(0));
 
-        for (Hand hand : p.getHands()) {
-            System.out.println(hand);
-        }
-        System.out.println(p.getHands().get(0).getCards());
-        System.out.println(p.getHands().get(1).getCards());
+        //for (Hand hand : p.getHand(0)) {
+        //    System.out.println(hand);
+        //}
+        System.out.println(p.getHand(0).getCard(0));
+        System.out.println(p.getHand(0).getCard(1));
     }
 }

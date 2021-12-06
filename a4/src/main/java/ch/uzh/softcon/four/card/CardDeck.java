@@ -11,7 +11,7 @@ public class CardDeck {
     // TODO: Set useful value!
     private final int THRESHOLD = 26;
     
-    private CardDeck() {
+    public CardDeck() {
         this.cards = new Stack<>();
         fillDeck(3);
         shuffle();
