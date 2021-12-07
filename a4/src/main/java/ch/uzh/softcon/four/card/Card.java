@@ -9,7 +9,7 @@ public class Card {
     public Card(Suit suit, Rank rank) {
         this.suit = suit;
         this.rank = rank;
-        this.hidden = true;
+        this.hidden = false;
     }
 
     public Suit getSuit() {
@@ -30,6 +30,10 @@ public class Card {
 
     public void reveal() {
         this.hidden = false;
+    }
+
+    public void hide() {
+        this.hidden = true;
     }
 
     public enum Suit {

@@ -5,7 +5,7 @@ import java.util.Stack;
 
 public class CardDeck {
 
-    private Stack<Card> cards;
+    private final Stack<Card> cards;
     private static CardDeck instance;
     
     private CardDeck() {

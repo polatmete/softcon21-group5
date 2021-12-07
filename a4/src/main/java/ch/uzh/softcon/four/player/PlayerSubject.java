@@ -26,15 +26,19 @@ public abstract class PlayerSubject {
         return this.hands.contains(hand);
     }
 
+    public int amountHands() {
+        return this.hands.size();
+    }
+
     public void addHand(Hand hand) {
         this.hands.add(hand);
     }
 
-    public void removeHand(Hand hand) {
-        this.hands.remove(hand);
-    }
-
     public void clearHands() {
         this.hands = new ArrayList<>();
+    }
+
+    protected void removeHand(Hand hand) {
+        this.hands.remove(hand);
     }
 }

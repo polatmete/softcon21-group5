@@ -6,12 +6,10 @@ import java.util.List;
 public class Hand {
 
     private final List<Card> cards;
-    private boolean hidden;
     private int points;
 
     public Hand() {
         this.cards = new ArrayList<>();
-        this.hidden = true;
         this.points = 0;
     }
 
@@ -32,10 +30,10 @@ public class Hand {
     }
 
     public void reveal() {
-        this.hidden = false;
+        this.points = 0;
         for (Card card : this.cards) {
-            this.points += card.getRank().getValue();
             card.reveal();
+            this.points += card.getRank().getValue();
         }
     }
 
@@ -45,9 +43,6 @@ public class Hand {
 
     //TODO getter?
     public int points() {
-        if (this.hidden) {
-            return 0;
-        }
         return this.points;
     }
 }

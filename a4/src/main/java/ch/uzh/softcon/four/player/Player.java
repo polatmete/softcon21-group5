@@ -31,6 +31,10 @@ public class Player extends PlayerSubject {
             //TODO: NullHandException?
             return;
         }
+        if (super.amountHands() == 4) {
+            //TODO: MaxHandSplitException?
+            return;
+        }
         if (!super.hasHand(hand)) {
             //TODO: NoSuchHandException?
             return;
