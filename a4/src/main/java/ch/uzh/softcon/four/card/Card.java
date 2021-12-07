@@ -28,12 +28,12 @@ public class Card {
         return this.rank;
     }
 
-    public void reveal() {
-        this.hidden = false;
-    }
-
     public void hide() {
         this.hidden = true;
+    }
+
+    protected void reveal() {
+        this.hidden = false;
     }
 
     public enum Suit {
