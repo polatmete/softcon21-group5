@@ -47,13 +47,13 @@ public class Player extends PlayerSubject {
             //TODO: CardsNotEqualRankException?
             return;
         }
-        for (int i = 0; i < 1; i++) {
+        removeHand(hand);
+        for (int i = 0; i <= 1; i++) {
             Card card = hand.getCard(i);
             Hand newHand = new Hand();
             newHand.addCard(card);
             addHand(newHand);
         }
-        removeHand(hand);
     }
 
     public void pay(int money) {
