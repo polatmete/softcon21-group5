@@ -72,4 +72,5 @@ public class Player extends PlayerSubject {
     public String getName() {
         return this.name;
     }
+
 }
