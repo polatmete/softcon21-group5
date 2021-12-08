@@ -19,7 +19,7 @@ public class Player extends PlayerSubject {
             //TODO: NullHandException?
             return;
         }
-        if (!super.hasHand(hand)) {
+        if (!hasHand(hand)) {
             //TODO: NoSuchHandException?
             return;
         }
@@ -31,11 +31,11 @@ public class Player extends PlayerSubject {
             //TODO: NullHandException?
             return;
         }
-        if (super.amountHands() == 4) {
+        if (amountHands() == 4) {
             //TODO: MaxHandSplitException?
             return;
         }
-        if (!super.hasHand(hand)) {
+        if (!hasHand(hand)) {
             //TODO: NoSuchHandException?
             return;
         }
@@ -47,16 +47,13 @@ public class Player extends PlayerSubject {
             //TODO: CardsNotEqualRankException?
             return;
         }
-        Card card1 = hand.getCard(0);
-        Card card2 = hand.getCard(1);
-        Hand hand1 = new Hand();
-        Hand hand2 = new Hand();
-        hand1.addCard(card1);
-        hand2.addCard(card2);
-
-        super.removeHand(hand);
-        super.addHand(hand1);
-        super.addHand(hand2);
+        for (int i = 0; i < 1; i++) {
+            Card card = hand.getCard(i);
+            Hand newHand = new Hand();
+            newHand.addCard(card);
+            addHand(newHand);
+        }
+        removeHand(hand);
     }
 
     public void pay(int money) {
@@ -79,5 +76,22 @@ public class Player extends PlayerSubject {
     //TODO getter? -> is final ..
     public String getName() {
         return this.name;
+    }
+
+    public int amountHands() {
+        return super.getHands().size();
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private boolean hasHand(Hand hand) {
+        return super.getHands().contains(hand);
+    }
+
+    private void addHand(Hand hand) {
+        super.getHands().add(hand);
+    }
+
+    private  void removeHand(Hand hand) {
+        super.getHands().remove(hand);
     }
 }
