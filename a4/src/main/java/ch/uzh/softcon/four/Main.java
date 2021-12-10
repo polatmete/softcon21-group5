@@ -8,6 +8,7 @@ import ch.uzh.softcon.four.card.CardSet;
 import ch.uzh.softcon.four.player.Dealer;
 import ch.uzh.softcon.four.card.Hand;
 import ch.uzh.softcon.four.player.Player;
+import java.util.Scanner;
 
 
 public class Main {
@@ -25,13 +26,33 @@ public class Main {
     private static void initialize() {
         // Clear console?
         // Welcome to BJ
+        System.out.println("Welcome to BJ");
         // Scoreboard.print
         // how many players? max 5(?)
-        int countPlayers = 5;
-        for (int i = 0; i < countPlayers; ++i) players[i] = new Player("Player " + (i+1));
+        System.out.print("How many players want to join the table? ");
+        Scanner scn = new Scanner(System.in);
+        int countPlayers = scn.nextInt();
+        while (countPlayers < 0 || countPlayers > 5) {
+            System.out.print("\nPlease insert a number between 0 and 5: ");
+            countPlayers = scn.nextInt();
+        }
+
+        for (int i = 0; i < countPlayers; ++i) {
+            System.out.print("\nPlayer " + (i+1) + "please insert your name: ");
+            players[i] = new Player(scn.next());
+        }
         // enter names of players
         // difficulty level: [e]asy: 1 deck / [m]edium: 3 decks / [h]ard: 6 decks
-        difficulty = 6;
+
+        do {
+            System.out.println("\nChoose a level:\n[1] Easy\n[2] Medium\n[3] Hard");
+            difficulty = scn.nextInt();
+        } while (difficulty < 1 || difficulty > 3);
+
+        if (difficulty == 2) difficulty = 3;
+        else if (difficulty == 3) difficulty = 6;
+
+        //difficulty = 6;
         // initialize decks
         deck = new CardDeck();
     }
