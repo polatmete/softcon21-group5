@@ -1,5 +1,6 @@
 package ch.uzh.softcon.four.player;
 
+import ch.uzh.softcon.four.card.Card;
 import ch.uzh.softcon.four.card.Hand;
 
 import java.util.ArrayList;
@@ -22,19 +23,12 @@ public abstract class PlayerSubject {
         return this.hands.get(handIdx);
     }
 
-    public boolean hasHand(Hand hand) {
-        return this.hands.contains(hand);
-    }
-
-    public void addHand(Hand hand) {
-        this.hands.add(hand);
-    }
-
-    public void removeHand(Hand hand) {
-        this.hands.remove(hand);
-    }
-
     public void clearHands() {
         this.hands = new ArrayList<>();
+        this.hands.add(new Hand());
+    }
+
+    protected List<Hand> getHands() {
+        return this.hands;
     }
 }

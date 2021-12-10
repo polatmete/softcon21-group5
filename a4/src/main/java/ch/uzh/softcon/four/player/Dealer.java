@@ -9,6 +9,9 @@ public class Dealer extends PlayerSubject {
     }
 
     public void giveCard(Card card) {
+        if (super.getHand(0).size() == 1) {
+            card.hide();
+        }
         super.getHand(0).addCard(card);
     }
 }

@@ -9,7 +9,7 @@ public class Card {
     public Card(Suit suit, Rank rank) {
         this.suit = suit;
         this.rank = rank;
-        this.hidden = true;
+        this.hidden = false;
     }
 
     public Suit getSuit() {
@@ -28,7 +28,11 @@ public class Card {
         return this.rank;
     }
 
-    public void reveal() {
+    public void hide() {
+        this.hidden = true;
+    }
+
+    protected void reveal() {
         this.hidden = false;
     }
 
