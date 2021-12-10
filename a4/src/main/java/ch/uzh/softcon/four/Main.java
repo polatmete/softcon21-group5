@@ -5,6 +5,7 @@ import ch.uzh.softcon.four.card.Card.Rank;
 import ch.uzh.softcon.four.card.Card.Suit;
 import ch.uzh.softcon.four.card.CardDeck;
 import ch.uzh.softcon.four.card.CardSet;
+import ch.uzh.softcon.four.logic.Game;
 import ch.uzh.softcon.four.player.Dealer;
 import ch.uzh.softcon.four.card.Hand;
 import ch.uzh.softcon.four.player.Player;
@@ -23,22 +24,26 @@ public class Main {
         loop();
     }
 
-    private static void initialize() {
-        // Clear console?
-        // Welcome to BJ
+    private static void initialize() { //Ugly put ok for first try
+        // TODO Clear console?
         System.out.println("Welcome to BJ");
-        // Scoreboard.print
-        // how many players? max 5(?)
+        // TODO Scoreboard.print
+        //TODO Fancy anleitung mit Befehlen. Einfafcherheitshalber alles mit Zahlen?
+        /*
+        * [0] Stay
+        * [1] Hit
+        * [2] Split
+        * */
         System.out.print("How many players want to join the table? ");
         Scanner scn = new Scanner(System.in);
-        int countPlayers = scn.nextInt();
+        int countPlayers = scn.nextInt(); // Todo check first if int.. otherwise crash
         while (countPlayers < 0 || countPlayers > 5) {
             System.out.print("\nPlease insert a number between 0 and 5: ");
             countPlayers = scn.nextInt();
         }
 
         for (int i = 0; i < countPlayers; ++i) {
-            System.out.print("\nPlayer " + (i+1) + "please insert your name: ");
+            System.out.print("\nPlayer " + (i+1) + " please insert your name: ");
             players[i] = new Player(scn.next());
         }
         // enter names of players
@@ -54,7 +59,7 @@ public class Main {
 
         //difficulty = 6;
         // initialize decks
-        deck = new CardDeck();
+        Game.initDeck();
     }
 
     private static void loop() {
@@ -67,16 +72,21 @@ public class Main {
                     break;
                 }
             }
-            if (!playerLeft) break;
+            if (!playerLeft) break; // TODO maybe game has ended message?
 
+            Scanner scn = new Scanner(System.in);
+
+            //First give dealer 2 cards
             dealer.giveCard(deck.drawCard());
             dealer.giveCard(deck.drawCard());
 
             for (Player p : players) {
-                p.giveCard(deck.drawCard(), p.getHand(0));
-                p.giveCard(deck.drawCard(), p.getHand(0));
-                p.bet(10);
+                if (p == null) continue;
+                Game.takeBets(p);
+                Game.play(p);
             }
+            Game.evaluate(players);
+            Game.conclude();
 
 
 

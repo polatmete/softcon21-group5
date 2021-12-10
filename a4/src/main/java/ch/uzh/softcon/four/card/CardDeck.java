@@ -5,7 +5,7 @@ import java.util.Stack;
 
 public class CardDeck {
 
-    private final Stack<Card> cards;
+    private Stack<Card> cards;
     private static CardDeck instance;
 
     // TODO: Set useful value!
