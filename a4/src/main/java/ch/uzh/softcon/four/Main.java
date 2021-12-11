@@ -59,6 +59,8 @@ public class Main {
 
         //difficulty = 6;
         // initialize decks
+        // TODO ugly? ask someone...
+        deck = CardDeck.getInstance();
         Game.initDeck();
     }
 

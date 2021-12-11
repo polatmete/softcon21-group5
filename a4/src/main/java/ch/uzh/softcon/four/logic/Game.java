@@ -22,25 +22,33 @@ public class Game {
     }
 
     public static void takeBets(Player p) {
-        boolean retry = false;
         int bet = -1;
-        do {
-            System.out.print(p.getName() + " enter your bet or type \"leave\" to leave: ");
-            String tmp = scn.next();
-            if (tmp.equals("l")) {
-                //TODO replace player in array with NULL maybe with exception?
-                return;
-            } else {
-                try {
-                    bet = Integer.parseInt(tmp);
-                    retry = false;
-                } catch(Exception e) {
-                    retry = true;
+        if (bets.get(p.getName()) == null) { //TODO Do better with while
+            boolean retry = false;
+            do {
+                System.out.print(p.getName() + " enter your bet or type \"leave\" to leave: ");
+                String tmp = scn.next();
+                if (tmp.equals("l")) {
+                    //TODO replace player in array with NULL maybe with exception?
+                    return;
+                } else {
+                    try {
+                        bet = Integer.parseInt(tmp);
+                        retry = false;
+                    } catch (Exception e) {
+                        retry = true;
+                    }
                 }
-            }
-        } while (retry);
+            } while (retry);
+        } else {
+            bet = bets.get(p.getName()); // TODO Not double the bet.. bet should increase alway by initial bet..
+            // NOTE FOR ME: You don't have to store the total amount of the bet... Just return the initial amount for each hand > dealers hand
+        }
 
-        bets.put(p.getName(), bet);
+        // Add the bet to the current bet (relevant when splitting hand)
+        int tmp = 0;
+        if (bets.get(p.getName()) != null) tmp = bets.get(p.getName());
+        bets.put(p.getName(), tmp + bet);
         p.bet(bet);
         //Todo
     }
@@ -57,6 +65,8 @@ public class Game {
                 distributeCards(p);
             } else if (move.equals("2")) {
                 p.splitHand(p.getHand(0)); // TODO WRONG!!!
+                takeBets(p);
+                System.out.println(bets.get(p.getName()));
             }
         } while (!move.equals("0")); // TODO Error message (invalid move entered)
     }
