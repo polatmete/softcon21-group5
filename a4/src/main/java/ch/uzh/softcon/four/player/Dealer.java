@@ -1,6 +1,7 @@
 package ch.uzh.softcon.four.player;
 
 import ch.uzh.softcon.four.card.Card;
+import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 
 public class Dealer extends PlayerSubject {
 
@@ -9,9 +10,13 @@ public class Dealer extends PlayerSubject {
     }
 
     public void giveCard(Card card) {
-        if (super.getHand(0).size() == 1) {
-            card.hide();
+        try {
+            if (super.getHand(0).size() == 1) {
+                card.hide();
+            }
+            super.getHand(0).addCard(card);
+        } catch (NullHandException e) {
+            System.err.println(e.getMessage());
         }
-        super.getHand(0).addCard(card);
     }
 }

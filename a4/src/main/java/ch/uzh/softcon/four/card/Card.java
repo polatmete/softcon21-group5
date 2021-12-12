@@ -1,5 +1,7 @@
 package ch.uzh.softcon.four.card;
 
+import ch.uzh.softcon.four.exceptions.card.CardHiddenException;
+
 public class Card {
 
     private final Suit suit;
@@ -12,18 +14,16 @@ public class Card {
         this.hidden = false;
     }
 
-    public Suit getSuit() {
+    public Suit getSuit() throws CardHiddenException {
         if (this.hidden) {
-            //TODO CardHiddenException
-            return null;
+            throw new CardHiddenException();
         }
         return this.suit;
     }
 
-    public Rank getRank() {
+    public Rank getRank() throws CardHiddenException {
         if (this.hidden) {
-            //TODO CardHiddenException
-            return null;
+            throw new CardHiddenException();
         }
         return this.rank;
     }

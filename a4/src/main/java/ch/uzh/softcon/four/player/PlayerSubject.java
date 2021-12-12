@@ -2,6 +2,7 @@ package ch.uzh.softcon.four.player;
 
 import ch.uzh.softcon.four.card.Card;
 import ch.uzh.softcon.four.card.Hand;
+import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,9 @@ public abstract class PlayerSubject {
         this.hands.add(new Hand());
     }
 
-    public Hand getHand(int handIdx) {
+    public Hand getHand(int handIdx) throws NullHandException {
         if (this.hands.size() <= handIdx) {
-            //TODO: NullHandException?
-            return null;
+            throw new NullHandException();
         }
         return this.hands.get(handIdx);
     }

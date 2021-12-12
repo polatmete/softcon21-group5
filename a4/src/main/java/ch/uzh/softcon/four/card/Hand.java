@@ -1,5 +1,8 @@
 package ch.uzh.softcon.four.card;
 
+import ch.uzh.softcon.four.exceptions.card.CardHiddenException;
+import ch.uzh.softcon.four.exceptions.card.NullCardException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,19 +16,19 @@ public class Hand {
         this.points = 0;
     }
 
-    public Card getCard(int cardIdx) {
+    public Card getCard(int cardIdx) throws NullCardException {
         if (this.cards.size() <= cardIdx) {
-            //TODO NullCardException
-            return null;
+            throw new NullCardException();
         }
         return this.cards.get(cardIdx);
     }
 
     public void addCard(Card card) {
         this.cards.add(card);
-        //TODO: Replace with catch?
-        if (card.getRank() != null) {
+        try {
             this.points += card.getRank().getValue();
+        } catch (CardHiddenException e) {
+            //nothing
         }
     }
 
@@ -33,7 +36,11 @@ public class Hand {
         this.points = 0;
         for (Card card : this.cards) {
             card.reveal();
-            this.points += card.getRank().getValue();
+            try {
+                this.points += card.getRank().getValue();
+            } catch (CardHiddenException e) {
+                //nothing
+            }
         }
     }
 

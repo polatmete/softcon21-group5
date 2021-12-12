@@ -2,6 +2,14 @@ package ch.uzh.softcon.four.player;
 
 import ch.uzh.softcon.four.card.Card;
 import ch.uzh.softcon.four.card.Hand;
+import ch.uzh.softcon.four.exceptions.NotEnoughMoneyException;
+import ch.uzh.softcon.four.exceptions.card.CardHiddenException;
+import ch.uzh.softcon.four.exceptions.card.CardsNotEqualRankException;
+import ch.uzh.softcon.four.exceptions.card.NullCardException;
+import ch.uzh.softcon.four.exceptions.hand.HandWrongSizeException;
+import ch.uzh.softcon.four.exceptions.hand.MaxHandSplitException;
+import ch.uzh.softcon.four.exceptions.hand.NoSuchHandException;
+import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 
 public class Player extends PlayerSubject {
 
@@ -26,33 +34,33 @@ public class Player extends PlayerSubject {
         hand.addCard(card);
     }
 
-    public void splitHand(Hand hand) {
+    public void splitHand(Hand hand) throws NullHandException, MaxHandSplitException,
+            NoSuchHandException, HandWrongSizeException, CardsNotEqualRankException {
         if (hand == null) {
-            //TODO: NullHandException?
-            return;
+            throw new NullHandException();
         }
         if (amountHands() == 4) {
-            //TODO: MaxHandSplitException?
-            return;
+            throw new MaxHandSplitException();
         }
         if (!hasHand(hand)) {
-            //TODO: NoSuchHandException?
-            return;
+            throw new NoSuchHandException();
         }
         if (hand.size() != 2) {
-            //TODO: HandWrongSizeException?
-            return;
+            throw new HandWrongSizeException();
         }
-        if (hand.getCard(0).getRank() != hand.getCard(1).getRank()) {
-            //TODO: CardsNotEqualRankException?
-            return;
-        }
-        removeHand(hand);
-        for (int i = 0; i <= 1; i++) {
-            Card card = hand.getCard(i);
-            Hand newHand = new Hand();
-            newHand.addCard(card);
-            addHand(newHand);
+        try {
+            if (hand.getCard(0).getRank() != hand.getCard(1).getRank()) {
+                throw new CardsNotEqualRankException();
+            }
+            removeHand(hand);
+            for (int i = 0; i <= 1; i++) {
+                Card card = hand.getCard(i);
+                Hand newHand = new Hand();
+                newHand.addCard(card);
+                addHand(newHand);
+            }
+        } catch (CardHiddenException | NullCardException e) {
+            System.err.println(e.getMessage());
         }
     }
 
@@ -60,10 +68,9 @@ public class Player extends PlayerSubject {
         this.money += money;
     }
 
-    public void bet(int money) {
+    public void bet(int money) throws NotEnoughMoneyException {
         if (money > this.money) {
-            //TODO: NoMoneyException
-            return;
+            throw new NotEnoughMoneyException();
         }
         this.money -= money;
     }
