@@ -26,7 +26,7 @@ public class Player extends PlayerSubject {
         hand.addCard(card);
     }
 
-    public void splitHand(Hand hand) {
+    public void splitHand(Hand hand, int bet) {
         if (hand == null) {
             //TODO: NullHandException?
             return;

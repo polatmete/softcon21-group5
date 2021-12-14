@@ -11,16 +11,15 @@ public class CardDeck {
     // TODO: Set useful value!
     private final int THRESHOLD = 26;
     
-    public CardDeck() {
+    private CardDeck() {
         this.cards = new Stack<>();
-        fillDeck(3);
-        shuffle();
     }
 
-    private void fillDeck(int count) {
+    public void fillDeck(int count) {
         for (int i = 0; i < count; i++) {
             addSet(new CardSet());
         }
+        shuffle();
     }
 
     public static synchronized CardDeck getInstance() {
