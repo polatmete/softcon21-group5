@@ -24,7 +24,6 @@ public class Game {
          * [2] Split */
 
          int difficulty;
-
         do {
             System.out.print("Difficulty levels\n[1] Easy\n[2] Medium\n[3] Hard\nChoose a level: ");
             difficulty = scn.nextInt(); // TODO Check whether it is a int
@@ -123,12 +122,7 @@ public class Game {
             move = scn.next();
             if (move.equals("1")) {
                 distributeCards(playerIndex, handIndex);
-                if (players[playerIndex].getHand(handIndex).points() == 21) break;
-                if (players[playerIndex].getHand(handIndex).points() > 21) {
-                    // ToDo set points to -1 when over 21
-                    //players[playerIndex].getHand(handIndex).setPoints(-1);
-                    break;
-                }
+                if (players[playerIndex].getHand(handIndex).points() >= 21) break;
             } else if (move.equals("2")) {
                 try {
                     players[playerIndex].splitHand(players[playerIndex].getHand(handIndex), bets.get(players[playerIndex].getName()));
@@ -148,9 +142,8 @@ public class Game {
     }
 
     public static void playDealer() {
+        dealer.getHand(0).reveal();
         while (dealer.getHand(0).points() < 17) dealer.giveCard(deck.drawCard());
-        // ToDo set points to -1 when over 21
-        //if (dealer.getHand(0).points() > 21) dealer.getHand(0).setPoints(-1);
     }
 
     public static void distributeCards(int playerIndex, int handIndex) {
@@ -158,20 +151,21 @@ public class Game {
     }
 
     public static void evaluate() {
+        int dealerHandPoints = dealer.getHand(0).points();
+        if (dealerHandPoints > 21) dealerHandPoints = -1;
         for (Player p : players) {
             if (p == null) continue;
             int bet = bets.get(p.getName());
             int winAmount = 0;
             for (int i = 0; i < p.amountHands(); ++i) {
-                if (p.getHand(i).points() > dealer.getHand(0).points()) {
-                    p.pay(bet);
+                int playerHandPoints = p.getHand(i).points();
+                if (playerHandPoints > 21) playerHandPoints = -2;
+
+                if (playerHandPoints < dealerHandPoints) winAmount -= bet;
+                else if (playerHandPoints == dealerHandPoints) p.pay(bet);
+                else if (playerHandPoints > dealerHandPoints) {
+                    p.pay(2*bet);
                     winAmount += bet;
-                }
-                else if (p.getHand(i).points() == dealer.getHand(0).points()) {
-                    p.pay(bet);
-                }
-                else {
-                    winAmount -= bet;
                 }
             }
             System.out.println("In this round " + p.getName() + " achieved CHF " + winAmount + ".-");

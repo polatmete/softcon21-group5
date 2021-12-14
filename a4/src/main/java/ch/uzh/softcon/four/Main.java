@@ -4,7 +4,6 @@ import ch.uzh.softcon.four.logic.Game;
 
 public class Main {
     public static void main(String[] args) {
-        // TODO: Implement
         Game.initialize();
         System.out.println("\n");
         while (true) {
