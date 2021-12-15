@@ -36,9 +36,6 @@ public class Player extends PlayerSubject {
 
     public void splitHand(Hand hand) throws BrokeException, NullHandException, MaxHandSplitException,
             NoSuchHandException, HandWrongSizeException, CardsNotEqualRankException {
-        if (this.initialBet > this.money) {
-            throw new BrokeException();
-        }
         if (hand == null) {
             throw new NullHandException();
         }
@@ -54,6 +51,9 @@ public class Player extends PlayerSubject {
         try {
             if (hand.getCard(0).getRank() != hand.getCard(1).getRank()) {
                 throw new CardsNotEqualRankException();
+            }
+            if (this.initialBet > this.money) {
+                throw new BrokeException();
             }
             removeHand(hand);
             for (int i = 0; i <= 1; i++) {
@@ -80,12 +80,10 @@ public class Player extends PlayerSubject {
         this.initialBet = money;
     }
 
-    //TODO getter?
-    public int balance() {
+    public int getBalance() {
         return this.money;
     }
 
-    //TODO getter? -> is final ..
     public String getName() {
         return this.name;
     }

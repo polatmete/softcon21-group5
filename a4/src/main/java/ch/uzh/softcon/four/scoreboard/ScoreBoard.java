@@ -12,12 +12,12 @@ public class ScoreBoard {
     private static int score;
 
     public static void saveScore(Player p) {
-        score = p.balance();
+        score = p.getBalance();
 
         int i = 0;
         for (ScoreBoardEntry scoreBoardEntry : scoreBoard) {
             if (scoreBoardEntry == null || scoreBoardEntry.balance() < score) {
-                ScoreBoardEntry s = new ScoreBoardEntry(p.getName(), p.balance());
+                ScoreBoardEntry s = new ScoreBoardEntry(p.getName(), p.getBalance());
                 ScoreBoardEntry previous = s;
                 ScoreBoardEntry current;
                 while (i < scoreBoardSize) {
