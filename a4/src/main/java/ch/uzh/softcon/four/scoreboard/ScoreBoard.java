@@ -1,5 +1,6 @@
 package ch.uzh.softcon.four.scoreboard;
 
+import ch.uzh.softcon.four.logic.IOFormatter;
 import ch.uzh.softcon.four.player.Player;
 
 import java.io.*;
@@ -50,7 +51,7 @@ public class ScoreBoard {
 
             pw.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(IOFormatter.formatErrorMessage("ScoreBoard ERROR."));
         }
     }
 
@@ -72,7 +73,7 @@ public class ScoreBoard {
             }
             csvReader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(IOFormatter.formatErrorMessage("ScoreBoard ERROR."));
         }
     }
 

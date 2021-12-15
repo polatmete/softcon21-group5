@@ -25,7 +25,7 @@ public class Main {
             Game.evaluate(); // Check for each player and hand who has won
             Game.conclude(); // Clear hands, kick out players without money, allow new players to join
         }
-        System.out.println("\nIt seems like no one wants to play at this table any more.. Tank you for joining and bye for now ;)");
+        System.out.println("\nIt seems like no one wants to play at this table any more.. Thank you for joining and bye for now ;)");
         ScoreBoard.printScore();
     }
 }

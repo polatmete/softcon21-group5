@@ -1,6 +1,8 @@
 package ch.uzh.softcon.four.logic;
 
 import ch.uzh.softcon.four.card.CardDeck;
+import ch.uzh.softcon.four.exceptions.hand.NoSuchHandException;
+import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 import ch.uzh.softcon.four.player.Dealer;
 import ch.uzh.softcon.four.player.Player;
 import ch.uzh.softcon.four.scoreboard.ScoreBoard;
@@ -12,7 +14,7 @@ public class Game {
     private static final Dealer dealer = new Dealer();
     private static final Player[] players = new Player[5];
     private static CardDeck deck;
-    private static Map<String, Integer> bets = new HashMap<>();
+    private static Map<Player, Integer> bets = new HashMap<>();
     private static final Scanner scn = new Scanner(System.in);
 
     public static void initialize() { // Set difficulty and players, initialize some variables
@@ -64,8 +66,9 @@ public class Game {
         for (int i = 0; i < countPlayers; ++i) {
             int nextAvailableSeat = 0;
             while (nextAvailableSeat < 5 && players[nextAvailableSeat] != null) ++nextAvailableSeat;
-            System.out.print("Player " + (nextAvailableSeat+1) + " please enter your name: ");
-            players[nextAvailableSeat] = new Player(scn.nextLine());
+            System.out.print("Player " + (nextAvailableSeat+1) + " please enter your name (max 10 characters): ");
+            String name = scn.nextLine();
+            players[nextAvailableSeat] = new Player(name.substring(0, Math.min(10, name.length()))); // only take first 10 chars to not mess up table
         }
     }
 
@@ -110,7 +113,7 @@ public class Game {
 
         try {
             players[playerIndex].bet(bet);
-            bets.put(players[playerIndex].getName(), bet); // Save bets for later
+            bets.put(players[playerIndex], bet); // Save bets for later
         } catch (Exception ex) { // If bet could not be made (e.g. to less money)
             System.out.println(IOFormatter.formatErrorMessage("Your bet could not be placed: " + ex.getMessage() + " Please try again."));
             takeBets(playerIndex);
@@ -131,10 +134,12 @@ public class Game {
             move = scn.nextLine();
             if (move.equals("1")) {
                 distributeCards(playerIndex, handIndex);
-                if (players[playerIndex].getHand(handIndex).points() >= 21) break; // Auto exit when hand > 21 points
+                try {
+                    if (players[playerIndex].getHand(handIndex).points() >= 21) break; // Auto exit when hand > 21 points
+                } catch (NullHandException ignored) { }
             } else if (move.equals("2")) {
                 try {
-                    players[playerIndex].splitHand(players[playerIndex].getHand(handIndex), bets.get(players[playerIndex].getName()));
+                    players[playerIndex].splitHand(players[playerIndex].getHand(handIndex));
                     // For every split run play for current hand and new (split) hand, which is appended at the end
                     play(playerIndex, handIndex);
                     play(playerIndex, players[playerIndex].amountHands() - 1); // Run play for last (newest) hand
@@ -151,35 +156,42 @@ public class Game {
     }
 
     public static void playDealer() { // Dealer magic. First reveal both cards, then as long as dealer hands < 17 draw card
-        dealer.getHand(0).reveal();
-        while (dealer.getHand(0).points() < 17) dealer.giveCard(deck.drawCard());
+        try {
+            dealer.getHand(0).reveal();
+            while (dealer.getHand(0).points() < 17) dealer.giveCard(deck.drawCard());
+        } catch (NullHandException ignored) { }
     }
 
     private static void distributeCards(int playerIndex, int handIndex) { // Helper method to give cards
-        players[playerIndex].giveCard(deck.drawCard(), players[playerIndex].getHand(handIndex));
+        try {
+            players[playerIndex].giveCard(deck.drawCard(), players[playerIndex].getHand(handIndex));
+        } catch (NullHandException | NoSuchHandException ignored) { }
     }
 
     public static void evaluate() { // Check for each player and hand who has won
-        int dealerHandPoints = dealer.getHand(0).points(); // Get points of dealer
-        if (dealerHandPoints > 21) dealerHandPoints = -1; // If dealers points > 21 set it to -1. This makes comparing later on much easier
-        for (Player p : players) {
-            if (p == null) continue;
-            int bet = bets.get(p.getName());
-            int winAmount = 0;
-            for (int i = 0; i < p.amountHands(); ++i) {
-                int playerHandPoints = p.getHand(i).points(); // Get points for each hand of player
-                if (playerHandPoints > 21) playerHandPoints = -2; // If hand points > 21 set it to -2. This makes comparing later on much easier. -2 because if dealer and player gets > 21 player still looses
+        int dealerHandPoints; // Get points of dealer
+        try {
+            dealerHandPoints = dealer.getHand(0).points();
+            if (dealerHandPoints > 21) dealerHandPoints = -1; // If dealers points > 21 set it to -1. This makes comparing later on much easier
+            for (Player p : players) {
+                if (p == null) continue;
+                int bet = bets.get(p);
+                int winAmount = 0;
+                for (int i = 0; i < p.amountHands(); ++i) {
+                    int playerHandPoints = p.getHand(i).points(); // Get points for each hand of player
+                    if (playerHandPoints > 21) playerHandPoints = -2; // If hand points > 21 set it to -2. This makes comparing later on much easier. -2 because if dealer and player gets > 21 player still looses
 
-                // Compare points
-                if (playerHandPoints < dealerHandPoints) winAmount -= bet;
-                else if (playerHandPoints == dealerHandPoints) p.pay(bet); // Player already paid. On draw give player his money back
-                else {
-                    p.pay(2*bet); // Player already paid. Give player twice his bet back such that he makes + his bet
-                    winAmount += bet;
+                    // Compare points
+                    if (playerHandPoints < dealerHandPoints) winAmount -= bet;
+                    else if (playerHandPoints == dealerHandPoints) p.pay(bet); // Player already paid. On draw give player his money back
+                    else {
+                        p.pay(2*bet); // Player already paid. Give player twice his bet back such that he makes + his bet
+                        winAmount += bet;
+                    }
                 }
+                System.out.println("In this round " + p.getName() + " achieved CHF " + winAmount + ".-");
             }
-            System.out.println("In this round " + p.getName() + " achieved CHF " + winAmount + ".-");
-        }
+        } catch (NullHandException ignored) { }
     }
 
     public static void conclude() { // Clear hands, kick out players without money, allow new players to join

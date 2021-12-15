@@ -5,7 +5,7 @@ import java.util.Stack;
 
 public class CardDeck {
 
-    private Stack<Card> cards;
+    private final Stack<Card> cards;
     private static CardDeck instance;
 
     // TODO: Set useful value!
@@ -43,15 +43,5 @@ public class CardDeck {
 
     private void shuffle() {
         Collections.shuffle(this.cards);
-    }
-
-    public void regenerateWithSetCount(int count) {
-        this.cards = new Stack<>();
-        fillDeck(count);
-        shuffle();
-    }
-
-    public int size() {
-        return this.cards.size();
     }
 }
