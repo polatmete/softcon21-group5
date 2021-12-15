@@ -1,6 +1,7 @@
 package ch.uzh.softcon.four.card;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
 
 public class CardDeck {
@@ -39,6 +40,10 @@ public class CardDeck {
         if (this.cards.size() < THRESHOLD)
             addSet(new CardSet());
         return poppedCard;
+    }
+
+    public int size() {
+        return this.cards.size();
     }
 
     private void shuffle() {

@@ -66,9 +66,9 @@ public class Game {
         for (int i = 0; i < countPlayers; ++i) {
             int nextAvailableSeat = 0;
             while (nextAvailableSeat < 5 && players[nextAvailableSeat] != null) ++nextAvailableSeat;
-            System.out.print("Player " + (nextAvailableSeat+1) + " please enter your name (max 10 characters): ");
+            System.out.print("Player " + (nextAvailableSeat+1) + " please enter your name (max 9 characters): ");
             String name = scn.nextLine();
-            players[nextAvailableSeat] = new Player(name.substring(0, Math.min(10, name.length()))); // only take first 10 chars to not mess up table
+            players[nextAvailableSeat] = new Player(name.substring(0, Math.min(9, name.length()))); // only take first 10 chars to not mess up table
         }
     }
 
@@ -130,7 +130,7 @@ public class Game {
         // Ask player for move
         String move;
         do {
-            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + ", " + (handIndex + 1) + ". hand", true, "Please enter your move: "));
+            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + ", " + (handIndex + 1) + ". hand", true, "Please enter your move [1/2/3]: "));
             move = scn.nextLine();
             if (move.equals("1")) {
                 distributeCards(playerIndex, handIndex);
@@ -200,10 +200,10 @@ public class Game {
 
         int availableSeats = 0;
         for (int i = 0; i < 5; ++i) {
-            if (players[i] != null && players[i].balance() > 0) players[i].clearHands(); // Clear hands of all players
+            if (players[i] != null && players[i].getBalance() > 0) players[i].clearHands(); // Clear hands of all players
             else { // Kick player with no money
                 if (players[i] != null) {
-                    System.out.println(players[i].getName() + " had no money left and was kicked out.");
+                    System.out.println(players[i].getName() + " had no money anymore and was kicked out.");
                     ScoreBoard.saveScore(players[i]); // Check whether player made it in the scoreboard
                 }
                 players[i] = null;
@@ -212,6 +212,10 @@ public class Game {
         }
         System.out.println("\n=== New game new luck ===");
         if (availableSeats > 0) takeNewPlayers(availableSeats); // Check whether seats are free and ask new players to join
-        else System.out.println(" Unfortunately there are no seats available currently. The game will continue.");
+        else System.out.println("Unfortunately there are no seats available currently. The game will continue.");
+    }
+
+    protected static Player[] getPlayers() {
+        return players;
     }
 }
