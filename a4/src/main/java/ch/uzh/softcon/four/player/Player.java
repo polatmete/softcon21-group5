@@ -2,7 +2,7 @@ package ch.uzh.softcon.four.player;
 
 import ch.uzh.softcon.four.card.Card;
 import ch.uzh.softcon.four.card.Hand;
-import ch.uzh.softcon.four.exceptions.NotEnoughMoneyException;
+import ch.uzh.softcon.four.exceptions.player.BrokeException;
 import ch.uzh.softcon.four.exceptions.card.CardHiddenException;
 import ch.uzh.softcon.four.exceptions.card.CardsNotEqualRankException;
 import ch.uzh.softcon.four.exceptions.card.NullCardException;
@@ -13,29 +13,32 @@ import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 
 public class Player extends PlayerSubject {
 
-    private int money;
     private final String name;
+    private int money;
+    private int initialBet;
 
     public Player(String name) {
         super();
-        this.money = 100;
         this.name = name;
+        this.money = 100;
+        this.initialBet = 0;
     }
 
-    public void giveCard(Card card, Hand hand) {
+    public void giveCard(Card card, Hand hand) throws NullHandException, NoSuchHandException {
         if (hand == null) {
-            //TODO: NullHandException?
-            return;
+            throw new NullHandException();
         }
         if (!hasHand(hand)) {
-            //TODO: NoSuchHandException?
-            return;
+            throw new NoSuchHandException();
         }
         hand.addCard(card);
     }
 
-    public void splitHand(Hand hand) throws NullHandException, MaxHandSplitException,
+    public void splitHand(Hand hand) throws BrokeException, NullHandException, MaxHandSplitException,
             NoSuchHandException, HandWrongSizeException, CardsNotEqualRankException {
+        if (this.initialBet > this.money) {
+            throw new BrokeException();
+        }
         if (hand == null) {
             throw new NullHandException();
         }
@@ -59,6 +62,7 @@ public class Player extends PlayerSubject {
                 newHand.addCard(card);
                 addHand(newHand);
             }
+            this.money -= initialBet;
         } catch (CardHiddenException | NullCardException e) {
             System.err.println(e.getMessage());
         }
@@ -68,11 +72,12 @@ public class Player extends PlayerSubject {
         this.money += money;
     }
 
-    public void bet(int money) throws NotEnoughMoneyException {
+    public void bet(int money) throws BrokeException {
         if (money > this.money) {
-            throw new NotEnoughMoneyException();
+            throw new BrokeException();
         }
         this.money -= money;
+        this.initialBet = money;
     }
 
     //TODO getter?

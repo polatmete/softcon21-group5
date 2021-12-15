@@ -37,10 +37,20 @@ public class Card {
     }
 
     public enum Suit {
-        SPADES,
-        HEARTS,
-        DIAMONDS,
-        CLUBS
+        SPADES('S'),
+        HEARTS('H'),
+        DIAMONDS('D'),
+        CLUBS('C');
+
+        private final char letter;
+
+        Suit(char letter) {
+            this.letter = letter;
+        }
+
+        public char getLetter() {
+            return this.letter;
+        }
     }
 
     public enum Rank {
