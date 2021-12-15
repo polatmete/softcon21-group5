@@ -78,4 +78,13 @@ public class Card {
             return this.value;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "suit=" + suit +
+                ", rank=" + rank +
+                ", hidden=" + hidden +
+                '}';
+    }
 }

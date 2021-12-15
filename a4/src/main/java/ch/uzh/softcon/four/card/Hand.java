@@ -52,4 +52,12 @@ public class Hand {
     public int points() {
         return this.points;
     }
+
+    @Override
+    public String toString() {
+        return "Hand{" +
+                "cards=" + cards +
+                ", points=" + points +
+                '}';
+    }
 }
