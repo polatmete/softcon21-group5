@@ -189,7 +189,12 @@ public class Game {
                         winAmount += bet;
                     }
                 }
-                System.out.println("In this round " + p.getName() + " achieved CHF " + winAmount + ".-");
+                if (winAmount > 0) System.out.println("In this round " + p.getName() + " won $" + winAmount + ".");
+                else if (winAmount == 0) System.out.println("In this round " + p.getName() + " neither won nor lost.");
+                else {
+                    winAmount = Math.abs(winAmount);
+                    System.out.println("In this round " + p.getName() + " lost $" + winAmount + ".");
+                }
             }
         } catch (NullHandException ignored) { }
     }
