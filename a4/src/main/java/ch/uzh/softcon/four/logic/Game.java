@@ -154,7 +154,7 @@ public class Game {
         while (dealer.getHand(0).points() < 17) dealer.giveCard(deck.drawCard());
     }
 
-    public static void distributeCards(int playerIndex, int handIndex) { // Helper method to give cards
+    private static void distributeCards(int playerIndex, int handIndex) { // Helper method to give cards
         players[playerIndex].giveCard(deck.drawCard(), players[playerIndex].getHand(handIndex));
     }
 
