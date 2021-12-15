@@ -8,19 +8,10 @@ public class Main {
         Game.initialize(); // Set difficulty and players, initialize some variables
         System.out.println(); // New line for better design
         while (true) {
-            Game.startNewRound(); // First, give dealer 2 cards
-
-            boolean quitGame = false;
-            for (int i = 0; i < 5; ++i) {
-                Game.takeBets(i); // Ask player for bet or to leave every time a new round begins
-
-                quitGame = !Game.checkPlayerLeft(); // Check whether a player is left after takeBets() since players can only leave at this point
-                if(quitGame) break; // If all players left end game
-
-                Game.play(i, 0); // Play with every player
-            }
-            if (quitGame) break; // If all players left end game
-
+            for (int i = 0; i < 5; ++i) Game.takeBets(i); // Ask player for bet or to leave every time a new round begin
+            if(!Game.checkPlayerLeft()) break; // Check whether a player is left after takeBets() since players can only leave at this point
+            Game.startNewRound(); // Helper methode to give every player and the dealer 2 cards at the beginning
+            for (int i = 0; i < 5; ++i) Game.play(i, 0); // Play with every player
             Game.playDealer(); // At the end dealer should draw cards
             Game.evaluate(); // Check for each player and hand who has won
             Game.conclude(); // Clear hands, kick out players without money, allow new players to join

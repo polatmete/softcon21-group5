@@ -72,7 +72,12 @@ public class Game {
         }
     }
 
-    public static void startNewRound() { // Helper methode to give dealer 2 cards at the beginning
+    public static void startNewRound() { // Helper methode to give every player and the dealer 2 cards at the beginning
+        for (int i = 0; i < 5; ++i) { // Give every player 2 cards at the beginning
+            if (players[i] == null) continue;
+            distributeCards(i, 0);
+            distributeCards(i, 0);
+        }
         dealer.giveCard(deck.drawCard());
         dealer.giveCard(deck.drawCard());
     }
@@ -123,14 +128,10 @@ public class Game {
     public static void play(int playerIndex, int handIndex) { // Here, the main gameplay happens
         if (players[playerIndex] == null) return;  // Since in main for every "seat" this method is executed we have to skip the empty seats
 
-        if(players[playerIndex].amountHands() <= 1) { // Give player 2 cards only on first call
-            distributeCards(playerIndex, handIndex);
-            distributeCards(playerIndex, handIndex);
-        }
         // Ask player for move
         String move;
         do {
-            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + ", " + (handIndex + 1) + ". hand", true, "Please enter your move [1/2/3]: "));
+            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + ", " + (handIndex + 1) + ". hand", true, "Please enter your move [0|1|2]: "));
             move = scn.nextLine();
             if (move.equals("1")) {
                 distributeCards(playerIndex, handIndex);
