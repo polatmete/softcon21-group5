@@ -49,7 +49,7 @@ public class Game {
         // Ask for # new players
         int countPlayers;
         do {
-            System.out.print("How many players want to join the table?: ");
+            System.out.print("There are " + maxPlayers + " seats available. How many players want to join the table?: ");
             try {
                 String tmp = scn.nextLine();
                 countPlayers = Integer.parseInt(tmp); // Not nice but at least we can catch wrong inputs from the user
@@ -198,11 +198,8 @@ public class Game {
                 ++availableSeats;
             }
         }
-        System.out.print("\nNew game new luck.");
-        if (availableSeats > 0) { // Check whether seats are free and ask new players to join
-            System.out.println(" There are " + availableSeats + " seats available. ");
-            takeNewPlayers(availableSeats);
-        }
+        System.out.println("\n=== New game new luck ===");
+        if (availableSeats > 0) takeNewPlayers(availableSeats); // Check whether seats are free and ask new players to join
         else System.out.println(" Unfortunately there are no seats available currently. The game will continue.");
     }
 }
