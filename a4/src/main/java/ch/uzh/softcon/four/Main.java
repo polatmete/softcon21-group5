@@ -1,7 +1,7 @@
 package ch.uzh.softcon.four;
 
 import ch.uzh.softcon.four.logic.Game;
-//TODO import ch.uzh.softcon.four.scoreboard.ScoreBoard;
+import ch.uzh.softcon.four.scoreboard.ScoreBoard;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,7 +25,7 @@ public class Main {
             Game.evaluate(); // Check for each player and hand who has won
             Game.conclude(); // Clear hands, kick out players without money, allow new players to join
         }
-        System.out.print("\nIt seems like no one wants to play at this table any more.. Tank you for joining and bye for now ;)");
-        // TODO ScoreBoard.printScore();
+        System.out.println("\nIt seems like no one wants to play at this table any more.. Tank you for joining and bye for now ;)");
+        ScoreBoard.printScore();
     }
 }

@@ -3,7 +3,7 @@ package ch.uzh.softcon.four.logic;
 import ch.uzh.softcon.four.card.CardDeck;
 import ch.uzh.softcon.four.player.Dealer;
 import ch.uzh.softcon.four.player.Player;
-//TODO import ch.uzh.softcon.four.scoreboard.ScoreBoard;
+import ch.uzh.softcon.four.scoreboard.ScoreBoard;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -17,7 +17,7 @@ public class Game {
 
     public static void initialize() { // Set difficulty and players, initialize some variables
         System.out.println("Welcome to Black Jack!");
-        // TODO ScoreBoard.printScore();
+        ScoreBoard.printScore();
 
         // Get difficulty level of game and map it to # sets used for deck
         int difficulty;
@@ -94,6 +94,7 @@ public class Game {
             System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName(), true, "Please enter your bet or type \"leave\" to leave: "));
             String tmpInput = scn.nextLine();
             if (tmpInput.equals("leave")) { // Leave when user enters "leave"
+                ScoreBoard.saveScore(players[playerIndex]); // Check whether player made it in the scoreboard
                 players[playerIndex] = null;
                 System.out.println(); // New line for better design
                 return;
@@ -189,7 +190,10 @@ public class Game {
         for (int i = 0; i < 5; ++i) {
             if (players[i] != null && players[i].balance() > 0) players[i].clearHands(); // Clear hands of all players
             else { // Kick player with no money
-                if (players[i] != null) System.out.println(players[i].getName() + " had no money left and was kicked out.");
+                if (players[i] != null) {
+                    System.out.println(players[i].getName() + " had no money left and was kicked out.");
+                    ScoreBoard.saveScore(players[i]); // Check whether player made it in the scoreboard
+                }
                 players[i] = null;
                 ++availableSeats;
             }
