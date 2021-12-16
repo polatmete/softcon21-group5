@@ -223,7 +223,8 @@ public class Game {
         }
         System.out.println("\n=== New game new luck ===");
         if (availableSeats > 0) takeNewPlayers(availableSeats); // Check whether seats are free and ask new players to join
-        else System.out.println("Unfortunately there are no seats available currently. The game will continue.");
+        else System.out.print("Unfortunately there are no seats available currently.\nPress enter to continue the game... ");
+        scn.nextLine(); // Don't really care about the input, enter is important
     }
 
     protected static Player[] getPlayers() {
