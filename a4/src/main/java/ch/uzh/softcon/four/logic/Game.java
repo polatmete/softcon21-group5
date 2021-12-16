@@ -131,12 +131,15 @@ public class Game {
         // Ask player for move
         String move;
         do {
-            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + ", " + (handIndex + 1) + ". hand", true, "Please enter your move [0|1|2]: "));
+            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + " (" + (handIndex + 1) + ". hand)", true, "Please enter your move [0|1|2]: "));
             move = scn.nextLine();
             if (move.equals("1")) {
                 distributeCards(playerIndex, handIndex);
                 try {
-                    if (players[playerIndex].getHand(handIndex).points() >= 21) break; // Auto exit when hand > 21 points
+                    if (players[playerIndex].getHand(handIndex).points() >= 21) { // Auto exit when hand >= 21 points
+                        System.out.println(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + " (" + (handIndex + 1) + ". hand)", true, "You got " + players[playerIndex].getHand(handIndex).points() + " points on this hand and therefore cannot hit or split any more."));
+                        break;
+                    }
                 } catch (NullHandException ignored) { }
             } else if (move.equals("2")) {
                 try {
@@ -161,6 +164,7 @@ public class Game {
             dealer.getHand(0).reveal();
             while (dealer.getHand(0).points() < 17) dealer.giveCard(deck.drawCard());
         } catch (NullHandException ignored) { }
+        System.out.println(IOFormatter.formatOutput("\nTurn: Dealer", true, "This round has end. Evaluation:\n"));
     }
 
     private static void distributeCards(int playerIndex, int handIndex) { // Helper method to give cards
@@ -197,6 +201,7 @@ public class Game {
                     System.out.println("In this round " + p.getName() + " lost $" + winAmount + ".");
                 }
             }
+            System.out.println();
         } catch (NullHandException ignored) { }
     }
 
