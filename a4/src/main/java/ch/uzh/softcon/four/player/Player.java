@@ -1,6 +1,7 @@
 package ch.uzh.softcon.four.player;
 
 import ch.uzh.softcon.four.card.Card;
+import ch.uzh.softcon.four.card.CardDeck;
 import ch.uzh.softcon.four.card.Hand;
 import ch.uzh.softcon.four.exceptions.player.BrokeException;
 import ch.uzh.softcon.four.exceptions.card.CardHiddenException;
@@ -49,7 +50,7 @@ public class Player extends PlayerSubject {
             throw new HandWrongSizeException();
         }
         try {
-            if (hand.getCard(0).getRank() != hand.getCard(1).getRank()) {
+            if (hand.getCard(0).getRank().getValue() != hand.getCard(1).getRank().getValue()) {
                 throw new CardsNotEqualRankException();
             }
             if (this.initialBet > this.money) {
@@ -60,6 +61,7 @@ public class Player extends PlayerSubject {
                 Card card = hand.getCard(i);
                 Hand newHand = new Hand();
                 newHand.addCard(card);
+                newHand.addCard(CardDeck.getInstance().drawCard());
                 addHand(newHand);
             }
             this.money -= initialBet;

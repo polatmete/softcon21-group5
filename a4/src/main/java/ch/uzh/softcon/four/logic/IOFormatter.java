@@ -1,5 +1,8 @@
 package ch.uzh.softcon.four.logic;
 
+import ch.uzh.softcon.four.card.Card;
+import ch.uzh.softcon.four.card.CardDeck;
+import ch.uzh.softcon.four.card.Hand;
 import ch.uzh.softcon.four.exceptions.card.CardHiddenException;
 import ch.uzh.softcon.four.exceptions.card.NullCardException;
 import ch.uzh.softcon.four.exceptions.hand.NullHandException;
@@ -14,34 +17,74 @@ public class IOFormatter {
         // If table has to be printed generate table
         if (printTable) {
             out.append("""
-                    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-                    ┃ ┌───┐   [0] Stay                                     ┌───┐ ┃
-                    ┃ │ X │   [1] Hit           Dealer                     │133│ ┃
-                    ┃ └───┘   [2] Split         XX  XX                     └───┘ ┃
-                    ┃                                                            ┃
-                    """)
-                    .append(moneyRow())
-                    .append(nameRow())
-                    .append(cardRows())
-                    .append("""
-                    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-                    """);
+            ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+            ┃ ┌───┐   [0] Stay                                     ┌───┐ ┃
+            ┃ │ X │   [1] Hit           Dealer:                    │""").append(deckAmount()).append("│ ┃\n").append("""
+            ┃ └───┘   [2] Split \040""").append(dealerCards()).append("              └───┘ ┃\n").append("""
+            ┃                                                            ┃
+            """)
+            .append(moneyRow())
+            .append(nameRow())
+            .append(cardRows())
+            .append("""
+            ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+            """);
         }
 
         out.append(textAfterTable);
         return out.toString();
     }
 
-    public static String formatErrorMessage(String errorMessage) { // Color the error messages in red
-        final String BRIGHT_RED = "\u001B[91m";
-        final String RESET = "\u001B[0m";
-        return BRIGHT_RED + errorMessage + RESET;
+    private static String deckAmount() {
+        StringBuilder row = new StringBuilder();
+        float sideLength = (3 - (float)String.valueOf(CardDeck.getInstance().size()).length()) / 2;
+
+        row.append(" ".repeat((int)Math.ceil(sideLength)));
+        row.append(CardDeck.getInstance().size());
+        row.append(" ".repeat((int)Math.floor(sideLength)));
+
+        return row.toString();
     }
 
-    //TODO: dealer
     private static String dealerCards() {
+        Hand hand = new Hand();
+        try {
+            hand = Game.getDealer().getHand(0);
+        } catch (NullHandException e) {System.err.println(e.getMessage());}
         StringBuilder row = new StringBuilder();
-        row.append(" ");
+        float sideLength = (float) (10.5 - 1.5 * hand.size());
+        if (hand.size() == 0) {
+            sideLength = 10;
+        }
+        for (int i = 0; i < hand.size(); i++) {
+            try {
+                if (hand.getCard(i).getRank().getValue() > 9) {
+                    sideLength -= 0.5;
+                }
+            } catch (CardHiddenException | NullCardException e) {/**/}
+        }
+
+        row.append(" ".repeat((int)Math.ceil(sideLength)));
+        for (int i = 0; i < hand.size(); i++) {
+            try {
+                Card card = hand.getCard(i);
+                if (card.getRank().getValue() == 1) {
+                    row.append("A");
+                } else {
+                    row.append(card.getRank().getValue());
+                }
+                row.append(card.getSuit().getLetter());
+            } catch (CardHiddenException e) {
+                row.append("XX");
+            } catch (NullCardException e) {
+                row.append(" ".repeat(2));
+            }
+            if (i < hand.size() - 1) {
+                row.append(" ");
+            }
+        }
+        row.append(" ".repeat((int)Math.floor(sideLength)));
+
         return row.toString();
     }
 
@@ -101,7 +144,6 @@ public class IOFormatter {
         int i = 0;
         StringBuilder row = new StringBuilder();
         while (i < Math.max(3, mostCardsOnHand)) {
-
             row.append("┃");
             for (int j = 0; j < Game.getPlayers().length; j++) {
                 if (Game.getPlayers()[j] != null) {
@@ -116,9 +158,7 @@ public class IOFormatter {
                     }
                 }
             }
-            row.append("┃");
-            //if (i < Math.max(3, mostCardsOnHand) - 1)
-            row.append("\n");
+            row.append("┃\n");
 
             i++;
         }
@@ -126,24 +166,35 @@ public class IOFormatter {
     }
 
     private static void appendName(StringBuilder row, String playerName) {
-        row.append(" ".repeat((int)Math.ceil((float)(9 - playerName.length()) / 2)));
+        float sideLength = (9 - (float)playerName.length()) / 2;
+        row.append(" ".repeat((int)Math.ceil(sideLength)));
         row.append(playerName).append(":");
-        row.append(" ".repeat((int)Math.floor((float)(9 - playerName.length()) / 2)));
+        row.append(" ".repeat((int)Math.floor(sideLength)));
     }
 
     private static void appendBalance(StringBuilder row, int balance) {
-        row.append(" ".repeat((int)Math.ceil((float)(9 - String.valueOf(balance).length()) / 2)));
+        float sideLength = (9 - (float)String.valueOf(balance).length()) / 2;
+        row.append(" ".repeat((int)Math.ceil(sideLength)));
         row.append("$").append(balance);
-        row.append(" ".repeat((int)Math.floor((float)(9 - String.valueOf(balance).length()) / 2)));
+        row.append(" ".repeat((int)Math.floor(sideLength)));
     }
-    //  1         2         3         4
-    //5-2-5 , 3.5-5-3.5 , 2-8-2 , 0.5-11-0.5
+
     private static void appendCards(StringBuilder row, int cardIdx, Player p) {
-        row.append(" ".repeat((int)Math.ceil(6.5 - 1.5 * p.amountHands())));
+        float sideLength = (float) (6.5 - 1.5 * p.amountHands());
+
+        row.append(" ".repeat((int)Math.ceil(sideLength)));
         for (int i = 0; i < p.amountHands(); i++) {
             try {
-                row.append(p.getHand(i).getCard(cardIdx).getRank().getValue());
-                row.append(p.getHand(i).getCard(cardIdx).getSuit().getLetter());
+                Card card = p.getHand(i).getCard(cardIdx);
+                if (card.getRank().getValue() > 9) {
+                    row.setLength(row.length() - 1);
+                }
+                if (card.getRank().getValue() == 1) {
+                    row.append("A");
+                } else {
+                    row.append(card.getRank().getValue());
+                }
+                row.append(card.getSuit().getLetter());
             } catch (NullCardException | NullHandException | CardHiddenException e){
                 row.append(" ".repeat(2));
             }
@@ -151,6 +202,6 @@ public class IOFormatter {
                 row.append(" ");
             }
         }
-        row.append(" ".repeat((int)Math.floor(6.5 - 1.5 * p.amountHands())));
+        row.append(" ".repeat((int)Math.floor(sideLength)));
     }
 }
