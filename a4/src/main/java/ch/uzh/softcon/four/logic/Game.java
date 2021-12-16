@@ -28,9 +28,9 @@ public class Game {
             try {
                 String tmp = scn.nextLine();
                 difficulty = Integer.parseInt(tmp);  // Not nice but at least we can catch wrong inputs from the user
-                if (difficulty < 1 || difficulty > 3) System.out.println(IOFormatter.formatErrorMessage("Could not recognize your input. Please enter a number between 1 and 3.\n"));
+                if (difficulty < 1 || difficulty > 3) System.err.println("Could not recognize your input. Please enter a number between 1 and 3.\n");
             } catch (Exception ex) {
-                System.out.println(IOFormatter.formatErrorMessage("Could not recognize your input. Please enter a number between 1 and 3.\n"));
+                System.err.println("Could not recognize your input. Please enter a number between 1 and 3.\n");
                 difficulty = 0;
             }
         } while (difficulty < 1 || difficulty > 3);
@@ -55,9 +55,9 @@ public class Game {
             try {
                 String tmp = scn.nextLine();
                 countPlayers = Integer.parseInt(tmp); // Not nice but at least we can catch wrong inputs from the user
-                if (countPlayers < 0 || countPlayers > maxPlayers) System.out.println(IOFormatter.formatErrorMessage("Could not recognize your input. Please enter a number between 0 and " + maxPlayers + ".\n"));
+                if (countPlayers < 0 || countPlayers > maxPlayers) System.err.println("Could not recognize your input. Please enter a number between 0 and " + maxPlayers + ".\n");
             } catch (Exception ex) {
-                System.out.println(IOFormatter.formatErrorMessage("Could not recognize your input. Please enter a number between 0 and " + maxPlayers + ".\n"));
+                System.err.println("Could not recognize your input. Please enter a number between 0 and " + maxPlayers + ".\n");
                 countPlayers = -1;
             }
         } while (countPlayers < 0 || countPlayers > maxPlayers);
@@ -111,7 +111,7 @@ public class Game {
                     bet = Integer.parseInt(tmpInput);
                 } catch (Exception ex) { // If input is no int then ask player again for input
                     retry = true;
-                    System.out.println(IOFormatter.formatErrorMessage("Could not recognize your input. Please try again."));
+                    System.err.println("Could not recognize your input. Please try again.");
                 }
             }
         } while (retry);
@@ -120,7 +120,7 @@ public class Game {
             players[playerIndex].bet(bet);
             bets.put(players[playerIndex], bet); // Save bets for later
         } catch (Exception ex) { // If bet could not be made (e.g. to less money)
-            System.out.println(IOFormatter.formatErrorMessage("Your bet could not be placed: " + ex.getMessage() + " Please try again."));
+            System.err.println("Your bet could not be placed: " + ex.getMessage() + " Please try again.");
             takeBets(playerIndex);
         }
     }
@@ -150,10 +150,10 @@ public class Game {
                     return;
                 }
                 catch (Exception ex) {
-                    System.out.println(IOFormatter.formatErrorMessage("Your hand could not be split: " + ex.getMessage() + " Please try again."));
+                    System.err.println("Your hand could not be split: " + ex.getMessage() + " Please try again.");
                 }
             } else if (!move.equals("0")) { // We don't have to check for 0 since 0 ist just skip. Instead, we check whether input is something invalid. If so show error message
-                System.out.println(IOFormatter.formatErrorMessage("Could not recognize your input. Please enter a number between 0 and 2."));
+                System.err.println("Could not recognize your input. Please enter a number between 0 and 2.");
             }
         } while (!move.equals("0")); // While input not 0 (hit) ask for input
         System.out.println(); // New line for better design
@@ -164,7 +164,7 @@ public class Game {
             dealer.getHand(0).reveal();
             while (dealer.getHand(0).points() < 17) dealer.giveCard(deck.drawCard());
         } catch (NullHandException ignored) { }
-        System.out.println(IOFormatter.formatOutput("\nTurn: Dealer", true, "This round has end. Evaluation:\n"));
+        System.out.println(IOFormatter.formatOutput("\nTurn: Dealer", true, "This round has ended. Evaluation:\n"));
     }
 
     private static void distributeCards(int playerIndex, int handIndex) { // Helper method to give cards
@@ -228,5 +228,9 @@ public class Game {
 
     protected static Player[] getPlayers() {
         return players;
+    }
+
+    protected static Dealer getDealer() {
+        return dealer;
     }
 }

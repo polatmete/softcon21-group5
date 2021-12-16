@@ -1,26 +1,17 @@
 package ch.uzh.softcon.four.card;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Stack;
 
 public class CardDeck {
 
     private final Stack<Card> cards;
+    private int threshold = 0;
     private static CardDeck instance;
-
-    // TODO: Set useful value!
-    private final int THRESHOLD = 26;
     
     private CardDeck() {
         this.cards = new Stack<>();
-    }
-
-    public void fillDeck(int count) {
-        for (int i = 0; i < count; i++) {
-            addSet(new CardSet());
-        }
-        shuffle();
     }
 
     public static synchronized CardDeck getInstance() {
@@ -29,21 +20,29 @@ public class CardDeck {
         return instance;
     }
 
-    private void addSet(CardSet cardSet) {
-        for (int i = 0; i < cardSet.size(); i++) {
-            this.cards.push(cardSet.drawCards()[i]);
+    public void fillDeck(int amountSet) {
+        for (int i = 0; i < amountSet; i++) {
+            addSet(new CardSet());
         }
+        shuffle();
+        threshold = amountSet * 26;
     }
 
     public Card drawCard() {
         Card poppedCard = cards.pop();
-        if (this.cards.size() < THRESHOLD)
+        if (this.cards.size() <= threshold) {
             addSet(new CardSet());
+            shuffle();
+        }
         return poppedCard;
     }
 
     public int size() {
         return this.cards.size();
+    }
+
+    private void addSet(CardSet cardSet) {
+        this.cards.addAll(Arrays.asList(cardSet.drawCards()));
     }
 
     private void shuffle() {

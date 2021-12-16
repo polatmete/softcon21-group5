@@ -38,9 +38,7 @@ public class Hand {
             card.reveal();
             try {
                 this.points += card.getRank().getValue();
-            } catch (CardHiddenException e) {
-                //nothing
-            }
+            } catch (CardHiddenException e) {/**/}
         }
     }
 
@@ -48,16 +46,7 @@ public class Hand {
         return this.cards.size();
     }
 
-    //TODO getter?
     public int points() {
         return this.points;
-    }
-
-    @Override
-    public String toString() {
-        return "Hand{" +
-                "cards=" + cards +
-                ", points=" + points +
-                '}';
     }
 }

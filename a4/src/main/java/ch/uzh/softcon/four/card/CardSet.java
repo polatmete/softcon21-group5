@@ -18,11 +18,11 @@ public class CardSet {
         }
     }
 
-    public Card[] drawCards() {
-        return this.cards;
-    }
-
     public int size() {
         return this.cards.length;
+    }
+
+    protected Card[] drawCards() {
+        return this.cards;
     }
 }

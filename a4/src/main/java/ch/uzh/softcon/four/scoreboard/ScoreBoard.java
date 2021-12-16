@@ -51,7 +51,7 @@ public class ScoreBoard {
 
             pw.close();
         } catch (IOException e) {
-            System.out.println(IOFormatter.formatErrorMessage("ScoreBoard ERROR."));
+            System.err.println("ScoreBoard ERROR.");
         }
     }
 
@@ -73,7 +73,7 @@ public class ScoreBoard {
             }
             csvReader.close();
         } catch (IOException e) {
-            System.out.println(IOFormatter.formatErrorMessage("ScoreBoard ERROR."));
+            System.err.println("ScoreBoard ERROR.");
         }
     }
 
