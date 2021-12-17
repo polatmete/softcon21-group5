@@ -1,6 +1,5 @@
 package ch.uzh.softcon.four.scoreboard;
 
-import ch.uzh.softcon.four.logic.IOFormatter;
 import ch.uzh.softcon.four.player.Player;
 
 import java.io.*;
