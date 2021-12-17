@@ -55,7 +55,7 @@ public class ScoreBoard {
         }
     }
 
-    private static void loadScore() {
+    private static String loadScore() {
 
         try {
             BufferedReader csvReader = new BufferedReader(new FileReader("a4/resources/scoreBoard.csv"));
@@ -72,8 +72,12 @@ public class ScoreBoard {
                 i++;
             }
             csvReader.close();
+            return "Success";
+        } catch (FileNotFoundException e) {
+            return "ScoreBoard is empty.";
         } catch (IOException e) {
             System.err.println("ScoreBoard ERROR.");
+            return "Error";
         }
     }
 
