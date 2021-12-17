@@ -83,8 +83,7 @@ public class ScoreBoard {
     public static void printScore() {
         loadScore();
 
-        System.out.println("**Scoreboard**");
-        System.out.println("--------------");
+        System.out.println("===== Hall of fame =====");
         int rank = 1;
         int sizeOfLongestName = sizeOfLongestName();
         int lengthOfLargestRank = String.valueOf(scoreBoardSize).length();
