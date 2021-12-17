@@ -1,6 +1,5 @@
 package ch.uzh.softcon.four.scoreboard;
 
-import ch.uzh.softcon.four.logic.IOFormatter;
 import ch.uzh.softcon.four.player.Player;
 
 import java.io.*;
@@ -37,7 +36,7 @@ public class ScoreBoard {
     private static void updateCSV(String fileName) {
 
         try {
-            File file = new File("a4/resources/" + fileName); //if file doesn't exist it'll create it
+            File file = new File(path() + fileName); //if file doesn't exist it'll create it
             FileWriter fw = new FileWriter(file);
             PrintWriter pw = new PrintWriter(fw);
 
@@ -55,10 +54,10 @@ public class ScoreBoard {
         }
     }
 
-    public static void loadScore() {
+    private static String loadScore() {
 
         try {
-            BufferedReader csvReader = new BufferedReader(new FileReader("a4/resources/scoreBoard.csv"));
+            BufferedReader csvReader = new BufferedReader(new FileReader(path() + "scoreBoard.csv"));
             String line = csvReader.readLine();
             int i = 0;
             while (line != null) {
@@ -72,15 +71,19 @@ public class ScoreBoard {
                 i++;
             }
             csvReader.close();
+            return "Success";
+        } catch (FileNotFoundException e) {
+            return "ScoreBoard is empty.";
         } catch (IOException e) {
             System.err.println("ScoreBoard ERROR.");
+            return "Error";
         }
     }
 
     public static void printScore() {
+        loadScore();
 
-        System.out.println("**Scoreboard**");
-        System.out.println("--------------");
+        System.out.println("===== Hall of fame =====");
         int rank = 1;
         int sizeOfLongestName = sizeOfLongestName();
         int lengthOfLargestRank = String.valueOf(scoreBoardSize).length();
@@ -114,5 +117,13 @@ public class ScoreBoard {
     public static void resetScoreBoard() {
         scoreBoard = new ScoreBoardEntry[scoreBoardSize];
         updateCSV("scoreBoard.csv");
+    }
+
+    private static String path() {
+        if (new File("a4/").exists()) {
+            return "a4/resources/";
+        } else {
+            return "resources/";
+        }
     }
 }

@@ -1,6 +1,9 @@
 package ch.uzh.softcon.four.logic;
 
 import ch.uzh.softcon.four.card.CardDeck;
+import ch.uzh.softcon.four.commands.Command;
+import ch.uzh.softcon.four.commands.CommandPrintScore;
+import ch.uzh.softcon.four.commands.CommandSaveScore;
 import ch.uzh.softcon.four.exceptions.hand.NoSuchHandException;
 import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 import ch.uzh.softcon.four.player.Dealer;
@@ -16,10 +19,16 @@ public class Game {
     private static CardDeck deck;
     private static Map<Player, Integer> bets = new HashMap<>();
     private static final Scanner scn = new Scanner(System.in);
+    private static Command printScore;
+    private static Command saveScore;
 
     public static void initialize() { // Set difficulty and players, initialize some variables
+
+        printScore = new CommandPrintScore();
+        saveScore = new CommandSaveScore();
+
         System.out.println("Welcome to Black Jack!");
-        ScoreBoard.printScore();
+        printScore.execute(null);
 
         // Get difficulty level of game and map it to # sets used for deck
         int difficulty;
@@ -102,7 +111,7 @@ public class Game {
             System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName(), true, "Please enter your bet or type \"leave\" to leave: "));
             String tmpInput = scn.nextLine();
             if (tmpInput.equals("leave")) { // Leave when user enters "leave"
-                ScoreBoard.saveScore(players[playerIndex]); // Check whether player made it in the scoreboard
+                saveScore.execute(players[playerIndex]); // Check whether player made it in the scoreboard
                 players[playerIndex] = null;
                 System.out.println(); // New line for better design
                 return;
@@ -215,7 +224,7 @@ public class Game {
             else { // Kick player with no money
                 if (players[i] != null) {
                     System.out.println(players[i].getName() + " had no money anymore and was kicked out.");
-                    ScoreBoard.saveScore(players[i]); // Check whether player made it in the scoreboard
+                    saveScore.execute(players[i]); // Check whether player made it in the scoreboard
                 }
                 players[i] = null;
                 ++availableSeats;
