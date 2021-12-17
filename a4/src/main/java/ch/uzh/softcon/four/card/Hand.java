@@ -27,9 +27,7 @@ public class Hand {
         this.cards.add(card);
         try {
             this.points += card.getRank().getValue();
-        } catch (CardHiddenException e) {
-            //nothing
-        }
+        } catch (CardHiddenException e) {/* Don't do anything */}
     }
 
     public void reveal() {
@@ -38,7 +36,7 @@ public class Hand {
             card.reveal();
             try {
                 this.points += card.getRank().getValue();
-            } catch (CardHiddenException e) {/**/}
+            } catch (CardHiddenException e) {/* Cannot happen */}
         }
     }
 

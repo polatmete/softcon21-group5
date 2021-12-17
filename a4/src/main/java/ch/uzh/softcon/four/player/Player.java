@@ -65,9 +65,7 @@ public class Player extends PlayerSubject {
                 addHand(newHand);
             }
             this.money -= initialBet;
-        } catch (CardHiddenException | NullCardException e) {
-            System.err.println(e.getMessage());
-        }
+        } catch (CardHiddenException | NullCardException e) {/* Cannot happen */}
     }
 
     public void pay(int money) {

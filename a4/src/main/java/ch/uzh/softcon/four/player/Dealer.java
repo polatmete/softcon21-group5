@@ -15,8 +15,6 @@ public class Dealer extends PlayerSubject {
                 card.hide();
             }
             super.getHand(0).addCard(card);
-        } catch (NullHandException e) {
-            System.err.println(e.getMessage());
-        }
+        } catch (NullHandException e) {/* Cannot happen */}
     }
 }
