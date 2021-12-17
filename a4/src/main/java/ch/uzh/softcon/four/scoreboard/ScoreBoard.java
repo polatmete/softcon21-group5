@@ -37,7 +37,7 @@ public class ScoreBoard {
     private static void updateCSV(String fileName) {
 
         try {
-            File file = new File("a4/resources/" + fileName); //if file doesn't exist it'll create it
+            File file = new File(path() + fileName); //if file doesn't exist it'll create it
             FileWriter fw = new FileWriter(file);
             PrintWriter pw = new PrintWriter(fw);
 
@@ -58,7 +58,7 @@ public class ScoreBoard {
     private static String loadScore() {
 
         try {
-            BufferedReader csvReader = new BufferedReader(new FileReader("a4/resources/scoreBoard.csv"));
+            BufferedReader csvReader = new BufferedReader(new FileReader(path() + "scoreBoard.csv"));
             String line = csvReader.readLine();
             int i = 0;
             while (line != null) {
@@ -119,5 +119,13 @@ public class ScoreBoard {
     public static void resetScoreBoard() {
         scoreBoard = new ScoreBoardEntry[scoreBoardSize];
         updateCSV("scoreBoard.csv");
+    }
+
+    private static String path() {
+        if (new File("a4/").exists()) {
+            return "a4/resources/";
+        } else {
+            return "resources/";
+        }
     }
 }
