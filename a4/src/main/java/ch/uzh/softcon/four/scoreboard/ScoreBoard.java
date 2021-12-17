@@ -55,7 +55,7 @@ public class ScoreBoard {
         }
     }
 
-    public static void loadScore() {
+    private static void loadScore() {
 
         try {
             BufferedReader csvReader = new BufferedReader(new FileReader("a4/resources/scoreBoard.csv"));
@@ -78,6 +78,7 @@ public class ScoreBoard {
     }
 
     public static void printScore() {
+        loadScore();
 
         System.out.println("**Scoreboard**");
         System.out.println("--------------");
