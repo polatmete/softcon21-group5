@@ -1,9 +1,13 @@
 package ch.uzh.softcon.four.logic;
 
+import ch.uzh.softcon.four.card.Card;
 import ch.uzh.softcon.four.card.CardDeck;
+import ch.uzh.softcon.four.card.Hand;
 import ch.uzh.softcon.four.commands.Command;
 import ch.uzh.softcon.four.commands.CommandPrintScore;
 import ch.uzh.softcon.four.commands.CommandSaveScore;
+import ch.uzh.softcon.four.exceptions.card.CardHiddenException;
+import ch.uzh.softcon.four.exceptions.card.NullCardException;
 import ch.uzh.softcon.four.exceptions.hand.NoSuchHandException;
 import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 import ch.uzh.softcon.four.player.Dealer;
@@ -145,11 +149,20 @@ public class Game {
             if (move.equals("1")) {
                 distributeCards(playerIndex, handIndex);
                 try {
-                    if (players[playerIndex].getHand(handIndex).points() >= 21) { // Auto exit when hand >= 21 points
-                        System.out.println(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + " (" + (handIndex + 1) + ". hand)", true, "You got " + players[playerIndex].getHand(handIndex).points() + " points on this hand and therefore cannot hit or split any more."));
+                    Hand hand = players[playerIndex].getHand(handIndex);
+                    int points = hand.points();
+                    //Aces can be either worth 1 or 11 points. When the player decides every ace on his hand is worth 1,
+                    //we need to subtract 10 of the total points for each ace. If he counts it as 11, it doesn't matter.
+                    for (int i = 0; i < hand.size(); i++) {
+                        if (hand.getCard(i).getRank() == Card.Rank.ACE) {
+                            points -= 10;
+                        }
+                    }
+                    if (points >= 21) { // Auto exit when hand >= 21 points
+                        System.out.println(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + " (" + (handIndex + 1) + ". hand)", true, "You got " + points + " points on this hand and therefore cannot hit or split any more."));
                         break;
                     }
-                } catch (NullHandException ignored) { }
+                } catch (NullHandException | NullCardException | CardHiddenException ignored) {/* */}
             } else if (move.equals("2")) {
                 try {
                     players[playerIndex].splitHand(players[playerIndex].getHand(handIndex));
@@ -171,8 +184,18 @@ public class Game {
     public static void playDealer() { // Dealer magic. First reveal both cards, then as long as dealer hands < 17 draw card
         try {
             dealer.getHand(0).reveal();
-            while (dealer.getHand(0).points() < 17) dealer.giveCard(deck.drawCard());
-        } catch (NullHandException ignored) { }
+            int points = dealer.getHand(0).points();
+            while (points < 17) {
+                Card drawnCard = deck.drawCard();
+                dealer.giveCard(drawnCard);
+                points += drawnCard.getRank().getValue();
+                for (int j = 0; j < dealer.getHand(0).size(); j++) {
+                    if (points > 21 && drawnCard.getRank() == Card.Rank.ACE) {
+                        points -= 10;
+                    }
+                }
+            }
+        } catch (NullHandException | CardHiddenException ignored) { }
         System.out.println(IOFormatter.formatOutput("\nTurn: Dealer", true, "This round has ended. Evaluation:\n"));
     }
 
@@ -193,6 +216,11 @@ public class Game {
                 int winAmount = 0;
                 for (int i = 0; i < p.amountHands(); ++i) {
                     int playerHandPoints = p.getHand(i).points(); // Get points for each hand of player
+                    for (int j = 0; j < p.getHand(i).size(); j++) {
+                        if (playerHandPoints > 21 && p.getHand(i).getCard(j).getRank() == Card.Rank.ACE) {
+                            playerHandPoints -= 10;
+                        }
+                    }
                     if (playerHandPoints > 21) playerHandPoints = -2; // If hand points > 21 set it to -2. This makes comparing later on much easier. -2 because if dealer and player gets > 21 player still looses
 
                     // Compare points
@@ -211,7 +239,7 @@ public class Game {
                 }
             }
             System.out.println();
-        } catch (NullHandException ignored) { }
+        } catch (NullHandException | NullCardException | CardHiddenException ignored) { }
     }
 
     public static void conclude() { // Clear hands, kick out players without money, allow new players to join

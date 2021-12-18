@@ -61,14 +61,14 @@ public class IOFormatter {
                 if (hand.getCard(i).getRank().getValue() > 9) {
                     sideLength -= 0.5;
                 }
-            } catch (CardHiddenException | NullCardException e) {/**/}
+            } catch (CardHiddenException | NullCardException e) {/* */}
         }
 
         row.append(" ".repeat((int)Math.ceil(sideLength)));
         for (int i = 0; i < hand.size(); i++) {
             try {
                 Card card = hand.getCard(i);
-                if (card.getRank().getValue() == 1) {
+                if (card.getRank().getValue() == 11) {
                     row.append("A");
                 } else {
                     row.append(card.getRank().getValue());
@@ -174,9 +174,9 @@ public class IOFormatter {
 
     private static void appendBalance(StringBuilder row, int balance) {
         float sideLength = (9 - (float)String.valueOf(balance).length()) / 2;
-        row.append(" ".repeat((int)Math.ceil(sideLength)));
-        row.append("$").append(balance);
         row.append(" ".repeat((int)Math.floor(sideLength)));
+        row.append("$").append(balance);
+        row.append(" ".repeat((int)Math.ceil(sideLength)));
     }
 
     private static void appendCards(StringBuilder row, int cardIdx, Player p) {
@@ -186,10 +186,10 @@ public class IOFormatter {
         for (int i = 0; i < p.amountHands(); i++) {
             try {
                 Card card = p.getHand(i).getCard(cardIdx);
-                if (card.getRank().getValue() > 9) {
+                if (card.getRank().getValue() == 10) {
                     row.setLength(row.length() - 1);
                 }
-                if (card.getRank().getValue() == 1) {
+                if (card.getRank().getValue() == 11) {
                     row.append("A");
                 } else {
                     row.append(card.getRank().getValue());
