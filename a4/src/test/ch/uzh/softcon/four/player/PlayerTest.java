@@ -6,6 +6,7 @@ import ch.uzh.softcon.four.card.Hand;
 import ch.uzh.softcon.four.exceptions.hand.NoSuchHandException;
 import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 import ch.uzh.softcon.four.exceptions.player.BrokeException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,19 +15,23 @@ import static ch.uzh.softcon.four.card.Card.*;
 
 class PlayerTest {
 
-    CardDeck deckInstance;
+    static CardDeck deckInstance;
     Player testPlayer;
     Hand testHand;
-    Card testCard;
+    static Card testCard;
+
+    @BeforeAll
+    static void beforeAll() {
+        deckInstance = CardDeck.getInstance();
+        deckInstance.fillDeck(1);
+        testCard = new Card(Suit.HEARTS, Rank.ACE);
+    }
 
     @BeforeEach
     void setUp() {
-        deckInstance = CardDeck.getInstance();
-        deckInstance.fillDeck(1);
         testPlayer = new Player("testSubject");
         testHand = testPlayer.getHands().get(0);
         testHand.addCard(new Card(Suit.DIAMONDS, Rank.ACE));
-        testCard = new Card(Suit.HEARTS, Rank.ACE);
     }
 
     @Test
