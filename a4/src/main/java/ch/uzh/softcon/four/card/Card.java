@@ -88,7 +88,7 @@ public class Card {
      * The card's rank.
      */
     public enum Rank {
-        ACE(1),
+        ACE(11),
         TWO(2),
         THREE(3),
         FOUR(4),
