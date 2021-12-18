@@ -2,10 +2,22 @@ package ch.uzh.softcon.four.card;
 
 import ch.uzh.softcon.four.exceptions.card.CardHiddenException;
 
+/**
+ * A BlackJack card.
+ */
 public class Card {
 
+    /**
+     * The card's assigned suit.
+     */
     private final Suit suit;
+    /**
+     * The card's assigned rank.
+     */
     private final Rank rank;
+    /**
+     * Whether the card is hidden.
+     */
     private boolean hidden;
 
     public Card(Suit suit, Rank rank) {
@@ -14,6 +26,11 @@ public class Card {
         this.hidden = false;
     }
 
+    /**
+     * Get the card's suit.
+     * @return the {@code Card.Suit} of the {@code Card}.
+     * @throws CardHiddenException if the card may not be seen.
+     */
     public Suit getSuit() throws CardHiddenException {
         if (this.hidden) {
             throw new CardHiddenException();
@@ -21,6 +38,11 @@ public class Card {
         return this.suit;
     }
 
+    /**
+     * Get the card's rank.
+     * @return the {@code Card.Rank} of the {@code Card}.
+     * @throws CardHiddenException if the card may not be seen.
+     */
     public Rank getRank() throws CardHiddenException {
         if (this.hidden) {
             throw new CardHiddenException();
@@ -28,14 +50,23 @@ public class Card {
         return this.rank;
     }
 
+    /**
+     * Hide the card's contents.
+     */
     public void hide() {
         this.hidden = true;
     }
 
+    /**
+     * Reveal the card's contents.
+     */
     protected void reveal() {
         this.hidden = false;
     }
 
+    /**
+     * The card's suit.
+     */
     public enum Suit {
         SPADES('S'),
         HEARTS('H'),
@@ -53,6 +84,9 @@ public class Card {
         }
     }
 
+    /**
+     * The card's rank.
+     */
     public enum Rank {
         ACE(1),
         TWO(2),
@@ -79,12 +113,12 @@ public class Card {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Card{" +
-                "suit=" + suit +
-                ", rank=" + rank +
-                ", hidden=" + hidden +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Card{" +
+//                "suit=" + suit +
+//                ", rank=" + rank +
+//                ", hidden=" + hidden +
+//                '}';
+//    }
 }

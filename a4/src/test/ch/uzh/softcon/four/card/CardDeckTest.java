@@ -1,28 +1,38 @@
 package ch.uzh.softcon.four.card;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardDeckTest {
 
-    @Test
-    void getInstance() {
+    private CardDeck deck;
 
+    @BeforeEach
+    void setUp() {
+        deck = CardDeck.getInstance();
     }
 
     @Test
-    void addSet() {
-
+    void getInstanceIsNonNullCardDeckInstance() {
+        assertEquals(deck.getClass(), CardDeck.class, "Deck is not an instance of CardDeck.");
+        assertNotNull(deck, "Deck is null, why though?");
     }
 
     @Test
-    void shuffle() {
-
+    void drawCardReturnsCardFromDeck() {
+        assertNotNull(deck.drawCard(), "Wrong card.");
     }
 
-    @Test
-    void size() {
+//    @Test
+//    void drawCardOnThresholdRepopulatesDeck() {
+//        // TODO: Create new deck, draw cards until threshold is reached, compare before and after?
+//    }
 
+    @Test
+    void sizeOfDeckIsCorrect() {
+        deck.fillDeck(3);
+        assertEquals(156, deck.size(), "Deck size is wrong.");
     }
 }
