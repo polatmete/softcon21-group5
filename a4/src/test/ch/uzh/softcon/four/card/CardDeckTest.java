@@ -3,6 +3,8 @@ package ch.uzh.softcon.four.card;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardDeckTest {
@@ -11,6 +13,13 @@ class CardDeckTest {
 
     @BeforeEach
     void setUp() {
+        try {
+            Field cardDeckInstance = CardDeck.getInstance().getClass().getDeclaredField("instance");
+            cardDeckInstance.setAccessible(true);
+            cardDeckInstance.set(deck, null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail(e.getMessage());
+        }
         deck = CardDeck.getInstance();
     }
 
@@ -22,6 +31,7 @@ class CardDeckTest {
 
     @Test
     void drawCardReturnsCardFromDeck() {
+        deck.fillDeck(3);
         assertNotNull(deck.drawCard(), "Wrong card.");
     }
 
