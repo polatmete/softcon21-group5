@@ -1,4 +1,4 @@
-package ch.uzh.softcon.four.scoreboard;
+package ch.uzh.softcon.four.card.scoreboard;
 
 import ch.uzh.softcon.four.player.Player;
 

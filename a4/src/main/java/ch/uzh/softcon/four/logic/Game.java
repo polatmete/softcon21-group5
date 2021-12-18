@@ -8,7 +8,7 @@ import ch.uzh.softcon.four.exceptions.hand.NoSuchHandException;
 import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 import ch.uzh.softcon.four.player.Dealer;
 import ch.uzh.softcon.four.player.Player;
-import ch.uzh.softcon.four.scoreboard.ScoreBoard;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
