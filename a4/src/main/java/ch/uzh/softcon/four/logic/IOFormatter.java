@@ -168,6 +168,9 @@ public class IOFormatter {
     private static void appendName(StringBuilder row, String playerName) {
         float sideLength = (9 - (float)playerName.length()) / 2;
         row.append(" ".repeat((int)Math.ceil(sideLength)));
+        if (playerName.equals("maettuu")) {
+            playerName = "\u001B[94mmaettuu\u001B[0m";
+        }
         row.append(playerName).append(":");
         row.append(" ".repeat((int)Math.floor(sideLength)));
     }

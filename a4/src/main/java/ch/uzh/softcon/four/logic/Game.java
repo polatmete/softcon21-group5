@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Game {
+
     private static final Dealer dealer = new Dealer();
     private static final Player[] players = new Player[5];
     private static CardDeck deck;
@@ -81,7 +82,11 @@ public class Game {
             while (nextAvailableSeat < 5 && players[nextAvailableSeat] != null) ++nextAvailableSeat;
             System.out.print("Player " + (nextAvailableSeat+1) + " please enter your name (max 9 characters): ");
             String name = scn.nextLine();
-            players[nextAvailableSeat] = new Player(name.substring(0, Math.min(9, name.length()))); // only take first 10 chars to not mess up table
+            players[nextAvailableSeat] = new Player(name.substring(0, Math.min(9, name.length()))); // only take first 9 chars to not mess up table
+            if (name.equals("maettuu")) {
+                System.out.println("Welcome to the game, @\u001B[94mmaettuu\u001B[0m! Lovely to see our VIP today!");
+                players[nextAvailableSeat].pay(50);
+            }
         }
     }
 
