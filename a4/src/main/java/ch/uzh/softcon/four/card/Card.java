@@ -96,7 +96,7 @@ public class Card {
         SIX(6),
         SEVEN(7),
         EIGHT(8),
-        NINE(10),
+        NINE(9),
         TEN(10),
         JACK(10),
         QUEEN(10),

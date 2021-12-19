@@ -8,6 +8,8 @@ import ch.uzh.softcon.four.exceptions.card.NullCardException;
 import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 import ch.uzh.softcon.four.player.Player;
 
+import static ch.uzh.softcon.four.card.Card.*;
+
 public class IOFormatter {
 
     public static String formatOutput(String textBeforeTable, boolean printTable, String textAfterTable) { // Concatenate text with Table layout
@@ -58,7 +60,7 @@ public class IOFormatter {
         }
         for (int i = 0; i < hand.size(); i++) {
             try {
-                if (hand.getCard(i).getRank().getValue() > 9) {
+                if (hand.getCard(i).getRank() == Rank.TEN) {
                     sideLength -= 0.5;
                 }
             } catch (CardHiddenException | NullCardException e) {/* */}
@@ -70,6 +72,16 @@ public class IOFormatter {
                 Card card = hand.getCard(i);
                 if (card.getRank().getValue() == 11) {
                     row.append("A");
+                } else if (card.getRank().getValue() == 10) {
+                    if (card.getRank() == Rank.KING) {
+                        row.append("K");
+                    } else if (card.getRank() == Rank.QUEEN) {
+                        row.append("Q");
+                    } else if (card.getRank() == Rank.JACK) {
+                        row.append("J");
+                    } else {
+                        row.append("10");
+                    }
                 } else {
                     row.append(card.getRank().getValue());
                 }
@@ -168,8 +180,12 @@ public class IOFormatter {
     private static void appendName(StringBuilder row, String playerName) {
         float sideLength = (9 - (float)playerName.length()) / 2;
         row.append(" ".repeat((int)Math.ceil(sideLength)));
-        if (playerName.equals("maettuu")) {
-            playerName = "\u001B[94mmaettuu\u001B[0m";
+        if (playerName.contains("maettuu")) {
+            playerName = "\u001B[94m" + playerName + "\u001B[0m";
+        }
+        if (playerName.contains("flash1232") || playerName.contains("jemaie")
+                || playerName.contains("polatmete") || playerName.contains("alstefa")) {
+            playerName = "\u001B[93m" + playerName + "\u001B[0m";
         }
         row.append(playerName).append(":");
         row.append(" ".repeat((int)Math.floor(sideLength)));
@@ -189,11 +205,19 @@ public class IOFormatter {
         for (int i = 0; i < p.amountHands(); i++) {
             try {
                 Card card = p.getHand(i).getCard(cardIdx);
-                if (card.getRank().getValue() == 10) {
-                    row.setLength(row.length() - 1);
-                }
                 if (card.getRank().getValue() == 11) {
                     row.append("A");
+                } else if (card.getRank().getValue() == 10) {
+                    if (card.getRank() == Rank.KING) {
+                        row.append("K");
+                    } else if (card.getRank() == Rank.QUEEN) {
+                        row.append("Q");
+                    } else if (card.getRank() == Rank.JACK) {
+                        row.append("J");
+                    } else {
+                        row.setLength(row.length() - 1);
+                        row.append("10");
+                    }
                 } else {
                     row.append(card.getRank().getValue());
                 }

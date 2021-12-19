@@ -83,9 +83,14 @@ public class Game {
             System.out.print("Player " + (nextAvailableSeat+1) + " please enter your name (max 9 characters): ");
             String name = scn.nextLine();
             players[nextAvailableSeat] = new Player(name.substring(0, Math.min(9, name.length()))); // only take first 9 chars to not mess up table
-            if (name.equals("maettuu")) {
-                System.out.println("Welcome to the game, @\u001B[94mmaettuu\u001B[0m! Lovely to see our VIP today!");
+            if (name.contains("maettuu")) {
+                System.out.println("Welcome to the game, \u001B[94m" + name + "\u001B[0m! Lovely to see our MVP today!");
                 players[nextAvailableSeat].pay(50);
+            }
+            if (name.contains("flash1232") || name.contains("jemaie")
+                    || name.contains("polatmete") || name.contains("alstefa")) {
+                System.out.println("Welcome to the game, \u001B[93m" + name + "\u001B[0m! Lovely to see a VIP today!");
+                players[nextAvailableSeat].pay(25);
             }
         }
     }
@@ -214,6 +219,11 @@ public class Game {
         int dealerHandPoints; // Get points of dealer
         try {
             dealerHandPoints = dealer.getHand(0).points();
+            for (int i = 0; i < dealer.getHand(0).size(); i++) {
+                if (dealerHandPoints > 21 && dealer.getHand(i).getCard(i).getRank() == Card.Rank.ACE) {
+                    dealerHandPoints -= 10;
+                }
+            }
             if (dealerHandPoints > 21) dealerHandPoints = -1; // If dealers points > 21 set it to -1. This makes comparing later on much easier
             for (Player p : players) {
                 if (p == null) continue;
