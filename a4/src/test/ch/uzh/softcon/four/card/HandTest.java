@@ -46,7 +46,7 @@ class HandTest {
         testHand.addCard(testCard);
         assertEquals(0, testHand.points());
         testHand.reveal();
-        assertEquals(1, testHand.points());
+        assertEquals(11, testHand.points());
     }
 
     @Test
@@ -58,6 +58,6 @@ class HandTest {
     @Test
     void points() {
         testHand.addCard(testCard);
-        assertEquals(1, testHand.points());
+        assertEquals(11, testHand.points());
     }
 }
