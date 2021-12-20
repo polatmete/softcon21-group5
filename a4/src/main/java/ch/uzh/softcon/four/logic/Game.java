@@ -220,7 +220,7 @@ public class Game {
         try {
             dealerHandPoints = dealer.getHand(0).points();
             for (int i = 0; i < dealer.getHand(0).size(); i++) {
-                if (dealerHandPoints > 21 && dealer.getHand(i).getCard(i).getRank() == Card.Rank.ACE) {
+                if (dealerHandPoints > 21 && dealer.getHand(0).getCard(i).getRank() == Card.Rank.ACE) {
                     dealerHandPoints -= 10;
                 }
             }
