@@ -3,6 +3,9 @@ package ch.uzh.softcon.four.player;
 import ch.uzh.softcon.four.card.Card;
 import ch.uzh.softcon.four.card.CardDeck;
 import ch.uzh.softcon.four.card.Hand;
+import ch.uzh.softcon.four.exceptions.card.CardsNotEqualRankException;
+import ch.uzh.softcon.four.exceptions.hand.HandWrongSizeException;
+import ch.uzh.softcon.four.exceptions.hand.MaxHandSplitException;
 import ch.uzh.softcon.four.exceptions.hand.NoSuchHandException;
 import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 import ch.uzh.softcon.four.exceptions.player.BrokeException;
@@ -62,6 +65,52 @@ class PlayerTest {
             testPlayer.getHand(1);
 
         }, "Should not generate exceptions?!");
+
+        assertThrows(NullHandException.class, () -> {
+
+            testPlayer.splitHand(null);
+
+        },"This should throw a NullHandException!");
+
+        assertThrows(MaxHandSplitException.class, () -> {
+
+            testPlayer.getHands().add(new Hand());
+            testPlayer.getHands().add(new Hand());
+            testPlayer.splitHand(testPlayer.getHand(3));
+
+        },"This should throw a MaxHandSplitException!");
+
+        assertThrows(NoSuchHandException.class, () -> {
+
+            testPlayer.clearHands();
+            Hand anotherHand = new Hand();
+            testPlayer.splitHand(anotherHand);
+
+        },"This should throw a NoSuchHandException!");
+
+        assertThrows(HandWrongSizeException.class, () -> {
+
+            testPlayer.splitHand(testPlayer.getHand(0));
+
+        },"This should throw a HandWrongSizeException!");
+
+        assertThrows(CardsNotEqualRankException.class, () -> {
+
+            testPlayer.giveCard(new Card(Suit.DIAMONDS, Rank.ACE), testPlayer.getHand(0));
+            testPlayer.giveCard(new Card(Suit.DIAMONDS, Rank.KING), testPlayer.getHand(0));
+            testPlayer.splitHand(testPlayer.getHand(0));
+
+        },"This should throw a CardsNotEqualRankException!");
+
+        assertThrows(BrokeException.class, () -> {
+
+            testPlayer.clearHands();
+            testPlayer.bet(75);
+            testPlayer.giveCard(new Card(Suit.DIAMONDS, Rank.ACE), testPlayer.getHand(0));
+            testPlayer.giveCard(new Card(Suit.CLUBS, Rank.ACE), testPlayer.getHand(0));
+            testPlayer.splitHand(testPlayer.getHand(0));
+
+        },"This should throw a BrokeException!");
     }
 
     @Test

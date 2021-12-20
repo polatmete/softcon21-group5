@@ -8,8 +8,20 @@ import ch.uzh.softcon.four.exceptions.card.NullCardException;
 import ch.uzh.softcon.four.exceptions.hand.NullHandException;
 import ch.uzh.softcon.four.player.Player;
 
+import static ch.uzh.softcon.four.card.Card.*;
+
+/**
+ * Removes the need to print in the Game or Main class and keep it tidy.
+ */
 public class IOFormatter {
 
+    /**
+     * Formats the output with the board.
+     * @param textBeforeTable is the text that is printed above the table.
+     * @param printTable whether to print the board or not.
+     * @param textAfterTable is the text that is printed below the table.
+     * @return the complete String to be printed.
+     */
     public static String formatOutput(String textBeforeTable, boolean printTable, String textAfterTable) { // Concatenate text with Table layout
         StringBuilder out = new StringBuilder();
         if (!textBeforeTable.equals("")) out.append(textBeforeTable).append("\n");
@@ -35,6 +47,10 @@ public class IOFormatter {
         return out.toString();
     }
 
+    /**
+     * Provides the amount of current cards formatted to fit the board.
+     * @return a string with the amount of cards.
+     */
     private static String deckAmount() {
         StringBuilder row = new StringBuilder();
         float sideLength = (3 - (float)String.valueOf(CardDeck.getInstance().size()).length()) / 2;
@@ -46,6 +62,10 @@ public class IOFormatter {
         return row.toString();
     }
 
+    /**
+     * Provides all the cards of the dealer formatted to fit the board.
+     * @return a string that contains all the cards.
+     */
     private static String dealerCards() {
         Hand hand = new Hand();
         try {
@@ -58,7 +78,7 @@ public class IOFormatter {
         }
         for (int i = 0; i < hand.size(); i++) {
             try {
-                if (hand.getCard(i).getRank().getValue() > 9) {
+                if (hand.getCard(i).getRank() == Rank.TEN) {
                     sideLength -= 0.5;
                 }
             } catch (CardHiddenException | NullCardException e) {/* */}
@@ -70,6 +90,16 @@ public class IOFormatter {
                 Card card = hand.getCard(i);
                 if (card.getRank().getValue() == 11) {
                     row.append("A");
+                } else if (card.getRank().getValue() == 10) {
+                    if (card.getRank() == Rank.KING) {
+                        row.append("K");
+                    } else if (card.getRank() == Rank.QUEEN) {
+                        row.append("Q");
+                    } else if (card.getRank() == Rank.JACK) {
+                        row.append("J");
+                    } else {
+                        row.append("10");
+                    }
                 } else {
                     row.append(card.getRank().getValue());
                 }
@@ -88,6 +118,10 @@ public class IOFormatter {
         return row.toString();
     }
 
+    /**
+     * Provides all the balances of the players formatted to fit the board.
+     * @return a string that contains all the balances.
+     */
     private static String moneyRow() {
         StringBuilder row = new StringBuilder();
 
@@ -107,6 +141,10 @@ public class IOFormatter {
         return row.toString();
     }
 
+    /**
+     * Provides all the names of the players formatted to fit the board.
+     * @return a string that contains all the names.
+     */
     private static String nameRow() {
         StringBuilder row = new StringBuilder();
 
@@ -126,6 +164,10 @@ public class IOFormatter {
         return row.toString();
     }
 
+    /**
+     * Provides all the cards of the players formatted to fit the board.
+     * @return a string that contains all the card rows.
+     */
     private static String cardRows() {
         int mostCardsOnHand = 0;
         for (Player p : Game.getPlayers()) {
@@ -165,13 +207,30 @@ public class IOFormatter {
         return row.toString();
     }
 
+    /**
+     * Helper method to add a name.
+     * @param row is the current StringBuilder we add the strings to.
+     * @param playerName is the name of the player.
+     */
     private static void appendName(StringBuilder row, String playerName) {
         float sideLength = (9 - (float)playerName.length()) / 2;
         row.append(" ".repeat((int)Math.ceil(sideLength)));
+        if (playerName.contains("maettuu")) {
+            playerName = "\u001B[94m" + playerName + "\u001B[0m";
+        }
+        if (playerName.contains("flash1232") || playerName.contains("jemaie")
+                || playerName.contains("polatmete") || playerName.contains("alstefa")) {
+            playerName = "\u001B[93m" + playerName + "\u001B[0m";
+        }
         row.append(playerName).append(":");
         row.append(" ".repeat((int)Math.floor(sideLength)));
     }
 
+    /**
+     * Helper method to add the balance.
+     * @param row is the current StringBuilder we add strings to.
+     * @param balance is the current balance to be added.
+     */
     private static void appendBalance(StringBuilder row, int balance) {
         float sideLength = (9 - (float)String.valueOf(balance).length()) / 2;
         row.append(" ".repeat((int)Math.floor(sideLength)));
@@ -179,6 +238,12 @@ public class IOFormatter {
         row.append(" ".repeat((int)Math.ceil(sideLength)));
     }
 
+    /**
+     * Helper method to add the cards.
+     * @param row is the current StringBuilder we add strings to.
+     * @param cardIdx is basically the row to which the card gets added.
+     * @param p is the current player.
+     */
     private static void appendCards(StringBuilder row, int cardIdx, Player p) {
         float sideLength = (float) (6.5 - 1.5 * p.amountHands());
 
@@ -186,11 +251,19 @@ public class IOFormatter {
         for (int i = 0; i < p.amountHands(); i++) {
             try {
                 Card card = p.getHand(i).getCard(cardIdx);
-                if (card.getRank().getValue() == 10) {
-                    row.setLength(row.length() - 1);
-                }
                 if (card.getRank().getValue() == 11) {
                     row.append("A");
+                } else if (card.getRank().getValue() == 10) {
+                    if (card.getRank() == Rank.KING) {
+                        row.append("K");
+                    } else if (card.getRank() == Rank.QUEEN) {
+                        row.append("Q");
+                    } else if (card.getRank() == Rank.JACK) {
+                        row.append("J");
+                    } else {
+                        row.setLength(row.length() - 1);
+                        row.append("10");
+                    }
                 } else {
                     row.append(card.getRank().getValue());
                 }
