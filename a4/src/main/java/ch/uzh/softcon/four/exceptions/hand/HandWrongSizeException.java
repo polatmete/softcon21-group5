@@ -1,5 +1,8 @@
 package ch.uzh.softcon.four.exceptions.hand;
 
+/**
+ * Exception that is thrown when the hand has any other amount than two cards while trying to split.
+ */
 public class HandWrongSizeException extends Exception {
 
     public HandWrongSizeException() {
