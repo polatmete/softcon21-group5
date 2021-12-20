@@ -1,4 +1,4 @@
-package ch.uzh.softcon.four.scoreboard;
+package ch.uzh.softcon.four.card.scoreboard;
 
 public class ScoreBoardEntry {
 

@@ -1,4 +1,4 @@
-package ch.uzh.softcon.four.scoreboard;
+package ch.uzh.softcon.four.card.scoreboard;
 
 import ch.uzh.softcon.four.player.Player;
 
@@ -30,7 +30,6 @@ public class ScoreBoard {
             }
             i++;
         }
-
     }
 
     private static void updateCSV(String fileName) {
@@ -114,16 +113,30 @@ public class ScoreBoard {
         return longest;
     }
 
-    public static void resetScoreBoard() {
+    public static void resetScoreBoard(boolean updateCSV) {
         scoreBoard = new ScoreBoardEntry[scoreBoardSize];
-        updateCSV("scoreBoard.csv");
+        if (updateCSV) {
+            updateCSV("scoreBoard.csv");
+        }
     }
 
-    private static String path() {
+    public static String path() {
         if (new File("a4/").exists()) {
             return "a4/resources/";
         } else {
             return "resources/";
         }
+    }
+
+    public static ScoreBoardEntry getScoreBoardEntry(int i) {
+        if (i > scoreBoardSize - 1 || i < 0) {
+            throw new IndexOutOfBoundsException("Index out of range");
+        } else {
+            return scoreBoard[i];
+        }
+    }
+
+    public static int size() {
+        return scoreBoardSize;
     }
 }

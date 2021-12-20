@@ -3,7 +3,6 @@ package ch.uzh.softcon.four;
 import ch.uzh.softcon.four.commands.Command;
 import ch.uzh.softcon.four.commands.CommandPrintScore;
 import ch.uzh.softcon.four.logic.Game;
-import ch.uzh.softcon.four.scoreboard.ScoreBoard;
 
 public class Main {
 
