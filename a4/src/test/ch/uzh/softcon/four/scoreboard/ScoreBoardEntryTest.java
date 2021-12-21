@@ -1,5 +1,6 @@
-package ch.uzh.softcon.four.card.scoreboard;
+package ch.uzh.softcon.four.scoreboard;
 
+import ch.uzh.softcon.four.scoreboard.ScoreBoardEntry;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
