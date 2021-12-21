@@ -1,15 +1,11 @@
 package ch.uzh.softcon.four;
 
-import ch.uzh.softcon.four.commands.Command;
 import ch.uzh.softcon.four.commands.CommandPrintScore;
 import ch.uzh.softcon.four.logic.Game;
 
 public class Main {
 
-    private static Command printScore;
-
     public static void main(String[] args) {
-        printScore = new CommandPrintScore();
         Game.initialize(); // Set difficulty and players, initialize some variables
         System.out.println(); // New line for better design
         while (true) {
@@ -22,6 +18,6 @@ public class Main {
             Game.conclude(); // Clear hands, kick out players without money, allow new players to join
         }
         System.out.println("\nIt seems like no one wants to play at this table any more.. Thank you for joining and bye for now ;)");
-        printScore.execute(null);
+        new CommandPrintScore().execute(null);
     }
 }
