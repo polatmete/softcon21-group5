@@ -29,3 +29,10 @@ Source code can be found [here](a2/src/main/java/ch/uzh/softcon/one).
 Source code can be found [here](a3/src/main/java/ch/uzh/softcon/one).
 
 Test suite can be found [here](a3/src/test/ch/uzh/softcon/one).
+
+### A4
+[Docs](a4/docs) with text, UML, Sequence Diagram, test docs, coverage report and descriptions.
+
+Source code can be found [here](a4/src/main/java/ch/uzh/softcon/four).
+
+Test suite can be found [here](a4/src/test/ch/uzh/softcon/four).
