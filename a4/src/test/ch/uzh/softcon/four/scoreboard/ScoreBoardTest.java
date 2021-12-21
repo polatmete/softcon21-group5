@@ -1,16 +1,11 @@
-package ch.uzh.softcon.four.card.scoreboard;
+package ch.uzh.softcon.four.scoreboard;
 
-import ch.uzh.softcon.four.card.CardDeck;
 import ch.uzh.softcon.four.player.Player;
+import ch.uzh.softcon.four.scoreboard.ScoreBoard;
+import ch.uzh.softcon.four.scoreboard.ScoreBoardEntry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 

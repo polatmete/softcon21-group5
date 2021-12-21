@@ -1,17 +1,27 @@
-package ch.uzh.softcon.four.card.scoreboard;
+package ch.uzh.softcon.four.scoreboard;
 
 import ch.uzh.softcon.four.player.Player;
 
 import java.io.*;
 
+/**
+ * BlackJack scoreboard
+ */
 public class ScoreBoard {
 
+    /**
+     * The size of the scoreboard
+     */
     private static final int scoreBoardSize = 10;
-    private static ScoreBoardEntry[] scoreBoard = new ScoreBoardEntry[scoreBoardSize];
-    private static int score;
 
+    private static ScoreBoardEntry[] scoreBoard = new ScoreBoardEntry[scoreBoardSize];
+
+    /**
+     * Check if a player is eligible to be on the scoreboard and updates the scoreboard accordingly
+     * @param p the player whose score is to be saved
+     */
     public static void saveScore(Player p) {
-        score = p.getBalance();
+        int score = p.getBalance();
 
         int i = 0;
         for (ScoreBoardEntry scoreBoardEntry : scoreBoard) {
@@ -32,6 +42,10 @@ public class ScoreBoard {
         }
     }
 
+    /**
+     * Write the contents of the scoreboard onto the scoreBoard.csv file
+     * @param fileName the name of the file in which the contents of the scoreboard are saved
+     */
     private static void updateCSV(String fileName) {
 
         try {
@@ -53,6 +67,10 @@ public class ScoreBoard {
         }
     }
 
+    /**
+     * Load the content of the scoreBoard.csv file and save it in the scoreBoard variable
+     * @return the status message
+     */
     private static String loadScore() {
 
         try {
@@ -79,6 +97,9 @@ public class ScoreBoard {
         }
     }
 
+    /**
+     * Print the up-to-date contents of the scoreboard on the terminal
+     */
     public static void printScore() {
         loadScore();
 
@@ -101,6 +122,10 @@ public class ScoreBoard {
         System.out.println();
     }
 
+    /**
+     * Calculate the size of the longest name in the scoreboard
+     * @return the size of the longest name in the scoreboard
+     */
     private static int sizeOfLongestName() {
         int longest = -1;
         for (ScoreBoardEntry scoreBoardEntry : scoreBoard) {
@@ -113,6 +138,10 @@ public class ScoreBoard {
         return longest;
     }
 
+    /**
+     * Clear the contents of the scoreboard variable, and depending on the parameter, clear the contents of the file
+     * @param updateCSV boolean parameter, determines if the csv file should be cleared alongside the scoreboard
+     */
     public static void resetScoreBoard(boolean updateCSV) {
         scoreBoard = new ScoreBoardEntry[scoreBoardSize];
         if (updateCSV) {
@@ -120,6 +149,10 @@ public class ScoreBoard {
         }
     }
 
+    /**
+     * Get the path of the scoreboard csv file
+     * @return the path of the scoreboard csv file
+     */
     public static String path() {
         if (new File("a4/").exists()) {
             return "a4/resources/";
@@ -128,6 +161,11 @@ public class ScoreBoard {
         }
     }
 
+    /**
+     * Get an entry of the scoreboard
+     * @param i the index of the scoreboard entry in the scoreboard
+     * @return the scoreboard entry at index i
+     */
     public static ScoreBoardEntry getScoreBoardEntry(int i) {
         if (i > scoreBoardSize - 1 || i < 0) {
             throw new IndexOutOfBoundsException("Index out of range");
@@ -136,6 +174,10 @@ public class ScoreBoard {
         }
     }
 
+    /**
+     * Get the size of the scoreboard
+     * @return the size of the scoreboard
+     */
     public static int size() {
         return scoreBoardSize;
     }

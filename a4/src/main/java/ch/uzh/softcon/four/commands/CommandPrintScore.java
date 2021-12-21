@@ -1,7 +1,7 @@
 package ch.uzh.softcon.four.commands;
 
 import ch.uzh.softcon.four.player.Player;
-import ch.uzh.softcon.four.card.scoreboard.ScoreBoard;
+import ch.uzh.softcon.four.scoreboard.ScoreBoard;
 
 public class CommandPrintScore implements Command {
 
