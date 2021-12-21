@@ -3,7 +3,6 @@ package ch.uzh.softcon.four.logic;
 import ch.uzh.softcon.four.card.Card;
 import ch.uzh.softcon.four.card.CardDeck;
 import ch.uzh.softcon.four.card.Hand;
-import ch.uzh.softcon.four.commands.Command;
 import ch.uzh.softcon.four.commands.CommandPrintScore;
 import ch.uzh.softcon.four.commands.CommandSaveScore;
 import ch.uzh.softcon.four.exceptions.card.CardHiddenException;
@@ -19,21 +18,15 @@ import java.util.Scanner;
 
 public class Game {
 
-    private static final Dealer dealer = new Dealer();
-    private static final Player[] players = new Player[5];
+    private static Dealer dealer = new Dealer();
+    private static Player[] players = new Player[5];
     private static CardDeck deck;
     private static Map<Player, Integer> bets = new HashMap<>();
-    private static final Scanner scn = new Scanner(System.in);
-    private static Command printScore;
-    private static Command saveScore;
+    private static Scanner scn = new Scanner(System.in);
 
     public static void initialize() { // Set difficulty and players, initialize some variables
-
-        printScore = new CommandPrintScore();
-        saveScore = new CommandSaveScore();
-
         System.out.println("Welcome to Black Jack!");
-        printScore.execute(null);
+        new CommandPrintScore().execute(null);
 
         // Get difficulty level of game and map it to # sets used for deck
         int difficulty;
@@ -42,7 +35,8 @@ public class Game {
             try {
                 String tmp = scn.nextLine();
                 difficulty = Integer.parseInt(tmp);  // Not nice but at least we can catch wrong inputs from the user
-                if (difficulty < 1 || difficulty > 3) System.err.println("Could not recognize your input. Please enter a number between 1 and 3.\n");
+                if (difficulty < 1 || difficulty > 3) System.err.println("Could not recognize your input. Please " +
+                        "enter a number between 1 and 3.\n");
             } catch (Exception ex) {
                 System.err.println("Could not recognize your input. Please enter a number between 1 and 3.\n");
                 difficulty = 0;
@@ -69,7 +63,8 @@ public class Game {
             try {
                 String tmp = scn.nextLine();
                 countPlayers = Integer.parseInt(tmp); // Not nice but at least we can catch wrong inputs from the user
-                if (countPlayers < 0 || countPlayers > maxPlayers) System.err.println("Could not recognize your input. Please enter a number between 0 and " + maxPlayers + ".\n");
+                if (countPlayers < 0 || countPlayers > maxPlayers) System.err.println("Could not recognize your input." +
+                        " Please enter a number between 0 and " + maxPlayers + ".\n");
             } catch (Exception ex) {
                 System.err.println("Could not recognize your input. Please enter a number between 0 and " + maxPlayers + ".\n");
                 countPlayers = -1;
@@ -82,7 +77,8 @@ public class Game {
             while (nextAvailableSeat < 5 && players[nextAvailableSeat] != null) ++nextAvailableSeat;
             System.out.print("Player " + (nextAvailableSeat+1) + " please enter your name (max 9 characters): ");
             String name = scn.nextLine();
-            players[nextAvailableSeat] = new Player(name.substring(0, Math.min(9, name.length()))); // only take first 9 chars to not mess up table
+            // only take first 9 chars to not mess up table
+            players[nextAvailableSeat] = new Player(name.substring(0, Math.min(9, name.length())));
             if (name.contains("maettuu")) {
                 System.out.println("Welcome to the game, \u001B[94m" + name + "\u001B[0m! Lovely to see our MVP today!");
                 players[nextAvailableSeat].pay(50);
@@ -122,16 +118,18 @@ public class Game {
         int bet = 0;
         do {
             retry = false;
-            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName(), true, "Please enter your bet or type \"leave\" to leave: "));
+            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName(),
+                    true, "Please enter your bet or type \"leave\" to leave: "));
             String tmpInput = scn.nextLine();
             if (tmpInput.equals("leave")) { // Leave when user enters "leave"
-                saveScore.execute(players[playerIndex]); // Check whether player made it in the scoreboard
+                new CommandSaveScore().execute(players[playerIndex]); // Check whether player made it in the scoreboard
                 players[playerIndex] = null;
                 System.out.println(); // New line for better design
                 return;
             } else { // Otherwise, try to convert string to int
                 try {
                     bet = Integer.parseInt(tmpInput);
+                    if (bet <= 0) throw new Exception("Invalid input!");
                 } catch (Exception ex) { // If input is no int then ask player again for input
                     retry = true;
                     System.err.println("Could not recognize your input. Please try again.");
@@ -149,12 +147,17 @@ public class Game {
     }
 
     public static void play(int playerIndex, int handIndex) { // Here, the main gameplay happens
-        if (players[playerIndex] == null) return;  // Since in main for every "seat" this method is executed we have to skip the empty seats
+        try {
+            // Since in main for every "seat" this method is executed we have to skip the empty seats
+            // If player already got 21 with the first 2 cards also skip
+            if (players[playerIndex] == null || players[playerIndex].getHand(0).points() == 21) return;
+        } catch (NullHandException e) {/* */}
 
         // Ask player for move
         String move;
         do {
-            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + " (" + (handIndex + 1) + ". hand)", true, "Please enter your move [0|1|2]: "));
+            System.out.print(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() +
+                    " (" + (handIndex + 1) + ". hand)", true, "Please enter your move [0|1|2]: "));
             move = scn.nextLine();
             if (move.equals("1")) {
                 distributeCards(playerIndex, handIndex);
@@ -169,7 +172,9 @@ public class Game {
                         }
                     }
                     if (points >= 21) { // Auto exit when hand >= 21 points
-                        System.out.println(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName() + " (" + (handIndex + 1) + ". hand)", true, "You got " + points + " points on this hand and therefore cannot hit or split any more."));
+                        System.out.println(IOFormatter.formatOutput("\nTurn: " + players[playerIndex].getName()
+                                + " (" + (handIndex + 1) + ". hand)", true, "You got " + points +
+                                " points on this hand and therefore cannot hit or split any more."));
                         break;
                     }
                 } catch (NullHandException | NullCardException | CardHiddenException ignored) {/* */}
@@ -184,7 +189,9 @@ public class Game {
                 catch (Exception ex) {
                     System.err.println("Your hand could not be split: " + ex.getMessage() + " Please try again.");
                 }
-            } else if (!move.equals("0")) { // We don't have to check for 0 since 0 ist just skip. Instead, we check whether input is something invalid. If so show error message
+            }
+            // We don't have to check for 0 since 0 ist just skip. Instead, we check whether input is something invalid. If so show error message
+            else if (!move.equals("0")) {
                 System.err.println("Could not recognize your input. Please enter a number between 0 and 2.");
             }
         } while (!move.equals("0")); // While input not 0 (hit) ask for input
@@ -206,7 +213,8 @@ public class Game {
                 }
             }
         } catch (NullHandException | CardHiddenException ignored) { }
-        System.out.println(IOFormatter.formatOutput("\nTurn: Dealer", true, "This round has ended. Evaluation:\n"));
+        System.out.println(IOFormatter.formatOutput("\nTurn: Dealer", true,
+                "This round has ended. Evaluation:\n"));
     }
 
     private static void distributeCards(int playerIndex, int handIndex) { // Helper method to give cards
@@ -224,7 +232,8 @@ public class Game {
                     dealerHandPoints -= 10;
                 }
             }
-            if (dealerHandPoints > 21) dealerHandPoints = -1; // If dealers points > 21 set it to -1. This makes comparing later on much easier
+            // If dealers points > 21 set it to -1. This makes comparing later on much easier
+            if (dealerHandPoints > 21) dealerHandPoints = -1;
             for (Player p : players) {
                 if (p == null) continue;
                 int bet = bets.get(p);
@@ -236,7 +245,8 @@ public class Game {
                             playerHandPoints -= 10;
                         }
                     }
-                    if (playerHandPoints > 21) playerHandPoints = -2; // If hand points > 21 set it to -2. This makes comparing later on much easier. -2 because if dealer and player gets > 21 player still looses
+                    // If hand points > 21 set it to -2. This makes comparing later on much easier. -2 because if dealer and player gets > 21 player still looses
+                    if (playerHandPoints > 21) playerHandPoints = -2;
 
                     // Compare points
                     if (playerHandPoints < dealerHandPoints) winAmount -= bet;
@@ -267,7 +277,7 @@ public class Game {
             else { // Kick player with no money
                 if (players[i] != null) {
                     System.out.println(players[i].getName() + " had no money anymore and was kicked out.");
-                    saveScore.execute(players[i]); // Check whether player made it in the scoreboard
+                    new CommandSaveScore().execute(players[i]); // Check whether player made it in the scoreboard
                 }
                 players[i] = null;
                 ++availableSeats;
@@ -275,8 +285,10 @@ public class Game {
         }
         System.out.println("\n=== New game new luck ===");
         if (availableSeats > 0) takeNewPlayers(availableSeats); // Check whether seats are free and ask new players to join
-        else System.out.print("Unfortunately there are no seats available currently.\nPress enter to continue the game... ");
-        scn.nextLine(); // Don't really care about the input, enter is important
+        else {
+            System.out.print("Unfortunately there are no seats available currently.\nPress enter to continue the game... ");
+            scn.nextLine(); // Don't really care about the input, enter is important
+        }
     }
 
     protected static Player[] getPlayers() {
