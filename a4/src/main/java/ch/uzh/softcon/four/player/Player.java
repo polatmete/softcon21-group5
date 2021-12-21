@@ -167,7 +167,7 @@ public class Player extends PlayerSubject {
      * Only for private use in the player class.
      * @param hand is the certain hand to be removed.
      */
-    private  void removeHand(Hand hand) {
+    private void removeHand(Hand hand) {
         super.getHands().remove(hand);
     }
 }
